@@ -1,0 +1,267 @@
+' Gambas class file
+
+'
+' Konvertilo
+' Conversor y manipulador de archivos
+'
+' Copyright (C) Martín Belmonte
+'
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation; either version 2 of the License, or
+' (at your option) any later version.
+'
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+' GNU General Public License for more details.
+'
+' You should have received a copy of the GNU General Public License
+' along with this program; if not, write to the Free Software
+' Foundation, Inc., 51 Franklin St, Fifth Floor,
+' Boston, MA  02110-1301  USA
+'
+
+'### EVENTOS ###
+Public Sub trvEntities_Drop()
+
+  cmdFiles()
+
+End
+
+Public Sub tobAbout_Click()
+
+  FAbout.ShowModal()
+
+End
+
+Public Sub tobStart_Click()
+
+  Dim obj As Object
+  Dim int As Integer
+  Dim intT As Integer
+  Dim strFile As String
+  Dim strTool As String
+
+  Inc Application.Busy
+
+  Select MStarter.strState
+    Case "stopped"
+
+      For Each obj In pnlButtons.Children
+        If Object.Type(obj) = "ToggleButton" Then
+          If obj.Value = True Then
+            MStarter.stxFilesPlay.Add(obj.Tag)
+          Endif
+        Endif
+      Next
+
+      MStarter.strState = "running"
+      tobStart.Picture = Picture["icon:/22/stop"]
+
+    Case "running"
+      MStarter.stxFilesPlay.Clear
+      MStarter.strState = "stopped"
+      tobStart.Picture = Picture["icon:/22/play"]
+
+  End Select
+
+  If MStarter.stxFilesPlay.Count > 0 Then
+    For int = 0 To grwData.Rows.Count - 1
+      If MStarter.stxFilesPlay.Find(grwData[int, 3].Text) > -1 Then
+
+        For intT = 0 To MStarter.stxToolsName.Max
+
+          If InStr(MStarter.stxToolsExt[intT], grwData[int, 3].Text) > 0 Then
+            If Settings[grwData[int, 3].Text & "/" & MStarter.stxToolsName[intT]] = True Then
+              ' Archivo a procesar
+              strFile = grwData[int, 0].Text
+
+              ' Herramienta a usar.
+              strTool = MStarter.stxToolsName[intT]
+
+              If MBatch.FileDelibery(strFile, strTool) = 1 Then
+                grwData[int, 3].Foreground = Color.Red
+              Endif
+
+            Endif
+          Endif
+        Next
+
+      Endif
+
+    Next
+
+  Endif
+  MStarter.stxFilesPlay.Clear
+  MStarter.strState = "stopped"
+  tobStart.Picture = Picture["icon:/22/play"]
+  Dec Application.Busy
+
+End
+
+Public Sub FileExtButton_Click()
+
+  Dim tgb As ToggleButton
+
+  tgb = Last
+
+  If tgb.Value = True Then
+
+    FTools.Run(tgb.Text)
+
+  Else
+    Print "Desactivado " & tgb.Text
+  Endif
+
+End
+
+Public Sub tobHelp_Click()
+
+  Desktop.Open(MStarter.strAppPath &/ "README.md")
+
+  'Desktop.Open("/home/administrador/.konvertilo/README.txt")
+
+End
+
+'##############################################################################
+
+Public Sub grwData_Drop()
+
+  Inc Application.Busy
+  cmdFiles()
+  Dec Application.Busy
+
+End
+
+'### FUNCIONES ###
+
+Public Function cmdFiles() As String[]
+
+  Dim strPath As String
+  Dim stxPaths As New String[]
+  Dim stxFilesTmp As New String[]
+
+  Dim strInfo As String
+  Dim strPathTmp As String
+
+  stxPaths = MUtility.FilesList(Drag.Paste("text/uri-list"))
+
+  ' En este punto se tiene la lista de archivos
+
+  ' Para cada ruta de archivo se verifica que exista y se extraen los metadaos de este
+  For Each strPath In stxPaths
+    If Exist(strPath) Then
+
+      Select Stat(strPath).Type
+
+        Case gb.File
+          If MStarter.stxFiles.Find(strPath) = -1 Then
+            MStarter.stxFiles.Add(strPath)
+          Endif
+
+        Case gb.Directory
+
+          stxFilesTmp.Clear
+          stxFilesTmp = MUtility.ScanFolder(strPath)
+
+          For Each strPathTmp In stxFilesTmp
+            If MStarter.stxFiles.Find(strPathTmp) = -1 Then
+              MStarter.stxFiles.Add(strPathTmp)
+            Endif
+          Next
+
+      End Select
+
+    Endif
+  Next
+  ' Orden de la lista
+  If MStarter.stxFiles.Count > 0 Then
+    MStarter.stxFiles.Sort
+  Endif
+
+  cmdCheckFiles()
+
+End
+
+Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Treeview.
+
+  Dim stxFInfo As New String[]
+  Dim intF As Integer
+  Dim intI As Integer
+  Dim intH As Integer
+  Dim intT As Integer
+  Dim strExtTmp As String
+  Dim btn As ToggleButton
+
+  grwData.Header = 3
+  grwData.Grid = True
+  grwData.Columns.Count = 9
+
+  For intH = 0 To MStarter.stxHeaders.Max
+    grwData.Columns[intH].Text = MStarter.stxHeaders[intH]
+  Next
+
+  grwData.Rows.Count = 0
+  grwData.Rows.Count = MStarter.stxFiles.Count
+
+  MStarter.stxExt.Clear
+
+  For intI = 0 To MStarter.stxFiles.Max
+    stxFInfo.Clear
+
+    stxFInfo = MUtility.FileInfo(MStarter.stxFiles[intI])
+
+    For intF = 0 To 8 'stxFInfo.Max
+
+      grwData[intI, intF].Text = Split(stxFInfo[intF], "\t")[1]
+
+      If Split(stxFInfo[intF], "\t")[0] = "FileExt" Then
+        strExtTmp = String.LCase(Split(stxFInfo[intF], "\t")[1])
+
+        If MStarter.stxExt.Find(strExtTmp) = -1 Then
+          MStarter.stxExt.Add(strExtTmp)
+        Endif
+      Endif
+    Next
+  Next
+
+  'Rellenar el treeview
+  trvEntities.Clear
+
+  trvEntities.Add("fileextension", ("Extensión"))
+  trvEntities["fileextension"].Expanded = True
+
+  pnlButtons.Children.Clear
+
+  For intT = 0 To MStarter.stxExt.Max
+    trvEntities.Add(MStarter.stxExt[intT], MStarter.stxExt[intT],, "fileextension")
+
+    btn = New ToggleButton(pnlButtons) As "FileExtButton"
+    With btn
+      .Name = MStarter.stxExt[intT]
+      .Text = String.UCase(MStarter.stxExt[intT])
+      .Tag = String.LCase(MStarter.stxExt[intT])
+      .Width = ((String.Len(MStarter.stxExt[intT])) * 8) + 16
+      .Height = 28
+
+    End With
+
+  Next
+
+  'Next
+
+End
+
+Public Sub tobClean_Click()
+
+  trvEntities.Clear
+  grwData.Clear
+  grwData.Rows.Count = 0
+  pnlButtons.Children.Clear
+
+  MStarter.stxFilesPlay.Clear
+  MStarter.strState = "stopped"
+  tobStart.Picture = Picture["icon:/22/play"]
+
+End

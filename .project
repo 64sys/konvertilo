@@ -1,0 +1,22 @@
+# Gambas Project File 3.0
+# Compiled with Gambas 3.9.2
+Title=Konvertilo
+Startup=MStarter
+Icon=logo.png
+Version=0.0.1
+Component=gb.image
+Component=gb.gui.qt
+Component=gb.form
+Component=gb.db
+Component=gb.desktop.x11
+Component=gb.desktop
+Component=gb.settings
+Component=gb.pcre
+Component=gb.xml
+Description="Conversor y manipulador de archivos"
+Authors="Martín Belmonte"
+TabSize=2
+Translate=1
+Language=es
+Vendor=Belmotek
+Packager=1

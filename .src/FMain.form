@@ -1,0 +1,124 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,88,64)
+  Icon = Picture["logo.png"]
+  Arrangement = Arrange.Vertical
+  { Panel1 Panel
+    MoveScaled(0,0,87,5)
+    Arrangement = Arrange.Horizontal
+    { tobStart ToolButton
+      MoveScaled(2,0,5,5)
+      ToolTip = ("Iniciar procesado de archivos")
+      Picture = Picture["icon:/22/play"]
+    }
+    { tobClean ToolButton
+      MoveScaled(10,0,5,5)
+      ToolTip = ("Limpiar la lista")
+      Picture = Picture["icon:/22/clear"]
+    }
+    { tobReport ToolButton
+      MoveScaled(18,0,5,5)
+      ToolTip = ("Imprimir informe de archivos procesados")
+      Picture = Picture["icon:/22/print"]
+    }
+    { tobAbout ToolButton
+      MoveScaled(30,0,5,5)
+      ToolTip = ("Acerda de")
+      Picture = Picture["icon:/22/info"]
+    }
+    { tobHelp ToolButton
+      MoveScaled(36,0,5,5)
+      ToolTip = ("Ayuda")
+      Picture = Picture["icon:/22/help"]
+    }
+    { Panel5 Panel
+      MoveScaled(49,0,7,5)
+      Expand = True
+    }
+    { btoSearch ButtonBox
+      MoveScaled(62,1,24,4)
+    }
+  }
+  { HSplit1 HSplit
+    MoveScaled(0,8,86,32)
+    Expand = True
+    Border = False
+    { Panel6 Panel
+      MoveScaled(4,4,21,27)
+      Expand = True
+      Arrangement = Arrange.Vertical
+      { trvEntities TreeView
+        MoveScaled(2,2,16,11)
+        Visible = False
+        Drop = True
+        Expand = True
+        Border = False
+      }
+      { pnlButtons Panel
+        MoveScaled(2,15,16,10)
+        Background = Color.TextBackground
+        Expand = True
+        Arrangement = Arrange.Row
+      }
+    }
+    { Panel4 Panel
+      MoveScaled(28,2,56,29)
+      Expand = True
+      Arrangement = Arrange.Vertical
+      { pnlDataFilter ScrollView
+        MoveScaled(0,1,41,4)
+        Background = Color.TextBackground
+        Arrangement = Arrange.Horizontal
+        Border = False
+        ScrollBar = Scroll.None
+      }
+      { Panel3 Panel
+        MoveScaled(0,6,41,14)
+        Expand = True
+        Arrangement = Arrange.Fill
+        { grwData GridView
+          MoveScaled(1,1,38,12)
+          Drop = True
+          Expand = True
+          Border = False
+          Mode = Select.Multiple
+        }
+      }
+      { pnlDataControls Panel
+        MoveScaled(0,21,41,4)
+        Visible = False
+        Background = Color.TextBackground
+        Arrangement = Arrange.Horizontal
+        { tobNewRecord ToolButton
+          MoveScaled(0,0,4,4)
+          ToolTip = ("Agregar")
+          Picture = Picture["icon:/16/new"]
+        }
+        { tobSaveRecord ToolButton
+          MoveScaled(4,0,4,4)
+          ToolTip = ("Guardar")
+          Picture = Picture["icon:/16/save"]
+        }
+        { tobDeleteRecord ToolButton
+          MoveScaled(9,0,4,4)
+          ToolTip = ("Borrar")
+          Picture = Picture["icon:/16/delete"]
+        }
+        { tobEditRecord ToolButton
+          MoveScaled(15,0,4,4)
+          ToolTip = ("Editar")
+          Picture = Picture["icon:/16/edit"]
+        }
+      }
+    }
+  }
+  { Panel2 Panel
+    MoveScaled(0,58,62,5)
+    Arrangement = Arrange.Horizontal
+    { lblInformation Label
+      MoveScaled(7,0,24,4)
+      Expand = True
+    }
+  }
+}

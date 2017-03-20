@@ -1,0 +1,69 @@
+' Gambas module file
+
+'
+' Konvertilo
+' Conversor y manipulador de archivos
+'
+' Copyright (C) Martín Belmonte
+'
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation; either version 2 of the License, or
+' (at your option) any later version.
+'
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+' GNU General Public License for more details.
+'
+' You should have received a copy of the GNU General Public License
+' along with this program; if not, write to the Free Software
+' Foundation, Inc., 51 Franklin St, Fifth Floor,
+' Boston, MA  02110-1301  USA
+'
+
+Public Function FileDelibery(strPath As String, stxTool As String) As Integer '' Funcion que reparte el archivo a una funcion coincidente con el nombre de la herramienta "Tool" en el segundo parametro
+
+  Dim int As Integer
+
+  int = 0
+
+  Select stxTool
+    Case "PDF Decrypt"
+      int = PDFDecrypt(strPath)
+
+  End Select
+
+  Return int
+
+End
+
+Public Function PDFDecrypt(strPath As String) As Integer
+
+  Dim strName As String
+  Dim strCommand As String
+  Dim prsCommand As Process
+
+  strName = File.Dir(strPath) &/ File.BaseName(strPath) & "dcr.pdf"
+  strCommand = "gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile='" & strName & "' -c .setpdfwrite -f '" & strPath & "'"
+
+  prsCommand = Shell strCommand
+
+  While prsCommand.State = prsCommand.Running
+    Wait 0.05
+  Wend
+
+  If Exist(strName) Then
+
+    If Stat(strName).Type = gb.File Then
+      Return 1
+    Else
+      Return 0
+    Endif
+  Endif
+
+End
+
+Public Function PDFExtract(strPath As String) As Integer
+
+End

@@ -1,0 +1,79 @@
+' Gambas class file
+
+Public strFileExt As String
+
+Public Sub Run(strExt As String) ' As Boolean
+
+  Dim chk As CheckBox
+  Dim intR As Integer
+
+  strFileExt = String.LCase(strExt)
+
+  For intR = 0 To MStarter.stxToolsExt.Max
+    If InStr(MStarter.stxToolsExt[intR], strFileExt) > 0 Then
+      chk = New CheckBox(pnlTools) As "chk"
+      With chk
+        .Name = "chk" & ":" & strFileExt & ":" & CStr(intR)
+        .Text = MStarter.stxToolsName[intR]
+        .Height = 28
+        .Width = 300
+        .Tooltip = MStarter.stxToolsDesc[intR]
+        .Value = Settings[strFileExt & "/" & MStarter.stxToolsName[intR], False]
+      End With
+    Endif
+  Next
+
+  Me.ShowModal()
+
+End
+
+Public Sub btnOK_Click()
+
+  cmdSaveSettings()
+  Wait 0.01
+
+  Me.Close
+
+End
+
+Public Sub btnCancel_Click()
+
+  Me.Close
+
+End
+
+Public Sub Form_Open()
+
+  ' Dim rad As RadioButton
+  ' Dim intR As Integer
+  '
+  ' For intR = 0 To MStarter.stxToolsExt.Max
+  '   If InStr(MStarter.stxToolsExt[intR], "strFileExt") > 0 Then
+  '     rad = New RadioButton(pnlTools) As "rad"
+  '     With rad
+  '       .Name = "rad" & ":" & strFileExt & ":" & CStr(intR)
+  '       .Text = MStarter.stxToolsName[intR]
+  '       .Height = 28
+  '       .Width = 300
+  '       .Tooltip = MStarter.stxToolsDesc[intR]
+  '       .Value = Settings[strFileExt & "/" & MStarter.stxToolsName[intR], False]
+  '     End With
+  '   Endif
+  ' Next
+
+End
+
+Public Sub cmdSaveSettings()
+
+  Dim obj As Object
+
+  For Each obj In pnlTools.Children
+
+    If Object.Type(obj) = "CheckBox" Then
+      With obj
+        Settings[strFileExt & "/" & .Text] = .Value
+      End With
+    Endif
+  Next
+
+End
