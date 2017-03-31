@@ -38,10 +38,6 @@ Public stxTitles As New String[][] 'Lista de títulos de los campos de las vista
 
 Public stxHeaders As New String[] '' <ul><li>0 Acronimo de dos letras "es"</li><li>1 Acronimo de tres letras "spa"</li><li>2 Nombre en inglés "Spanish"</li><li>3 Nombre nativo "Español"</li><li>4 Grupo del idioma "Indo-European"</li><li>5 Alfabeto "Latn" (latino)</li><li>6 Traducir [True/False]</li></ul>
 
-'Public stxCustom As New String[] ' Lista de vistas creadas por SQL personalizado
-'Public stxCustomSQL As New String[] ' Lista de SQL para las vistas personalizadas
-' Las vistas custom son archivos estilo myview.sql en el directorio de la aplicación y son levantadas cuando inicia el programa.
-
 Public stxFieldsTableCurrentrent As New String[] ' lista de campos para crear los botones de filtros
 Public stxFieldsViewCurrentrent As New String[] ' lista de campos para crear los botones de filtros
 
@@ -58,11 +54,11 @@ Public stxToolsExt As New String[] ' Llista de las extensiones de archivo a las 
 
 Public strState As String ' Estado de actividad del programa "running / stopped"
 Public stxFilesPlay As New String[] ' Lista de tipos de archivos a procesar txt, pdf etc.
+Public stxEmail As New String[] ' Lista de ruta de imagenes para pasar al gif del correo.
 
 Public Sub Main()
 
   Dim stxPackages As New String[]
-  'Dim strAppPath As String
   Dim strSQL As String
   Dim resSQL As Result
   Dim intTable As Integer
@@ -71,14 +67,8 @@ Public Sub Main()
   Dim stxTmp As New Variant[][]
   Dim intTmp As Integer
   Dim intP As Integer
-  Dim intLine As Integer
-  Dim strP0 As String
-  '  Dim strP1 As String
-  '  Dim strP2 As String
-  '  Dim strP3 As String
-  '  Dim strP4 As String
-  '  Dim strP5 As String
-  '  Dim strP6 As String
+  '  Dim intLine As Integer
+  ' Dim strP0 As String
 
   strInputLanguage = ""
 
@@ -105,7 +95,7 @@ Public Sub Main()
   strDBName = Replace(Application.Name & ".sqlite", "-", "")
   stxProgram = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
 
-  stxProgram[18] = ("Carga de parametros primera pasada")
+  stxProgram[18] = ("Carga de parámetros primera pasada")
 
   stxProgram[0] = Settings["Program/Database-Engine", "sqlite3"]
   stxProgram[1] = Settings["Program/Database-Host", strAppPath]
@@ -185,11 +175,6 @@ Public Sub Main()
   strState = "stopped"
   stxFilesPlay.Clear
 
-  ' For intLine = 0 To stxLanguag.Max
-  '   strP0 = stxLanguage[intLine][0]
-  '   stxLanguage[intLine][9] = Settings["Language/" & strP0, "False"]
-  ' Next
-
   '//////////////////////////////////
 
   stxProgram[18] = ("Abriendo formulario principal")
@@ -211,17 +196,95 @@ End
 
 Public Sub LoadTools() '' Carga de herramientas disponibles para asignar el el proceso de archivos segun su extensión
 
-  stxToolsName.Add("JPEG E-MAIL")
-  stxToolsDesc.Add(("Crea una copia reducida de la imagen para enviar por email"))
+  '## JPEG
+  stxToolsName.Add("JPEG>Email")
+  stxToolsDesc.Add(("Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email"))
   stxToolsExt.Add("jpg:jpeg")
 
-  stxToolsName.Add("JPEG ARRANGE")
-  stxToolsDesc.Add(("Mueve las fotografias organizandolas según su fecha de captura"))
+  stxToolsName.Add("JPEG>GIFEmail")
+  stxToolsDesc.Add(("Crea un archivo") & " GIF " & ("y luego lo adjunta en un nuevo correo") & ".")
   stxToolsExt.Add("jpg:jpeg")
 
-  stxToolsName.Add("PDF Decrypt")
-  stxToolsDesc.Add(("Crea una copia sin encriptacion"))
+  stxToolsName.Add("JPEG>Copy-Reduced-Color")
+  stxToolsDesc.Add(("Crea una copia reducida en la misma ubicación que la original"))
+  stxToolsExt.Add("jpg:jpeg")
+
+  stxToolsName.Add("JPEG>Copy-Reduced-Gray")
+  stxToolsDesc.Add(("Crea una copia reducida en escala de grices en la misma ubicación que la original"))
+  stxToolsExt.Add("jpg:jpeg")
+
+  stxToolsName.Add("JPEG>Copy-Gray")
+  stxToolsDesc.Add(("Crea una copia en escala de grices en la misma ubicación que la original"))
+  stxToolsExt.Add("jpg:jpeg")
+
+  stxToolsName.Add("JPEG>Square")
+  stxToolsDesc.Add(("Crea una copia reducida de proporción cuadrada en la misma ubicación que la original."))
+  stxToolsExt.Add("jpg:jpeg")
+
+  stxToolsName.Add("JPEG>PDF")
+  stxToolsDesc.Add(("Crea un archivo") & " PDF " & ("con todas las imágenes que se le pase") & ".")
+  stxToolsExt.Add("jpg:jpeg")
+
+  stxToolsName.Add("JPEG>Arrange")
+  stxToolsDesc.Add(("Mueve las fotografiás organizándolas según su fecha de captura."))
+  stxToolsExt.Add("jpg:jpeg")
+
+  '## PNG
+  stxToolsName.Add("PNG>Copy-Reduced-Color")
+  stxToolsDesc.Add(("Crea una copia reducida en la misma ubicación que la original"))
+  stxToolsExt.Add("png")
+
+  stxToolsName.Add("PNG>JPEG-Copy-Reduced-Color")
+  stxToolsDesc.Add(("Crea una copia reducida en la misma ubicación que la original"))
+  stxToolsExt.Add("png")
+
+  '## ODT
+  stxToolsName.Add("ODT-Thumbnail")
+  stxToolsDesc.Add(("Extractor de miniatura del documento"))
+  stxToolsExt.Add("odt")
+
+  stxToolsName.Add("ODT>EPUB")
+  stxToolsDesc.Add(("Convertir documentos") & " ODT " & ("en") & " EPUB")
+  stxToolsExt.Add("odt")
+
+  '##PDF
+  stxToolsName.Add("PDF>Decrypt")
+  stxToolsDesc.Add(("Crea una copia desencriptada del archivo"))
   stxToolsExt.Add("pdf")
+
+  stxToolsName.Add("PDF>Image")
+  stxToolsDesc.Add(("Extractor de paginas en formato de imagen jpeg una imagen por página."))
+  stxToolsExt.Add("pdf")
+
+  stxToolsName.Add("PDF>Pages")
+  stxToolsDesc.Add(("Extractor de paginas") & "PDF")
+  stxToolsExt.Add("pdf")
+
+  stxToolsName.Add("PDF>OCR-Text")
+  stxToolsDesc.Add(("Extractor de paginas") & "TIF ." & ("Reconocimiento optico de caracteres"))
+  stxToolsExt.Add("pdf")
+
+  stxToolsName.Add("PDF>PDF-R90")
+  stxToolsDesc.Add(("Gira las paginas del archivo") & " 90º")
+  stxToolsExt.Add("pdf")
+
+  '## Video
+  stxToolsName.Add("Video>Frame")
+  stxToolsDesc.Add(("Extractor de fotograma de un video"))
+  stxToolsExt.Add("avi:mov:m2ts:mp4:webm:ogv")
+
+  '## MDB, ACCDB
+  stxToolsName.Add("JET>SQL")
+  stxToolsDesc.Add(("Crea los archivos") & "SQL" & ("para crear bases de datos") & " SQLite / PostgreSQL / MySQL")
+  stxToolsExt.Add("mdb:accdb")
+
+  '## MS-OUTLOOK PST
+  stxToolsName.Add("PST>Mbox")
+  stxToolsDesc.Add(("Crea archivos") & " MBX " & ("a partir de") & " PST")
+  stxToolsExt.Add("pst")
+
+  ' Agragar acá las nuevas herramientas de vonversión. #######
+  ' ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 End
 
@@ -241,84 +304,31 @@ End
 
 Public Function Terminator() As Integer ''Funcion que guarda las configuraciones que se modificaron en el programa antes de cerrarlo.
 
-  Dim int As Integer
-  Dim strLang As String
-  Dim strValue As String
+  'Dim int As Integer
+  'Dim strLang As String
+  'Dim strValue As String
 
-  Settings["Dictionaries/Path"] = stxProgram[7]
-  Settings["Language/Input"] = stxProgram[4]
-
-  Settings["Program/Database-Engine"] = stxProgram[0]
-  Settings["Program/Database-Host"] = stxProgram[1]
-  Settings["Program/Database-Name"] = stxProgram[2]
-  Settings["Program/Database-Path"] = stxProgram[3]
-  Settings["Program/Language-Input"] = stxProgram[4]
-  Settings["Program/Language-Input3"] = stxProgram[5]
-  Settings["Program/Language-InputEng"] = stxProgram[6]
-  Settings["Program/Language-InputDict"] = stxProgram[7]
-
-  Settings["Program/Language-Output"] = stxProgram[8]
-  Settings["Program/Language-Output3"] = stxProgram[9]
-  Settings["Program/Language-OutputEng"] = stxProgram[10]
-  Settings["Program/Language-OutputDict"] = stxProgram[11]
-
-  Settings["Program/Window"] = stxProgram[12]
-  'Settings["Program/Dict-Path"] = stxProgram[13]
-  Settings["Program/Default-width"] = stxProgram[14]
-
-  'Settings["Program/Window"] = stxProgram[4]
-
-  ' For int = 0 To stxLanguage.Max
-  '   strLang = stxLanguage[int][0]
+  ' Settings["Dictionaries/Path"] = stxProgram[7]
+  ' Settings["Language/Input"] = stxProgram[4]
   '
-  '   strValue = stxLanguage[int][9]
-  '   Select strValue
-  '     Case "False"
-  '       Settings["Language/" & strLang] = ""
-  '     Case "True"
-  '       Settings["Language/" & strLang] = "True"
-  '   End Select
+  ' Settings["Program/Database-Engine"] = stxProgram[0]
+  ' Settings["Program/Database-Host"] = stxProgram[1]
+  ' Settings["Program/Database-Name"] = stxProgram[2]
+  ' Settings["Program/Database-Path"] = stxProgram[3]
+  ' Settings["Program/Language-Input"] = stxProgram[4]
+  ' Settings["Program/Language-Input3"] = stxProgram[5]
+  ' Settings["Program/Language-InputEng"] = stxProgram[6]
+  ' Settings["Program/Language-InputDict"] = stxProgram[7]
   '
-  ' Next
+  ' Settings["Program/Language-Output"] = stxProgram[8]
+  ' Settings["Program/Language-Output3"] = stxProgram[9]
+  ' Settings["Program/Language-OutputEng"] = stxProgram[10]
+  ' Settings["Program/Language-OutputDict"] = stxProgram[11]
+  ' Settings["Program/Window"] = stxProgram[12]
+  ' Settings["Program/Default-width"] = stxProgram[14]
+  '
+  ' Settings.Save
 
-  Settings.Save
-
-  Return 1
+  ' Return 1
 
 End
-
-' Public Function LangInfo(strLang2Ltr As String) As String[]  '' <p>El parametro de entrada es el lenguaje en dos letras, por ejemplo "es". Devuelve una matriz con:</p><ul><li>0 Nombre de dos letras</li><li>1 Nombre de tres letras</li><li>2 Nombre en inglés</li><li>3 Diccionario ispell</li><li>4 Nombre en idioma local</li><ul>
-'
-'   Dim int As Integer
-'   Dim stxILang As New String[]
-'
-'   For int = 0 To stxLanguage.Max
-'     If stxLanguage[int][0] = strLang2Ltr Then
-'       stxILang.Add(strLang2Ltr)
-'       stxILang.Add(stxLanguage[int][1]) ' Nombre de tres letras
-'       stxILang.Add(stxLanguage[int][4]) ' Nombre en inglés
-'       stxILang.Add(stxLanguage[int][3]) ' Diccionario ispell
-'       stxILang.Add(stxLanguage[int][2]) ' Nombre en idioma local
-'     Endif
-'   Next
-'
-'   Return stxILang
-'
-' End
-
-' Public Function LangOut(strLang2Ltr As String) As String[]  '' <p>El parametro de entrada es el lenguaje en dos letras, por ejemplo "es". Devuelve una matriz listando todos los lenguajes de salida.
-'
-'   Dim int As Integer
-'   Dim stxLangOut As New String[]
-'
-'   For int = 0 To stxLanguage.Max
-'     If stxLanguage[int][0] <> strLang2Ltr Then
-'       If stxLanguage[int][9] = "True" Then
-'         stxLangOut.Add(stxLanguage[int][0])
-'       Endif
-'     Endif
-'   Next
-'
-'   Return stxLangOut
-'
-' End

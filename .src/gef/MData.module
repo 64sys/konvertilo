@@ -311,7 +311,7 @@ Public Function RecordForeign(connDB As Connection, strTable As String, strField
           Case Else
             intForeign = -3
             Message.Warning(("Existen") & " " & CStr(resForeign.Count) &
-              " " & ("coincidencias, deberia ser una sola") &
+              " " & ("coincidencias, debería ser una sola") &
               gb.NewLine & ("Se utilizara el primero de la lista"))
         End Select
 
@@ -1439,7 +1439,7 @@ Public Sub MDBtoSQL(strFilePath As String, lblInformation As Label) As String[]
   strPkg = "mdbtools"
   strTools = Msys.PkgStat(strPkg)
 
-  lblInformation.Text = ("mdbtools instalado correctamente")
+  lblInformation.Text = "mdbtools " & ("instalado correctamente")
   'F10app.lblImport.Text = ("mdbtools instalado correctamente")
   'Exec ["notify-send", "-t", "2000", ("Sistema"), ("mdbtools instalado correctamente")]
 
@@ -1497,7 +1497,7 @@ Public Sub MDBtoSQL(strFilePath As String, lblInformation As Label) As String[]
     Wait 0.1
   Wend
 
-  lblInformation.Text = ("Esquemas extraidos")
+  lblInformation.Text = ("Esquemas extraídos")
   'F10app.lblImport.Text =
   'Exec ["notify-send", "-t", "2000", ("Actividad"), ("Esquemas extraidos")]
 
@@ -1613,7 +1613,7 @@ Public Sub MDBtoSQL(strFilePath As String, lblInformation As Label) As String[]
 
   Print stxDatabaseInfo.Join("\n")
 
-  lblInformation.Text = ("Conversion terminada stisfactoriamente")
+  lblInformation.Text = ("Conversion terminada satisfactoriamente")
 
   Return stxDatabaseInfo
 

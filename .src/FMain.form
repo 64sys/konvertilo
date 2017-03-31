@@ -13,18 +13,23 @@
       Picture = Picture["icon:/22/play"]
     }
     { tobClean ToolButton
-      MoveScaled(10,0,5,5)
+      MoveScaled(9,0,5,5)
       ToolTip = ("Limpiar la lista")
       Picture = Picture["icon:/22/clear"]
     }
+    { tobConfig ToolButton
+      MoveScaled(16,0,5,5)
+      ToolTip = ("Preferencias")
+      Picture = Picture["icon:/22/properties"]
+    }
     { tobReport ToolButton
-      MoveScaled(18,0,5,5)
+      MoveScaled(24,0,5,5)
       ToolTip = ("Imprimir informe de archivos procesados")
       Picture = Picture["icon:/22/print"]
     }
     { tobAbout ToolButton
       MoveScaled(30,0,5,5)
-      ToolTip = ("Acerda de")
+      ToolTip = ("Acerca de")
       Picture = Picture["icon:/22/info"]
     }
     { tobHelp ToolButton

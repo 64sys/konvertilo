@@ -26,7 +26,7 @@
     Padding = 4
     Count = 2
     Index = 0
-    Text = ("Traducción")
+    Text = ("Herramientas")
     { TabPanel1 IconPanel
       MoveScaled(2,3,36,29)
       Expand = True

@@ -529,7 +529,7 @@ Public Function PkgDep(stxPackages As String[]) As String[] '' Verifica si los p
     strCommand = Replace(strCommand, "-", Chr(45)) ' Esto es porque sendkeys tiene problermas con "-"
     Select Message.Question(strMessage & ":" & gb.NewLine &
           stxPackagesInstall.Join(gb.NewLine) & gb.NewLine &
-          ("Puede usar la siguente orden") & ":" & gb.NewLine &
+          ("Puede usar la siguiente orden") & ":" & gb.NewLine &
           strCommand & gb.NewLine &
           ("¿Quiere abrir la terminal para poceder?"), ("Sí"), ("No"))
       Case 1
@@ -579,7 +579,7 @@ Public Function PkgInstall(stxPackagesInstall As String[]) As String[] '' Instal
 
     Select Message.Question(strMessage & ":" & gb.NewLine &
           stxPackagesInstall.Join(gb.NewLine) & gb.NewLine &
-          ("Puede usar el siguente commando") & ":" & gb.NewLine &
+          ("Puede usar la siguiente orden") & ":" & gb.NewLine &
           strCommand & gb.NewLine &
           ("¿Quiere abrir la terminal para poceder?"), ("Sí"), ("No"))
 

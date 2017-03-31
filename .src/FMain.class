@@ -35,6 +35,12 @@ Public Sub tobAbout_Click()
 
 End
 
+Public Sub tobConfig_Click()
+
+  FConfig.ShowModal()
+
+End
+
 Public Sub tobStart_Click()
 
   Dim obj As Object
@@ -42,6 +48,10 @@ Public Sub tobStart_Click()
   Dim intT As Integer
   Dim strFile As String
   Dim strTool As String
+  Dim strReturn As String
+  Dim strTimeJob As String
+  Dim strJobFile As String
+  Dim prs As Process
 
   Inc Application.Busy
 
@@ -67,32 +77,59 @@ Public Sub tobStart_Click()
   End Select
 
   If MStarter.stxFilesPlay.Count > 0 Then
+
     For int = 0 To grwData.Rows.Count - 1
-      If MStarter.stxFilesPlay.Find(grwData[int, 3].Text) > -1 Then
+      'Comprobar si el archivo ya fue procesado
+      If grwData[int, 3].Foreground <> Color.Red Then
 
-        For intT = 0 To MStarter.stxToolsName.Max
+        If MStarter.stxFilesPlay.Find(String.LCase(grwData[int, 3].Text)) > -1 Then
 
-          If InStr(MStarter.stxToolsExt[intT], grwData[int, 3].Text) > 0 Then
-            If Settings[grwData[int, 3].Text & "/" & MStarter.stxToolsName[intT]] = True Then
-              ' Archivo a procesar
-              strFile = grwData[int, 0].Text
+          For intT = 0 To MStarter.stxToolsName.Max
 
-              ' Herramienta a usar.
-              strTool = MStarter.stxToolsName[intT]
+            If InStr(MStarter.stxToolsExt[intT], String.LCase(grwData[int, 3].Text)) > 0 Then
+              If Settings[String.LCase(grwData[int, 3].Text) & "/" & MStarter.stxToolsName[intT]] = True Then
+                ' Archivo a procesar
+                strFile = grwData[int, 0].Text
 
-              If MBatch.FileDelibery(strFile, strTool) = 1 Then
-                grwData[int, 3].Foreground = Color.Red
+                ' Herramienta a usar.
+                strTool = MStarter.stxToolsName[intT]
+                strReturn = "0"
+                strReturn = MBatch.FileDelibery(strFile, strTool)
+
+                If strReturn <> "0" Then
+
+                  Select strTool
+                    Case "JPEG>Email"
+                      MStarter.stxEmail.Add(strReturn)
+                      grwData[int, 3].Foreground = Color.Green
+                    Case Else
+                      grwData[int, 3].Foreground = Color.Red
+                  End Select
+                Endif
               Endif
-
             Endif
-          Endif
-        Next
-
+          Next
+        Endif
       Endif
-
     Next
+  Endif
+
+  ' Casos particulares para acciones sobre un conjunto de archivos ya procesados o de salida.
+  ' Por ejemplo enviarlos por email o hacer un archivo zip o realizar un post proceso.
+
+  If MStarter.stxEmail.Count > 0 Then
+    strTimeJob = Format(Now(), "yyyymmddhhnnss")
+    strJobFile = "/tmp" &/ strTimeJob & ".gif"
+    prs = Shell "convert -delay 150 -loop 0 " & MStarter.stxEmail.Join(" ") & " " & strJobFile
+
+    While prs.State = prs.Running
+      Wait 0.1
+    Wend
+
+    Desktop.SendMail([], [], [], strTimeJob, "", strJobFile)
 
   Endif
+
   MStarter.stxFilesPlay.Clear
   MStarter.strState = "stopped"
   tobStart.Picture = Picture["icon:/22/play"]
@@ -118,9 +155,12 @@ End
 
 Public Sub tobHelp_Click()
 
-  Desktop.Open(MStarter.strAppPath &/ "README.md")
+  Dim strFile As String
 
-  'Desktop.Open("/home/administrador/.konvertilo/README.txt")
+  strFile = MStarter.strAppPath &/ "README.md"
+  If Exist(strFile)
+    Desktop.Open(strFile)
+  Endif
 
 End
 
@@ -142,7 +182,7 @@ Public Function cmdFiles() As String[]
   Dim stxPaths As New String[]
   Dim stxFilesTmp As New String[]
 
-  Dim strInfo As String
+  'Dim strInfo As String
   Dim strPathTmp As String
 
   stxPaths = MUtility.FilesList(Drag.Paste("text/uri-list"))
@@ -218,9 +258,10 @@ Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Tree
 
       If Split(stxFInfo[intF], "\t")[0] = "FileExt" Then
         strExtTmp = String.LCase(Split(stxFInfo[intF], "\t")[1])
-
-        If MStarter.stxExt.Find(strExtTmp) = -1 Then
-          MStarter.stxExt.Add(strExtTmp)
+        If strExtTmp <> "" Then
+          If MStarter.stxExt.Find(strExtTmp) = -1 Then
+            MStarter.stxExt.Add(strExtTmp)
+          Endif
         Endif
       Endif
     Next
@@ -249,19 +290,26 @@ Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Tree
 
   Next
 
-  'Next
-
 End
 
 Public Sub tobClean_Click()
+
+  MStarter.stxFiles.Clear
+  MStarter.stxEmail.Clear
+  MStarter.stxFilesPlay.Clear
+  MStarter.strState = "stopped"
 
   trvEntities.Clear
   grwData.Clear
   grwData.Rows.Count = 0
   pnlButtons.Children.Clear
 
-  MStarter.stxFilesPlay.Clear
-  MStarter.strState = "stopped"
   tobStart.Picture = Picture["icon:/22/play"]
+
+End
+
+Public Sub Form_Open()
+
+  HSplit1.Layout = [1, 5]
 
 End

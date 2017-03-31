@@ -40,11 +40,11 @@ Public Sub Form_Open()
   stxLang.Clear
   intCounter = 0
 
-  For intType = 0 To MStarter.stxLanguage.Max
-    If stxType.Find(MStarter.stxLanguage[intType][7]) = -1 Then
-      stxType.Add(MStarter.stxLanguage[intType][7])
-    Endif
-  Next
+  ' For intType = 0 To MStarter.stxLanguage.Max
+  '   If stxType.Find(MStarter.stxLanguage[intType][7]) = -1 Then
+  '     stxType.Add(MStarter.stxLanguage[intType][7])
+  '   Endif
+  ' Next
 
   If stxType.Count > 0 Then
     TabPanel1.Count = stxType.Count
@@ -192,10 +192,10 @@ Public Function MakeConfigControls() As Integer '' Esta funcion crea los control
 
   pnlConfig.Children.Clear
 
-  stxParam.Add(["0", ("Motor de la Base de datos"), "cmo", "postgresql:mysql:sqlite3:odbc", MStarter.stxProgram[0]])
-  stxParam.Add(["1", ("Ubicación de la Base de datos"), "txo", "", MStarter.stxProgram[1]])
-  stxParam.Add(["2", ("Nombre de la Base de datos"), "txo", "", MStarter.stxProgram[2]])
-  stxParam.Add(["3", ("Ruta de la Base de datos"), "txo", "", MStarter.stxProgram[3]])
+  stxParam.Add(["0", ("Motor de la base de datos"), "cmo", "postgresql:mysql:sqlite3:odbc", MStarter.stxProgram[0]])
+  stxParam.Add(["1", ("Ubicación de la base de datos"), "txo", "", MStarter.stxProgram[1]])
+  stxParam.Add(["2", ("Nombre de la base de datos"), "txo", "", MStarter.stxProgram[2]])
+  stxParam.Add(["3", ("Ruta de la base de datos"), "txo", "", MStarter.stxProgram[3]])
   stxParam.Add(["4", ("Idioma de entrada"), "cmo", "es:en:fr:it:de:pt", MStarter.stxProgram[4]])
   stxParam.Add(["6", ("Tamaño de la ventana"), "cmo", "small:medium:full", MStarter.stxProgram[6]])
   stxParam.Add(["8", ("Anchura por defecto"), "vao", "", MStarter.stxProgram[14]])

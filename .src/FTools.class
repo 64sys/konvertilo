@@ -42,27 +42,6 @@ Public Sub btnCancel_Click()
 
 End
 
-Public Sub Form_Open()
-
-  ' Dim rad As RadioButton
-  ' Dim intR As Integer
-  '
-  ' For intR = 0 To MStarter.stxToolsExt.Max
-  '   If InStr(MStarter.stxToolsExt[intR], "strFileExt") > 0 Then
-  '     rad = New RadioButton(pnlTools) As "rad"
-  '     With rad
-  '       .Name = "rad" & ":" & strFileExt & ":" & CStr(intR)
-  '       .Text = MStarter.stxToolsName[intR]
-  '       .Height = 28
-  '       .Width = 300
-  '       .Tooltip = MStarter.stxToolsDesc[intR]
-  '       .Value = Settings[strFileExt & "/" & MStarter.stxToolsName[intR], False]
-  '     End With
-  '   Endif
-  ' Next
-
-End
-
 Public Sub cmdSaveSettings()
 
   Dim obj As Object

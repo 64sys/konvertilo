@@ -1,4 +1,4 @@
-# konvertilo
+# konvertilo  ![](./logo.png)
 File converter and batch processor.
 
 ## General
@@ -10,6 +10,15 @@ Verificador de nombre de archivo
 
 
 ## JPEG
+
+### JPEG>Arrange
+* Mueve las fotografias organizandolas según su fecha de captura.
+
+### JPEG>Email
+Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email.
+
+### JPEG>GIFEmail
+* Crea un archivo GIF y lo adjunta en un nuevo email.
 
 ### JPEG>Copy-Reduced-Color
 Crea una copia reducida en la misma ubicación que la original
@@ -24,12 +33,15 @@ Crea una copia en escala de grices en la misma ubicación que la original
 Crea una copia reducida de proporción cuadrada en la misma ubicación que la original.
 
 ### JPEG>PDF
-Crea un archivo PDF con todas las imagenes que se le pase.
+Crea un archivo PDF con todas	 las imagenes que se le pase.
 
 ## PNG
 
 ### PNG>Copy-Reduced-Color
 Crea una copia reducida en la misma ubicación que la original
+
+### PNG>JPEG-Copy-Reduced-Color
+* Crea una copia reducida en la misma ubicación que la original
 
 ## ODT
 
@@ -42,16 +54,19 @@ Convertir documentos ODT en documentos EPUB
 ## PDF
 
 ### PDF>Decrypt
-Crea una copia desencriptada de un PDF dejandolo habilitado para modificarlo.
+* Crea una copia sin encriptar.
 
 ### PDF>Image
-Extractor de paginas en formato de imagen jpeg
+* Extractor de paginas en formato de imagen jpeg una imagen por página.
 
 ### PDF>Pages
 Extractor de paginas en formato pdf
 
 ### PDF>OCR-Text
 Extractor de paginas en formato de imagen TIF y reconocimiento optico de caracteres
+
+### PDF>PDF-R90
+* Rotar las paginas del archivo 90 grados.
 
 ## Video
 

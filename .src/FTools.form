@@ -20,12 +20,12 @@
     }
     { btnOK Button
       MoveScaled(29,0,16,4)
-      Text = ("OK")
+      Text = ("Aceptar")
       Default = True
     }
     { btnCancel Button
       MoveScaled(46,0,16,4)
-      Text = ("Cancel")
+      Text = ("Cancelar")
       Cancel = True
     }
   }

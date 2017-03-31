@@ -126,7 +126,7 @@ Public Sub Form_Open()
 
   txa = New TextLabel(pnlAbout)
   txa.Name = "txa-" & "Warranty"
-  txa.Text = ("Este programa se entrega sin ningun tipo de garantia")
+  txa.Text = ("Este programa se entrega sin ningún tipo de garantía")
   txa.Font.Grade = 0
   txa.Alignment = Align.Center
   txa.Height = 56

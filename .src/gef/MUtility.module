@@ -55,7 +55,7 @@ Public Function FileChooser(Optional strInputPath As String, Optional strFilter 
   If strFilter <> "" Then
     stxExtensions = Split(strFilter, ":")
 
-    strFilterB &= ("Filtro por:")
+    strFilterB &= ("Filtro por") & ":"
     For Each strExtension In stxExtensions
 
       strFilterA &= "*." & String.LCase(strExtension) & ";"
@@ -378,133 +378,160 @@ Public Function CRC32(stInputPath As String, Optional strCase As String) As Stri
 
 End
 
-Public Function FileExif(strPath As String) As String[] '' Devuelve una matriz con los datos extraídos por el programa de la terminal ExifTool.
+Public Function ExifRaw(strPath As String) As String[] '' Devuelve una matriz con los metadatos extraídos por el programa de la terminal ExifTool.
 
-  Dim strExifRaw As String
-  Dim stxExifRaw As New String[]
-  Dim strExifTag As String
-  Dim strExifVal As String
-
-  Dim stxExifStd As New String[] ' Standard tags for sound files
-  Dim stxExiTag As New String[]
-  Dim stxExiVal As New String[]
-  Dim stxExif As New String[]
-  Dim intR As Integer
-  Dim intCursor As Integer
+  Dim strExifBruto As String
+  Dim stxExifBruto As New String[]
+  Dim intLin As Integer
+  Dim intCur As Integer
   Dim intLen As Integer
-  Dim intE As Integer
-  Dim strPkgName As String
-  Dim strExifStdFile As String
-  '  Dim bolTagExist As String
-  Dim intTagExist As Integer
+  Dim strExif As String
+  Dim stxExif As New String[]
 
-  'Verificacion de la existencia del archivo
+  Shell "exiftool -f -s -s '" & strPath & "' 2>&1" To strExifBruto ' Toma todos los tags del archivo
 
-  ' Nombre del paquete externo que usa esta funcion
-  strPkgName = "libimage-exiftool-perl"
+  stxExifBruto = Split(strExifBruto, "\n")
 
-  strExifStdFile = User.Home &/ "exiftags.txt"
-  If Exist(strExifStdFile) Then
-    stxExifStd = Split(File.Load(strExifStdFile), gb.NewLine)
-  Else
-    stxExifStd = Split("Title:Track:Artist:Album:Genre:Year:FileType:AudioBitrate:ChannelMode:Duration:SampleRate", ":")
-  Endif
+  For intLin = 0 To stxExifBruto.Max
 
-  If Exist(strPath) = True Then
-    If Stat(strPath).Type = gb.File Then
-      ' Toma todos los tags del archivo
-      If InStr(strPath, Chr(39)) <> 0 Then
-        strPath = Replace(strPath, Chr(39), Chr(92) & Chr(39))
-      Endif
-
-      Select Msys.DistroShort()
-        Case "manjaro", "ubuntu", "mint", "debian"
-          If Msys.PkgStat(strPkgName) = True Then
-            Shell "exiftool -f -s -s '" & strPath & "' 2>&1" To strExifRaw
-          Else
-            Message(("Falta el paquete") & " " & strPkgName)
-          Endif
-
-        Case Else
-          If Msys.PkgStat(strPkgName) = True Then
-            Shell "exiftool -f -s -s '" & strPath & "' 2>&1" To strExifRaw
-          Else
-            Message(("Falta el paquete") & " " & strPkgName)
-          Endif
-      End Select
-
-      stxExifRaw = Split(strExifRaw, "\n")
-      For intR = 0 To stxExifRaw.Max
-        If stxExifRaw[intR] <> "" Then
-          intCursor = InStr(stxExifRaw[intR], ": ")
-          intLen = String.Len(stxExifRaw[intR])
-
-          strExifTag = String.Mid(stxExifRaw[intR], 1, intCursor - 1)
-          strExifVal = String.Mid(stxExifRaw[intR], intCursor + 2, intLen - intCursor - 1)
-
-          ' Retoque de la información
-          Select strExifTag
-            Case "AudioBitrate", "NominalBitrate"
-              strExifTag = "AudioBitrate"
-              strExifVal = Split(strExifVal, " ")[0]
-
-            Case "Duration"
-              strExifVal = Split(strExifVal, " ")[0]
-              strExifVal = HMStoSeconds(strExifVal)
-
-            Case "ChannelMode", "AudioChannels"
-              strExifTag = "ChannelMode"
-              If InStr(String.LCase(strExifVal), "stereo") <> 0 Then
-                strExifVal = 2
-              Else
-                strExifVal = 1
-              Endif
-
-            Case "Track", "TrackNumber"
-              strExifTag = "Track"
-              If InStr(strExifVal, "/") <> 0 Then
-                strExifVal = Split(strExifVal, "/")[0]
-              Endif
-
-            Case "Year", "Date"
-              strExifTag = "Year"
-
-          End Select
-
-          If InStr(strExifVal, ":") <> 0 Then
-            strExifVal = Replace(strExifVal, ":", ".")
-          Endif
-
-          'strExif = strExifTag & ":" & strExifVal
-
-          stxExiTag.Add(strExifTag)
-          stxExiVal.Add(strExifVal)
-
-          ' Preparación de la matriz de datos
-          ' stxExif.Add(strExif)
-        Endif
-      Next
-
-      For intE = 0 To stxExifStd.Max
-
-        intTagExist = stxExiTag.Find(stxExifStd[intE])
-
-        Select intTagExist
-          Case -1
-            stxExif.Add(stxExifStd[intE] & ":" & "")
-          Case Else
-            stxExif.Add(stxExiTag[intTagExist] & ":" & stxExiVal[intTagExist])
-        End Select
-
-      Next
-
+    If stxExifBruto[intLin] <> "" Then
+      intCur = InStr(stxExifBruto[intLin], ": ")
+      intLen = String.Len(stxExifBruto[intLin])
+      strExif = String.Mid(stxExifBruto[intLin], 1, intCur - 1) & "\t" & String.Mid(stxExifBruto[intLin], intCur + 2, intLen - intCur - 1)
+      stxExif.Add(strExif)
     Endif
-
-  Endif
-
+  Next
   Return stxExif
 
 End
+
+' Public Function FileExif(strPath As String) As String[] '' Devuelve una matriz con los datos extraídos por el programa de la terminal ExifTool.
+'
+'   Dim strExifRaw As String
+'   Dim stxExifRaw As New String[]
+'   Dim strExifTag As String
+'   Dim strExifVal As String
+'
+'   Dim stxExifStd As New String[] ' Standard tags for sound files
+'   Dim stxExiTag As New String[]
+'   Dim stxExiVal As New String[]
+'   Dim stxExif As New String[]
+'   Dim intR As Integer
+'   Dim intCursor As Integer
+'   Dim intLen As Integer
+'   Dim intE As Integer
+'   Dim strPkgName As String
+'   Dim strExifStdFile As String
+'   '  Dim bolTagExist As String
+'   Dim intTagExist As Integer
+'
+'   'Verificacion de la existencia del archivo
+'
+'   ' Nombre del paquete externo que usa esta funcion
+'   strPkgName = "libimage-exiftool-perl"
+'
+'   strExifStdFile = User.Home &/ "exiftags.txt"
+'   If Exist(strExifStdFile) Then
+'     stxExifStd = Split(File.Load(strExifStdFile), gb.NewLine)
+'   Else
+'     stxExifStd = Split("Title:Track:Artist:Album:Genre:Year:FileType:AudioBitrate:ChannelMode:Duration:SampleRate", ":")
+'   Endif
+'
+'   If Exist(strPath) = True Then
+'     If Stat(strPath).Type = gb.File Then
+'       ' Toma todos los tags del archivo
+'       If InStr(strPath, Chr(39)) <> 0 Then
+'         strPath = Replace(strPath, Chr(39), Chr(92) & Chr(39))
+'       Endif
+'
+'       Select Msys.DistroShort()
+'         Case "manjaro", "ubuntu", "mint", "debian"
+'           If Msys.PkgStat(strPkgName) = True Then
+'             Shell "exiftool -f -s -s '" & strPath & "' 2>&1" To strExifRaw
+'           Else
+'             Message(("Falta el paquete") & " " & strPkgName)
+'           Endif
+'
+'         Case Else
+'           If Msys.PkgStat(strPkgName) = True Then
+'             Shell "exiftool -f -s -s '" & strPath & "' 2>&1" To strExifRaw
+'           Else
+'             Message(("Falta el paquete") & " " & strPkgName)
+'           Endif
+'       End Select
+'
+'       stxExifRaw = Split(strExifRaw, "\n")
+'       For intR = 0 To stxExifRaw.Max
+'         If stxExifRaw[intR] <> "" Then
+'           intCursor = InStr(stxExifRaw[intR], ": ")
+'           intLen = String.Len(stxExifRaw[intR])
+'
+'           strExifTag = String.Mid(stxExifRaw[intR], 1, intCursor - 1)
+'           strExifVal = String.Mid(stxExifRaw[intR], intCursor + 2, intLen - intCursor - 1)
+'
+'           ' Retoque de la información
+'           Select strExifTag
+'             Case "AudioBitrate", "NominalBitrate"
+'               strExifTag = "AudioBitrate"
+'               strExifVal = Split(strExifVal, " ")[0]
+'
+'             Case "Duration"
+'               strExifVal = Split(strExifVal, " ")[0]
+'               strExifVal = HMStoSeconds(strExifVal)
+'
+'             Case "ChannelMode", "AudioChannels"
+'               strExifTag = "ChannelMode"
+'               If InStr(String.LCase(strExifVal), "stereo") <> 0 Then
+'                 strExifVal = 2
+'               Else
+'                 strExifVal = 1
+'               Endif
+'
+'             Case "Track", "TrackNumber"
+'               strExifTag = "Track"
+'               If InStr(strExifVal, "/") <> 0 Then
+'                 strExifVal = Split(strExifVal, "/")[0]
+'               Endif
+'
+'             Case "Year", "Date"
+'               strExifTag = "Year"
+'
+'           End Select
+'
+'           If InStr(strExifVal, ":") <> 0 Then
+'             strExifVal = Replace(strExifVal, ":", ".")
+'           Endif
+'
+'           'strExif = strExifTag & ":" & strExifVal
+'
+'           stxExiTag.Add(strExifTag)
+'           stxExiVal.Add(strExifVal)
+'
+'           ' Preparación de la matriz de datos
+'           ' stxExif.Add(strExif)
+'         Endif
+'       Next
+'
+'       For intE = 0 To stxExifStd.Max
+'
+'         intTagExist = stxExiTag.Find(stxExifStd[intE])
+'
+'         Select intTagExist
+'           Case -1
+'             stxExif.Add(stxExifStd[intE] & ":" & "")
+'           Case Else
+'             stxExif.Add(stxExiTag[intTagExist] & ":" & stxExiVal[intTagExist])
+'         End Select
+'
+'       Next
+'
+'     Endif
+'
+'   Endif
+'
+'   Return stxExif
+'
+' End
 
 Public Function Timestamp(datTime As Date) As String '' Retorna una cadena de texto con el tiempo en formato "yyyymmddhhnnss".
 
@@ -523,23 +550,6 @@ Public Function TypeVar(intType As Integer) As String '' Función que devuelve e
 End
 
 Public Function Capital(strInput As String) As String ''Devuelve un texto con la primera letra en mayusculas y todas las siguientes en minúsculas.
-
-  Dim strOutput As String
-
-  If strInput <> "" Then
-
-    strOutput = String.UCase(String.Mid(strInput, 1, 1))
-    strOutput &= String.LCase(String.Mid(strInput, 2, String.len(strInput) - 1))
-
-  Else
-    strOutput = ""
-  Endif
-
-  Return strOutput
-
-End
-
-Public Function OnlyChar(strInput As String) As String ''Devuelve un texto con sus caracteres.
 
   Dim strOutput As String
 
@@ -991,10 +1001,10 @@ Public Function ScanFolder(strDir As String, Optional strExt As String) As Strin
           stxFiles[intR] = strFilePro
           Kill strFileRaw
         Else
-          Message.Info(("El archivo ") &
+          Message.Info(("El archivo") & " " &
             gb.NewLine & strFileRaw &
             gb.NewLine &
-            ("Tiene caracteres no ascii"))
+            ("Tiene caracteres no compatibles con") & " ascii")
         Endif
 
       Endif
