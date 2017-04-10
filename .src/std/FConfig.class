@@ -29,7 +29,7 @@ Public Sub Form_Open()
   Dim chk As CheckBox
   Dim scw As ScrollView
   Dim strText As String
-  Dim intType As Integer
+  'Dim intType As Integer
   Dim stxType As New String[]
   Dim inxTypeKey As New Integer[]
   Dim intTab As Integer

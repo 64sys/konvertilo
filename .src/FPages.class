@@ -1,0 +1,85 @@
+' Gambas class file
+
+' Gambas class file
+
+Public inxPages As New Integer[]
+
+Public Sub Run(inx As Integer[]) 'As Integer[]
+
+  Dim tgb As ToggleButton
+  Dim intP As Integer
+
+  inxPages = inx
+
+  For intP = 0 To inxPages.Max
+    tgb = New ToggleButton(pnlPages) As "Page"
+
+    With tgb
+      .Name = "tgb" & ":" & CStr(intP)
+      Select String.Len(CStr(intP))
+        Case String.Len(CStr(inxPages.Count))
+          .Text = CStr(intP)
+          .Tag = intP
+        Case Else
+          .Text = String(String.Len(CStr(inxPages.Count)) - String.Len(CStr(intP)), "0") & CStr(intP)
+      End Select
+      .Height = 28
+      If String.Len(CStr(inxPages.Count)) * 6 < .Height Then
+        .Width = .Height
+      Else
+        .Width = String.Len(CStr(inxPages.Count)) * 7
+      Endif
+      '.Width = String.Len(CStr(inxPages.Count)) * 6
+      Select inxPages[intP]
+        Case 1
+          .Value = True
+        Case Else
+          .Value = False
+      End Select
+
+    End With
+
+  Next
+
+  Me.ShowModal()
+
+  'Return Not Me.ShowModal()
+
+End
+
+Public Sub btnOK_Click()
+
+  'cmdSavePages()
+  'Wait 0.01
+
+  Me.Close
+
+End
+
+Public Sub btnCancel_Click()
+
+  Me.Close
+
+End
+
+'Public Sub cmdSavePages()
+
+'  MStarter.stxPages = inxPages
+
+'End
+
+Public Sub Page_Click()
+
+  Dim obj As Object
+
+  For Each obj In pnlPages.Children
+    If Object.Type(obj) = "ToggleButton" Then
+      If obj.Value = True Then
+        MStarter.stxPages[obj.Tag] = 1
+      Else
+        MStarter.stxPages[obj.Tag] = 0
+      Endif
+    Endif
+  Next
+
+End

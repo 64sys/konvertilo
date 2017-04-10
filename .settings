@@ -13,11 +13,26 @@ Geometry=[56,25,224,280]
 [DebugWindow/MStarter.stxFiles]
 Geometry=[787,298,777,658]
 
+[DebugWindow/MStarter.stxHeaders]
+Geometry=[1170,551,224,344]
+
+[DebugWindow/MStarter.stxPDF]
+Geometry=[0,56,725,854]
+
+[DebugWindow/MStarter.stxPages]
+Geometry=[354,67,224,280]
+
 [DebugWindow/MStarter.stxToolsExt]
 Geometry=[47,179,224,280]
 
 [DebugWindow/MUtility.FileExif(strPath)]
 Geometry=[1053,389,224,615]
+
+[DebugWindow/inxMod]
+Geometry=[354,67,224,280]
+
+[DebugWindow/inxPages]
+Geometry=[354,67,224,280]
 
 [DebugWindow/stxEmail]
 Geometry=[25,71,224,280]
@@ -26,28 +41,27 @@ Geometry=[25,71,224,280]
 Geometry=[1215,37,535,1005]
 
 [DebugWindow/stxFInfo]
-Geometry=[0,25,224,280]
+Geometry=[934,574,224,321]
+
+[DebugWindow/stxPDFDir]
+Geometry=[0,25,891,577]
+
+[DebugWindow/stxSch]
+Geometry=[1,33,224,280]
+
+[DebugWindow/stxTime]
+Geometry=[960,33,224,280]
 
 [Executable]
 Path="konvertilo.gambas"
 
 [OpenFile]
-Count=14
-File[1]=".src/FMain.form"
-File[2]=".src/FMain.class:9.63"
-File[3]=".src/std/MStarter.module:0.222"
-Active=10
-File[4]=".src/MBatch.module:37.44"
-File[5]=".src/gef/MUtility.module:0.59"
-File[6]=".src/gef/MValidator.module:0.59"
-File[7]=".src/FTools.form"
-File[8]=".src/std/FConfig.form"
-File[9]=".src/std/FData.form"
-File[10]=".src/std/FConfig.class:35.199"
-File[11]=".src/std/FAbout.class:39.135"
-File[12]=".src/gef/MData.module:46.68"
-File[13]=".src/gef/Msys.module:35.393"
-File[14]="README.md:52.20"
+Count=4
+File[1]=".src/FPages.form"
+File[2]=".src/FPages.class:0.76"
+File[3]=".src/FMain.class:13.646"
+Active=4
+File[4]=".src/gef/MUtility.module:1.754"
 
 [Watches]
 Count=0

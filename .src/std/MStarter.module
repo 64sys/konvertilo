@@ -51,10 +51,19 @@ Public stxExt As New String[] ' Lista de tipode extensiones
 Public stxToolsName As New String[] ' Lista de herramientas a aplicar cuando se procesan archivos
 Public stxToolsDesc As New String[] ' Lista de descripciones de las herramientas (traducibles)
 Public stxToolsExt As New String[] ' Llista de las extensiones de archivo a las que se puede aplicar cada herramienta
+Public intTimer As Integer ' Tiempo en segundos transcurridos desde el inicio del procesado de archivos
 
 Public strState As String ' Estado de actividad del programa "running / stopped"
 Public stxFilesPlay As New String[] ' Lista de tipos de archivos a procesar txt, pdf etc.
+Public stxSchedule As New String[] ' Lista de [Herramienta "\t" Página "\t" Archivo]
+Public stxPages As New Integer[] ' Lista de paginas a procesar de un archivo dado, es una matriz temporal den un solo uso.
+
 Public stxEmail As New String[] ' Lista de ruta de imagenes para pasar al gif del correo.
+Public stxPDF As New String[] ' Lista de ruta de imagenes para agregar al PDF.
+Public stxErr As New String[] ' Lista de rutas de archivos con error Tool/file
+
+Public strOCRTxt As String ' Texto de salida del OCR
+Public strOCRFile As String ' Archivo de salida del OCR
 
 Public Sub Main()
 
@@ -67,8 +76,6 @@ Public Sub Main()
   Dim stxTmp As New Variant[][]
   Dim intTmp As Integer
   Dim intP As Integer
-  '  Dim intLine As Integer
-  ' Dim strP0 As String
 
   strInputLanguage = ""
 
@@ -137,7 +144,7 @@ Public Sub Main()
       stxTableFields.Add(stxTmp[intTmp])
     Next
   Next
-  Print "###Tablas ###"
+  'Print "###Tablas ###"
   For intP = 0 To stxTableFields.Max
     Print stxTableFields[intP].Join(":")
   Next
@@ -174,6 +181,7 @@ Public Sub Main()
 
   strState = "stopped"
   stxFilesPlay.Clear
+  stxSchedule.Clear
 
   '//////////////////////////////////
 
@@ -297,8 +305,9 @@ Public Sub LoadHeaders()
   stxHeaders.Add(("Base"))
   stxHeaders.Add(("Tamaño"))
   stxHeaders.Add(("Tiempo"))
-  stxHeaders.Add("CRC32")
+  'stxHeaders.Add("CRC32")
   stxHeaders.Add(("Versión"))
+  stxHeaders.Add(("Páginas"))
 
 End
 

@@ -1,0 +1,38 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,64,64)
+  Arrangement = Arrange.Vertical
+  Spacing = True
+  Margin = True
+  { pnlPages Panel
+    MoveScaled(1,1,62,57)
+    Expand = True
+    Arrangement = Arrange.Row
+    Spacing = True
+  }
+  { HBox1 HBox
+    MoveScaled(1,59,62,4)
+    Spacing = True
+    { btnWhole ToggleButton
+      MoveScaled(0,0,11,4)
+      Text = ("Todas")
+    }
+    { btnNothing ToggleButton
+      MoveScaled(12,0,11,4)
+      Text = ("Ninguna")
+    }
+    { Panel1 Panel
+      MoveScaled(24,0,4,4)
+      Expand = True
+    }
+    { btnOK Button
+      MoveScaled(29,0,16,4)
+      Text = ("Aceptar")
+    }
+    { btnCancel Button
+      MoveScaled(46,0,16,4)
+      Text = ("Cancelar")
+    }
+  }
+}

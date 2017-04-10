@@ -8,7 +8,7 @@
     MoveScaled(0,0,87,5)
     Arrangement = Arrange.Horizontal
     { tobStart ToolButton
-      MoveScaled(2,0,5,5)
+      MoveScaled(4,1,5,5)
       ToolTip = ("Iniciar procesado de archivos")
       Picture = Picture["icon:/22/play"]
     }
@@ -36,6 +36,10 @@
       MoveScaled(36,0,5,5)
       ToolTip = ("Ayuda")
       Picture = Picture["icon:/22/help"]
+    }
+    { sirProcess Spinner
+      MoveScaled(42,0,5,5)
+      Visible = False
     }
     { Panel5 Panel
       MoveScaled(49,0,7,5)
@@ -119,11 +123,41 @@
     }
   }
   { Panel2 Panel
-    MoveScaled(0,58,62,5)
+    MoveScaled(0,59,87,4)
     Arrangement = Arrange.Horizontal
-    { lblInformation Label
-      MoveScaled(7,0,24,4)
-      Expand = True
+    { Panel8 Panel
+      MoveScaled(1,0,15,4)
+      Arrangement = Arrange.Vertical
+      { lblTotals Label
+        MoveScaled(1,0,12,2)
+      }
+      { lblEstimated Label
+        MoveScaled(1,2,12,2)
+      }
     }
+    { Panel9 Panel
+      MoveScaled(18,0,28,4)
+      Expand = True
+      Arrangement = Arrange.Vertical
+      { Panel7 Panel
+        MoveScaled(0,1,24,1)
+        Arrangement = Arrange.Horizontal
+        Spacing = True
+        { prsBar ProgressBar
+          MoveScaled(0,0,19,1)
+          Expand = True
+          Label = False
+          Border = False
+        }
+      }
+      { lblInformation Label
+        MoveScaled(0,2,20,2)
+        Expand = True
+        Alignment = Align.Right
+      }
+    }
+  }
+  { tmrCounter #Timer
+    #MoveScaled(32,42)
   }
 }

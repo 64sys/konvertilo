@@ -22,13 +22,13 @@
 ' Boston, MA  02110-1301  USA
 '
 
-Public Function FileDelibery(strPath As String, stxTool As String) As String '' Funcion que reparte el archivo a una funcion coincidente con el nombre de la herramienta "Tool" en el segundo parametro
+Public Function FileDelibery(strTool As String, strPath As String, Optional intPage As Integer) As String '' Funcion que reparte el archivo a una funcion coincidente con el nombre de la herramienta "Tool" en el segundo parametro
 
   Dim str As String
 
   str = "0"
 
-  Select stxTool
+  Select strTool
       'General
     Case "File-Rename" 'Renombrador de archivos
 
@@ -46,6 +46,8 @@ Public Function FileDelibery(strPath As String, stxTool As String) As String '' 
     Case "JPEG>Copy-Gray" 'Crea una copia en escala de grices en la misma ubicación que la original
     Case "JPEG>Square" 'Crea una copia reducida de proporción cuadrada en la misma ubicación que la original.
     Case "JPEG>PDF" 'Crea un archivo PDF con todas las imagenes que se le pase.
+      str = JPEGPDF(strPath, intPage)
+
     Case "JPEG>Arrange" 'Mueve las fotografias organizandolas según su fecha de captura.
       str = JPEGArrange(strPath)
 
@@ -63,13 +65,15 @@ Public Function FileDelibery(strPath As String, stxTool As String) As String '' 
       str = PDFDecrypt(strPath)
 
     Case "PDF>Image" 'Extractor de paginas en formato de imagen jpeg una imagen por página.
-      str = PDFImage(strPath)
+      str = PDFImage(strPath, intPage)
 
     Case "PDF>PDF-R90" 'Rota las paginas 90 grados.
       str = PDFR90(strPath)
 
     Case "PDF>Pages" 'Extractor de paginas en formato pdf
+
     Case "PDF>OCR-Text" 'Extractor de paginas en formato de imagen TIF y reconocimiento optico de caracteres
+      str = PDFOCRText(strPath)
 
       '## Video
     Case "Video>Frame" 'Extractor de fotograma de un video
@@ -231,6 +235,56 @@ Public Function JPEGGIFEmail(strPath As String) As String ''Si el archivo es pro
 
 End
 
+Public Function JPEGPDF(strPath As String) As String ''Convierte todas las imágenes JPEG de la lista en un archivo PDF. Si el archivo PDF es creado satisfactoriamente se devuelve la ruta del mismo.
+
+  'Dim prs As Process
+  'Dim strCommand As String
+
+  Dim prs2 As Process
+  Dim strCommand2 As String
+
+  'Dim strTmpPath As String
+  Dim strRenPath As String
+
+  If MStarter.strState = "running" Then
+
+    'strTmpPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "#rezised" & "." & String.LCase(File.Ext(strPath))
+    strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & ".pdf"
+
+    'If Exist(strRenPath) = False Then
+    'strCommand = "mogrify -resize 1754x2481! " & strPath
+    'prs = Shell strCommand
+    'While
+    '  prs.State = prs.Running
+    '  Wait 0.05
+    'Wend
+
+    'Endif
+
+    'strCommand2 = "convert -type grayscale -quality 30 " & strPath & " " & strRenPath
+    strCommand2 = "convert -quality 30 " & strPath & " " & strRenPath
+    prs2 = Shell strCommand2
+    While
+      prs2.State = prs2.Running
+      Wait 0.05
+    Wend
+
+    ' If Exist(strTmpPath) Then
+    '   Kill strTmpPath
+    ' Endif
+
+  Endif
+
+  If Exist(strRenPath) Then
+    If Stat(strRenPath).Type = gb.File Then
+      Return strRenPath
+    Else
+      Return "0"
+    Endif
+  Endif
+
+End
+
 Public Function PNGJPEGReduced(strPath As String) As String '' Devuelve la ruta al archivo jpeg creado
 
   Dim prs As Process
@@ -290,7 +344,145 @@ Public Function PDFDecrypt(strPath As String) As String '' Devuelve la ruta al a
 
 End
 
-Public Function PDFImage(strPath As String) As String '' Devuelve la carpeta donde se extrajeron las imagenes
+Public Function PDFImage(strPath As String, intPage As Integer) As String '' Devuelve la carpeta donde se extrajeron las imagenes
+
+  Dim strCommand As String
+  Dim prs1 As Process
+  Dim pdf As New PdfDocument
+  'Dim index As Integer
+  Dim strNameNoExt As String
+  Dim strNumx As String
+  Dim strPageImageName As String
+  Dim int As Integer
+
+  strNameNoExt = String.Left(strPath, String.RInStr(strPath, ".") - 1)
+  int = 0
+
+  pdf.Open(strPath)
+  If Exist(strNameNoExt) = False
+    Shell "mkdir -p '" & strNameNoExt & "'"
+  Endif
+
+  'For index = 0 To pdf.Count - 1
+
+  If MStarter.strState = "running" Then
+
+    Select String.Len(Str(intPage + 1)) ' Le sumo 1 porque convert arranca de 0
+      Case 1
+        strNumx = "s00" & Str(intPage + 1) '' idem
+      Case 2
+        strNumx = "s0" & Str(intPage + 1) '' idem
+      Case 3
+        strNumx = "s" & Str(intPage + 1) '' idem
+    End Select
+
+    strPageImageName = strNameNoExt &/ strNumx & ".jpeg"
+
+    ' Salia con fondo negro asi que le pude "-alpha remove" y solucionado
+    strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & intPage & "] '" & strPageImageName & "'"
+    'strCommand = "convert -type grayscale -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & index & "] '" & strPageImageName & "'"
+
+    prs1 = Shell strCommand
+
+    While prs1.State = prs1.Running
+      Wait 0.05
+    Wend
+
+    If Exist(strPageImageName) Then
+      If Stat(strPageImageName).Type = gb.File Then
+        Inc int
+      Endif
+    Endif
+
+  Endif
+
+  'Next
+
+  'Desktop.Open(strNameNoExt) ' Abrir el directorio donde se estrajerosn las paginas
+  'If int = pdf.Count Then
+  If Exist(strPageImageName) Then
+    Return strPageImageName 'strNameNoExt
+  Else
+    Return "0"
+  Endif
+
+End
+
+Public Function PDFOCRText(strPath As String) As String '' Devuelve la carpeta donde se extrajeron las imagenes PNG
+
+  Dim strCommand As String
+  Dim prs1 As Process
+  Dim pdf As New PdfDocument
+  Dim index As Integer
+  Dim strNameNoExt As String
+  Dim strNumx As String
+  Dim strPageImageName As String
+  Dim int As Integer
+  'Dim strTxt As String
+  Dim strTxtTemp As String
+
+  strNameNoExt = String.Left(strPath, String.RInStr(strPath, ".") - 1)
+  int = 0
+
+  pdf.Open(strPath)
+  If Exist(strNameNoExt) = False
+    Shell "mkdir -p '" & strNameNoExt & "'"
+  Endif
+
+  For index = 0 To pdf.Count - 1
+
+    If MStarter.strState = "running" Then
+
+      Select String.Len(Str(index + 1)) ' Le sumo 1 porque convert arranca de 0
+        Case 1
+          strNumx = "s00" & Str(index + 1) '' idem
+        Case 2
+          strNumx = "s0" & Str(index + 1) '' idem
+        Case 3
+          strNumx = "s" & Str(index + 1) '' idem
+      End Select
+
+      strPageImageName = strNameNoExt &/ strNumx & ".png"
+
+      strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & index & "] '" & strPageImageName & "'"
+
+      prs1 = Shell strCommand
+
+      While prs1.State = prs1.Running
+        Wait 0.05
+      Wend
+
+      If Exist(strPageImageName) Then
+        If Stat(strPageImageName).Type = gb.File Then
+          strTxtTemp = ""
+
+          strCommand = "tesseract '" & strPageImageName & "' stdout -l spa 2>&1"
+          Shell strCommand To strTxtTemp
+          MStarter.strOCRTxt &= strTxtTemp
+
+          ' Guardado incremental con cada p ágina procesada, al final del proceso este archivo y el final deben coincidir
+
+          File.Save(File.Dir(strPath) &/ File.BaseName(strPath) & "-tmp.txt", MStarter.strOCRTxt)
+
+          'Kill strPageImageName
+
+          Inc int
+        Endif
+      Endif
+
+    Endif
+
+  Next
+
+  If MStarter.strOCRTxt <> "" Then
+    Return MStarter.strOCRTxt
+  Else
+    Return "0"
+  Endif
+
+End
+
+Public Function PDFImageBW(strPath As String) As String '' Extrae la imagenes del PDF en formato JPEG en Escala de grises. Devuelve la carpeta donde se extrajeron las imagenes
 
   Dim strCommand As String
   Dim prs1 As Process

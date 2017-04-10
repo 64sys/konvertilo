@@ -2,7 +2,7 @@
 
 Public strFileExt As String
 
-Public Sub Run(strExt As String) ' As Boolean
+Public Sub Run(strExt As String)
 
   Dim chk As CheckBox
   Dim intR As Integer
