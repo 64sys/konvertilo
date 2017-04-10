@@ -102,6 +102,7 @@ Public Sub tobStart_Click()
 
   tmrCounter.Start
 
+  'Comienzo del proceso por lotes.
   For intS = 0 To MStarter.stxSchedule.Max
 
     Print MStarter.stxSchedule[intS]
@@ -118,13 +119,12 @@ Public Sub tobStart_Click()
 
     strTool = Split(MStarter.stxSchedule[intS], "\t")[0]
     strFile = Split(MStarter.stxSchedule[intS], "\t")[1]
+
     intPage = CInt(Split(MStarter.stxSchedule[intS], "\t")[2])
 
     strReturn = MBatch.FileDelibery(strTool, strFile, intPage)
 
     stxTime.Clear
-
-    'MStarter.intTimer
 
     intCurrTime = MStarter.intTimer
 
@@ -157,210 +157,16 @@ Public Sub tobStart_Click()
 
 End
 
-' Public Sub tobStart_Click()
-'
-'   Dim obj As Object
-'   Dim int As Integer
-'   Dim intT As Integer
-'   Dim strFile As String
-'   Dim strTool As String
-'   Dim strReturn As String
-'   Dim strTimeGIF As String
-'   Dim strFileGIF As String
-'   Dim strTimePDF As String
-'   Dim strFilePDF As String
-'   Dim str As String
-'
-'   Dim c As Integer
-'   Dim r As Integer
-'   Dim stxPDFDir As New String[]
-'   Dim strDir As String
-'   Dim strTmpDir As String
-'   Dim strOCRTxt As String
-'   Dim strOCRFile As String
-'
-'   Inc Application.Busy
-'
-'   Select MStarter.strState
-'     Case "stopped"
-'
-'       For Each obj In pnlButtons.Children
-'         If Object.Type(obj) = "ToggleButton" Then
-'           If obj.Value = True Then
-'             MStarter.stxFilesPlay.Add(obj.Tag)
-'           Endif
-'         Endif
-'       Next
-'
-'       MStarter.strState = "running"
-'       tobStart.Picture = Picture["icon:/22/stop"]
-'
-'     Case "running"
-'       MStarter.stxFilesPlay.Clear
-'       MStarter.strState = "stopped"
-'       tobStart.Picture = Picture["icon:/22/play"]
-'
-'   End Select
-'
-'   ' Antes de comenzar puesta a cero de las listas de archivos
-'   MStarter.stxErr.Clear
-'   MStarter.stxEmail.Clear
-'   MStarter.stxPDF.Clear
-'   stxPDFDir.Clear
-'
-'   ' Puesta a cero del gridview
-'   For c = 0 To grwData.Columns.Max
-'     For r = 0 To grwData.Rows.Max
-'       grwData[r, c].Foreground = Color.Foreground
-'     Next
-'   Next
-'
-'   If MStarter.stxFilesPlay.Count > 0 Then
-'
-'     For int = 0 To grwData.Rows.Count - 1
-'       'Comprobar si el archivo ya fue procesado
-'       If grwData[int, 3].Foreground <> Color.Red Then
-'
-'         If MStarter.stxFilesPlay.Find(String.LCase(grwData[int, 3].Text)) > -1 Then
-'
-'           For intT = 0 To MStarter.stxToolsName.Max
-'             lblInformation.Text = ("Herramienta") & " : " & MStarter.stxToolsName[intT]
-'
-'             If InStr(MStarter.stxToolsExt[intT], String.LCase(grwData[int, 3].Text)) > 0 Then
-'               If Settings[String.LCase(grwData[int, 3].Text) & "/" & MStarter.stxToolsName[intT]] = True Then
-'                 ' Archivo a procesar
-'                 strFile = grwData[int, 0].Text
-'
-'                 ' Herramienta a usar.
-'                 strTool = MStarter.stxToolsName[intT]
-'                 strReturn = "0"
-'
-'                 ' Procesado del archivo y respuesta de la herramienta, si es -1 es que no se proceso, si es una ruta valida es que se proceso correctamente.
-'                 ' Luego segun sea el caso de procesos de 1>1 devuelve la ruta de un archivo, en el caso 1>VARIOS como la extraccion de imagenes de un PDF
-'                 ' el valor de retorno dependera de la herramienta. en el caso de PDF>JPEG por ejemplo devuelve la ruta al directorio que se creo para las imagenes
-'
-'                 strReturn = MBatch.FileDelibery(strFile, strTool)
-'
-'                 lblInformation.Text = ("Herramienta") & ": " & MStarter.stxToolsName[intT] & " " & ("Archivo") & ": " & File.Name(strFile)
-'
-'                 Select strReturn
-'                   Case "0"
-'
-'                     MStarter.stxErr.Add(strTool & "\t" & strFile)
-'
-'                   Case Else
-'                     Select strTool
-'                       Case "JPEG>Email"
-'                         MStarter.stxEmail.Add(strReturn)
-'                         grwData[int, 3].Foreground = Color.Red
-'                         ' Aqui se podria agregar algun texto en una colunma que sea del estilo "finalizado" o "procesando" etc
-'                       Case "JPEG>PDF"
-'
-'                         MStarter.stxPDF.Add(strReturn)
-'                         grwData[int, 3].Foreground = Color.Red
-'
-'                       Case "PDF>OCR-Text"
-'                         'MStarter.strOCRTxt = ""
-'
-'                         MStarter.strOCRFile = File.Dir(strFile) &/ File.BaseName(strFile) & ".txt"
-'
-'                         File.Save(MStarter.strOCRFile, MStarter.strOCRTxt)
-'                         MUtility.f
-'
-'                         If Exist(MStarter.strOCRFile) Then
-'                           Desktop.Open(MStarter.strOCRFile, True)
-'
-'                         Endif
-'                         '****************************
-'
-'                       Case Else
-'                         grwData[int, 3].Foreground = Color.Red
-'                     End Select
-'                 End Select
-'
-'               Endif
-'             Endif
-'           Next
-'         Endif
-'       Endif
-'     Next
-'   Endif
-'
-'   ' Casos particulares para acciones sobre un conjunto de archivos ya procesados o de salida.
-'   ' Por ejemplo enviarlos por email o hacer un archivo zip o realizar un post proceso.
-'
-'   'Creacion del archivo GIF unificado
-'   If MStarter.stxEmail.Count > 0 Then
-'     strTimeGIF = Format(Now(), "yyyymmddhhnnss")
-'     strFileGIF = "/tmp" &/ strTimeGIF & ".gif"
-'     prsBar = Shell "convert -delay 150 -loop 0 " & MStarter.stxEmail.Join(" ") & " " & strFileGIF
-'
-'     While prsBar.State = prsBar.Running
-'       Wait 0.1
-'     Wend
-'
-'     Desktop.SendMail([], [], [], strTimeGIF, "", strFileGIF)
-'
-'   Endif
-'
-'   'Creacion del archivo PDF unificado
-'   If MStarter.stxPDF.Count > 0 Then
-'     strTimePDF = Format(Now(), "yyyymmddhhnnss")
-'     'strFilePDF = "/tmp" &/ strTimePDF & ".pdf"
-'
-'     For Each str In MStarter.stxPDF
-'       strTmpDir = File.Dir(str)
-'
-'       If stxPDFDir.Find(strTmpDir) = -1 Then
-'         stxPDFDir.Add(strTmpDir)
-'       Endif
-'     Next
-'
-'     Select stxPDFDir.Count
-'
-'       Case 1
-'         strDir = MUtility.DirParent(stxPDFDir[0])
-'
-'         If InStr(Stat(strDir).Perm.User, "w") Then
-'           strFilePDF = stxPDFDir[0] & "#" & strTimePDF & ".pdf"
-'         Endif
-'
-'       Case Else
-'         strFilePDF = User.Home &/ strTimePDF & ".pdf"
-'     End Select
-'
-'     ' Si todas las imagenes se encuentran en el mismo directorio se intentara crear un pdf
-'     ' con el mismo nombre del directorio sin caractares como espacios comillas simples etc.
-'     ' en un nivel superior de dicho directorio, siempre y cuando se cuente con permisos de
-'     ' escritura en este. si no fuera el caso entonces se crearia un archivo en el directorio
-'     ' HOME con un nombre tal como 20171230153412.pdf (yyyymmddhhnnss)
-'
-'     prsBar = Shell "pdftk " & MStarter.stxPDF.Join(" ") & " cat output " & strFilePDF
-'
-'     While prsBar.State = prsBar.Running
-'       Wait 0.1
-'     Wend
-'
-'   Endif
-'
-'   ' Finalizacion del proceso e indicacion en el formulario mediante cambio de icono
-'   MStarter.stxFilesPlay.Clear
-'   MStarter.strState = "stopped"
-'   tobStart.Picture = Picture["icon:/22/play"]
-'
-'   Dec Application.Busy
-'
-' End
-
 Public Function Scheduler(stxFiles As String[], stxTool As String[], stxExt As String[]) As String[] '' stxFiles es la lista de archivos, stxTool es la lista de herramientas, stxExt es la lista de extensiones a las que aplicar las herramientas y estas dos ultimas listas trabajan juntas cada indice se corresponde en ambas listas.
 
   Dim stxSch As New String[]
   Dim int1 As Integer
   Dim int2 As Integer
-  Dim pdf As New PdfDocument ' Requiere el componente gb.pdf
   Dim int3 As Integer
   Dim strExtension As String
   Dim stxVTool As New String[] ' Herramienta válida
+  Dim stxPagesTmp As New String[] ' Logística de las páginas
+  Dim intM As Integer ' Número de posicion en la cadena de logistica de páginas
 
   stxVTool.Clear
 
@@ -371,15 +177,20 @@ Public Function Scheduler(stxFiles As String[], stxTool As String[], stxExt As S
 
       If File.Ext(stxFiles[int2]) = stxExt[int1] Then  ' Comprobar si la extension de archivo tiene acciones planeadas
         If Settings[strExtension & "/" & stxTool[int1]] = True Then ' Comprobar si la herramienta esta seleccionada
-          Select String.LCase(stxExt[int1])
-            Case "pdf" ' Caso en el que un archivo tiene varias paginas
-              pdf.Open(stxFiles[int2])
-              For int3 = 0 To pdf.Count - 1
-                stxSch.Add(stxTool[int1] & "\t" & stxFiles[int2] & "\t" & CStr(int3))
-              Next
-            Case Else
-              stxSch.Add(stxTool[int1] & "\t" & stxFiles[int2] & "\t" & "0")
-          End Select
+
+          ' Genero una matriz temporal de la logística de páginas
+          stxPagesTmp.Clear
+          For intM = 1 To Len(MStarter.stxFilesPages[int2])
+            stxPagesTmp.Add(Mid(MStarter.stxFilesPages[int2], intM, 1))
+          Next
+
+          For int3 = 0 To stxPagesTmp.Max
+            If stxPagesTmp[int3] = "1" Then
+              stxSch.Add(stxTool[int1] & "\t" & stxFiles[int2] & "\t" & CStr(int3))
+            Endif
+
+          Next
+
         Endif
       Endif
     Next
@@ -495,9 +306,9 @@ Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Tree
   For intH = 0 To MStarter.stxHeaders.Max
     grwData.Columns[intH].Text = MStarter.stxHeaders[intH]
     Select intH
-      Case 0, 1, 2, 5, 6, 7
+      Case 0, 1, 2, 5, 6, 7, 8
         grwData.Columns[intH].Width = 0
-      Case 3, 4, 8
+      Case 3, 4 ' Solo muestro las columnas de extensión y de nombre del archivo
         grwData.Columns[intH].Width = Settings["GridColumn/" & CStr(intH), 75]
     End Select
     '     grwData.Columns[intH].Width = 50
@@ -510,6 +321,7 @@ Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Tree
 
   For intI = 0 To MStarter.stxFiles.Max
     stxFInfo.Clear
+    MStarter.stxFilesPages.Clear
 
     'Extraccion de la informacion del arcivo
     stxFInfo = MUtility.FileInfo(MStarter.stxFiles[intI])
@@ -519,8 +331,6 @@ Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Tree
     strPages = ""
 
     For intF = 0 To stxFInfo.Max
-
-      'grwData[intI, intF].Text = Split(stxFInfo[intF], "\t")[1]
 
       Select Split(stxFInfo[intF], "\t")[0]
 
@@ -541,6 +351,7 @@ Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Tree
             strPages &= "1"
           Next
 
+          MStarter.stxFilesPages.Add(strPages)
           grwData[intI, intF].Text = strPages
 
         Case Else
@@ -620,9 +431,11 @@ Public Sub grwData_DblClick()
   Dim inx As New Integer[]
   Dim inxMod As New Integer[]
   Dim str As String
+  Dim strFile As String
   Dim int As Integer
 
   str = grwData[grwData.Row, 8].Text
+  strFile = grwData[grwData.Row, 0].Text
 
   MStarter.stxPages.Clear
 
@@ -637,17 +450,19 @@ Public Sub grwData_DblClick()
   Wait 0.01
   Print "control 1"
 
-  '  If inxMod <> MStarter.stxPages Then
   str = ""
   If inx <> MStarter.stxPages Then
     For int = 0 To MStarter.stxPages.Max
       str &= MStarter.stxPages[int]
     Next
+
+    MStarter.stxFilesPages[MStarter.stxFiles.Find(strFile)] = str
+
     grwData[grwData.Row, 8].Text = str
     grwData[grwData.Row, 8].Refresh
 
   Endif
-  '  Endif
+
   Print "control 2"
 
 End

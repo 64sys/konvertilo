@@ -14,11 +14,11 @@
   { HBox1 HBox
     MoveScaled(1,59,62,4)
     Spacing = True
-    { btnWhole ToggleButton
+    { btnWhole Button
       MoveScaled(0,0,11,4)
       Text = ("Todas")
     }
-    { btnNothing ToggleButton
+    { btnNothing Button
       MoveScaled(12,0,11,4)
       Text = ("Ninguna")
     }

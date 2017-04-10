@@ -43,6 +43,9 @@ Geometry=[1215,37,535,1005]
 [DebugWindow/stxFInfo]
 Geometry=[934,574,224,321]
 
+[DebugWindow/stxFiles]
+Geometry=[564,69,743,280]
+
 [DebugWindow/stxPDFDir]
 Geometry=[0,25,891,577]
 
@@ -56,12 +59,23 @@ Geometry=[960,33,224,280]
 Path="konvertilo.gambas"
 
 [OpenFile]
-Count=4
+Count=15
 File[1]=".src/FPages.form"
-File[2]=".src/FPages.class:0.76"
-File[3]=".src/FMain.class:13.646"
-Active=4
-File[4]=".src/gef/MUtility.module:1.754"
+File[2]=".src/FPages.class:22.120"
+File[3]=".src/FMain.class:0.334"
+Active=8
+File[4]=".src/FMain.form"
+File[5]=".src/gef/MUtility.module:1.754"
+File[6]=".src/std/MStarter.module:2.343"
+File[7]=".src/gef/MValidator.module:0.0"
+File[8]=".src/MBatch.module:0.422"
+File[9]=".src/std/FAbout.form"
+File[10]=".src/std/FAbout.class:0.44"
+File[11]=".src/std/FConfig.form"
+File[12]=".src/std/FConfig.class:0.41"
+File[13]=".src/std/FData.form"
+File[14]=".src/std/FData.class:0.0"
+File[15]=".src/FTools.form"
 
 [Watches]
 Count=0

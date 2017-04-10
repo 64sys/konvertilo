@@ -3,6 +3,9 @@
 ' Gambas class file
 
 Public inxPages As New Integer[]
+Public strState As String
+Public intWhole As Integer ' Todos los botones activados
+Public intNothing As Integer ' Ningún boton activado
 
 Public Sub Run(inx As Integer[]) 'As Integer[]
 
@@ -18,10 +21,11 @@ Public Sub Run(inx As Integer[]) 'As Integer[]
       .Name = "tgb" & ":" & CStr(intP)
       Select String.Len(CStr(intP))
         Case String.Len(CStr(inxPages.Count))
-          .Text = CStr(intP)
+          .Text = CStr(intP + 1)
           .Tag = intP
         Case Else
-          .Text = String(String.Len(CStr(inxPages.Count)) - String.Len(CStr(intP)), "0") & CStr(intP)
+          .Text = String(String.Len(CStr(inxPages.Count)) - String.Len(CStr(intP)), "0") & CStr(intP + 1)
+          .Tag = intP
       End Select
       .Height = 28
       If String.Len(CStr(inxPages.Count)) * 6 < .Height Then
@@ -41,6 +45,7 @@ Public Sub Run(inx As Integer[]) 'As Integer[]
 
   Next
 
+  strState = "loaded"
   Me.ShowModal()
 
   'Return Not Me.ShowModal()
@@ -72,14 +77,52 @@ Public Sub Page_Click()
 
   Dim obj As Object
 
+  If strState = "loaded" Then
+    For Each obj In pnlPages.Children
+      If Object.Type(obj) = "ToggleButton" Then
+        If obj.Value = True Then
+          MStarter.stxPages[obj.Tag] = 1
+          Inc intWhole
+        Else
+          MStarter.stxPages[obj.Tag] = 0
+          Inc intNothing
+        Endif
+      Endif
+    Next
+  Endif
+
+  'cmdChangeBtn()
+
+End
+
+Public Sub btnNothing_Click()
+
+  Dim obj As Object
+
+  strState = "loading"
+
   For Each obj In pnlPages.Children
     If Object.Type(obj) = "ToggleButton" Then
-      If obj.Value = True Then
-        MStarter.stxPages[obj.Tag] = 1
-      Else
-        MStarter.stxPages[obj.Tag] = 0
-      Endif
+      obj.Value = False
     Endif
   Next
+
+  strState = "loaded"
+
+End
+
+Public Sub btnWhole_Click()
+
+  Dim obj As Object
+
+  strState = "loading"
+
+  For Each obj In pnlPages.Children
+    If Object.Type(obj) = "ToggleButton" Then
+      obj.Value = True
+    Endif
+  Next
+
+  strState = "loaded"
 
 End

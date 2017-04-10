@@ -47,6 +47,9 @@ Public strInputLanguage As String
 
 '## variables del konvertilo ##
 Public stxFiles As New String[] ' Lista de archivos a procesar
+Public stxFilesPages As New String[] ' Lista de paginas de cada archivo a procesar cada item es una cadena de texto formada con "1" y/o "0"
+'donde 0 es para la pagina que no se procesa y 1 para la que si. ej: "1111110" un archivo con 7 páginas donde la ultima no se procesará.
+
 Public stxExt As New String[] ' Lista de tipode extensiones
 Public stxToolsName As New String[] ' Lista de herramientas a aplicar cuando se procesan archivos
 Public stxToolsDesc As New String[] ' Lista de descripciones de las herramientas (traducibles)
@@ -300,9 +303,9 @@ Public Sub LoadHeaders()
 
   stxHeaders.Add(("Ruta"))
   stxHeaders.Add(("Directorio"))
-  stxHeaders.Add(("Nombre"))
+  stxHeaders.Add(("Archivo"))
   stxHeaders.Add(("Extensión"))
-  stxHeaders.Add(("Base"))
+  stxHeaders.Add(("Nombre"))
   stxHeaders.Add(("Tamaño"))
   stxHeaders.Add(("Tiempo"))
   'stxHeaders.Add("CRC32")

@@ -30,7 +30,6 @@ Public Sub Form_Open()
   Dim tob As ToolButton
   Dim stxComp As String[]
   Dim intComp As Integer
-  '   Dim strComp As String
 
   If Exist("logo.png") Then
     pioLogo.Picture = Picture.Load("logo.png")
@@ -43,9 +42,6 @@ Public Sub Form_Open()
   stxInfo = Msys.ProjInfo()
 
   stxComp = Split(stxInfo[5], ":")
-  ' For intComp = 0 To stxComp.Max
-  '   strComp &= "<p>" & stxComp[intComp] & "</p>"
-  ' Next
 
   txa = New TextLabel(pnlAbout)
   txa.Name = "txa-" & "Title"

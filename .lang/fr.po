@@ -2,13 +2,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tradukisto 0.0.23\n"
-"POT-Creation-Date: 2017-04-01 00:15+CET\n"
+"POT-Creation-Date: 2017-04-10 14:38 UTC\n"
 "PO-Revision-Date: 2017-04-01 00:43+CET\n"
 "Last-Translator: Belmotek, Powerded by Tradukisto software. info@belmotek.net\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
 #: .project:1
 msgid "Konvertilo"
 msgstr "Konvertilo"
@@ -16,10 +17,6 @@ msgstr "Konvertilo"
 #: .project:2
 msgid "Conversor de archivos"
 msgstr "Convertisseur de fichier"
-
-#: FAbout.form:88
-msgid "Cerrar"
-msgstr "Fermer"
 
 #: FAbout.class:87
 msgid "Pagina web"
@@ -46,7 +43,8 @@ msgid "Clic para ver detalles en"
 msgstr "Cliquez ici pour voir les détails"
 
 #: FAbout.class:129
-msgid "Este programa se entrega sin ningun tipo de garantia"
+#, fuzzy
+msgid "Este programa se entrega sin ningún tipo de garantía"
 msgstr "Ce programme est livré sans aucune sorte de garantie"
 
 #: FAbout.class:136
@@ -57,7 +55,7 @@ msgstr "Licence"
 msgid "Clic para ver la licencia en"
 msgstr "Cliquez pour voir sous licence"
 
-#: FAbout.class:143 FMain.form:64
+#: FAbout.class:143 FMain.form:72
 msgid "Acerca de"
 msgstr "À propos de"
 
@@ -65,11 +63,43 @@ msgstr "À propos de"
 msgid "Hola desarrolladores de"
 msgstr "Les développeurs hi"
 
+#: FAbout.form:88
+msgid "Cerrar"
+msgstr "Fermer"
+
+#: FConfig.class:195
+msgid "Motor de la base de datos"
+msgstr ""
+
+#: FConfig.class:196
+msgid "Ubicación de la base de datos"
+msgstr ""
+
+#: FConfig.class:197
+msgid "Nombre de la base de datos"
+msgstr ""
+
+#: FConfig.class:198
+msgid "Ruta de la base de datos"
+msgstr ""
+
+#: FConfig.class:199
+msgid "Idioma de entrada"
+msgstr ""
+
+#: FConfig.class:200
+msgid "Tamaño de la ventana"
+msgstr ""
+
+#: FConfig.class:201
+msgid "Anchura por defecto"
+msgstr ""
+
 #: FConfig.form:22
 msgid "Guardar y salir"
 msgstr "Enregistrer et quitter"
 
-#: FConfig.form:23 FMain.form:151
+#: FConfig.form:23 FMain.form:164
 msgid "Guardar"
 msgstr "Sauvegarder"
 
@@ -85,92 +115,72 @@ msgstr "Outils"
 msgid "Programa"
 msgstr "Programme"
 
-#: FConfig.class:195
-msgid "Motor de la Base de datos"
-msgstr ""
-
-#: FConfig.class:196
-msgid "Ubicación de la Base de datos"
-msgstr ""
-
-#: FConfig.class:197
-msgid "Nombre de la Base de datos"
-msgstr ""
-
-#: FConfig.class:198
-msgid "Ruta de la Base de datos"
-msgstr ""
-
-#: FConfig.class:199
-msgid "Idioma de entrada"
-msgstr ""
-
-#: FConfig.class:200
-msgid "Tamaño de la ventana"
-msgstr ""
-
-#: FConfig.class:201
-msgid "Anchura por defecto"
-msgstr ""
-
-#: FData.form:34
+#: FData.form:34 FPages.form:46 FTools.form:34
 msgid "Aceptar"
 msgstr ""
 
-#: FData.form:40
+#: FData.form:40 FPages.form:51 FTools.form:40
 msgid "Cancelar"
 msgstr ""
 
-#: FMain.form:40
-msgid "Iniciar procesado de archivos"
+#: FMain.class:151
+msgid "Proceso finalizado"
 msgstr ""
 
-#: FMain.form:46
-msgid "Limpiar la lista"
+#: FMain.class:151
+msgid "tiempo empleado"
 msgstr ""
 
-#: FMain.form:52
-msgid "Preferencias"
-msgstr ""
-
-#: FMain.form:58
-msgid "Imprimir informe de archivos procesados"
-msgstr ""
-
-#: FMain.form:70
-msgid "Ayuda"
-msgstr ""
-
-#: FMain.form:145
-msgid "Agregar"
-msgstr ""
-
-#: FMain.form:157
-msgid "Borrar"
-msgstr ""
-
-#: FMain.form:163
-msgid "Editar"
-msgstr ""
-
-#: FMain.class:273 MStarter.module:296
+#: FMain.class:557 MStarter.module:304
 msgid "Extensión"
 msgstr ""
 
-#: FTools.form:34
-msgid "OK"
+#: FMain.form:48
+msgid "Iniciar procesado de archivos"
 msgstr ""
 
-#: FTools.form:40
-msgid "Cancel"
+#: FMain.form:54
+msgid "Limpiar la lista"
 msgstr ""
 
-#: MData.module:69
-msgid "No existe el archivo"
+#: FMain.form:60
+msgid "Preferencias"
+msgstr ""
+
+#: FMain.form:66
+msgid "Imprimir informe de archivos procesados"
+msgstr ""
+
+#: FMain.form:78
+msgid "Ayuda"
+msgstr ""
+
+#: FMain.form:158
+msgid "Agregar"
+msgstr ""
+
+#: FMain.form:170
+msgid "Borrar"
+msgstr ""
+
+#: FMain.form:176
+msgid "Editar"
+msgstr ""
+
+#: FPages.form:31
+msgid "Todas"
+msgstr ""
+
+#: FPages.form:36
+msgid "Ninguna"
 msgstr ""
 
 #: MData.module:69
 msgid "La base de datos no sera creada"
+msgstr ""
+
+#: MData.module:69
+msgid "No existe el archivo"
 msgstr ""
 
 #: MData.module:315
@@ -178,19 +188,19 @@ msgid "Existen"
 msgstr ""
 
 #: MData.module:315
-msgid "coincidencias, deberia ser una sola"
-msgstr ""
-
-#: MData.module:315
 msgid "Se utilizara el primero de la lista"
 msgstr ""
 
+#: MData.module:315
+msgid "coincidencias, debería ser una sola"
+msgstr ""
+
 #: MData.module:1442
-msgid "mdbtools instalado correctamente"
+msgid "instalado correctamente"
 msgstr ""
 
 #: MData.module:1500
-msgid "Esquemas extraidos"
+msgid "Esquemas extraídos"
 msgstr ""
 
 #: MData.module:1524
@@ -202,11 +212,11 @@ msgid "Nombres de tablas cargados"
 msgstr ""
 
 #: MData.module:1588
-msgid "Sistema"
+msgid "Extrayendo datos de"
 msgstr ""
 
 #: MData.module:1588
-msgid "Extrayendo datos de"
+msgid "Sistema"
 msgstr ""
 
 #: MData.module:1597
@@ -218,154 +228,173 @@ msgid "Base de datos completada"
 msgstr ""
 
 #: MData.module:1616
-msgid "Conversion terminada stisfactoriamente"
+msgid "Conversion terminada satisfactoriamente"
 msgstr ""
 
-#: MStarter.module:98
-msgid "Carga de parametros primera pasada"
+#: MStarter.module:105
+msgid "Carga de parámetros primera pasada"
 msgstr ""
 
-#: MStarter.module:115
+#: MStarter.module:122
 msgid "Conectando la base de datos"
 msgstr ""
 
-#: MStarter.module:163
+#: MStarter.module:170
 msgid "Cargando lista de idiomas"
 msgstr ""
 
-#: MStarter.module:180
+#: MStarter.module:188
 msgid "Abriendo formulario principal"
 msgstr ""
 
-#: MStarter.module:185
+#: MStarter.module:193
 msgid "No se pudo abrir la conexión a la base de datos"
 msgstr ""
 
-#: MStarter.module:201
+#: MStarter.module:209
 msgid "Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email"
 msgstr ""
 
-#: MStarter.module:205
-msgid "Crea un archivo GIF y lo adjunta en un nuevo email."
-msgstr ""
-
-#: MStarter.module:209
-msgid "Crea una copia reducida en la misma ubicación que la original"
-msgstr ""
+#: MStarter.module:213
+#, fuzzy
+msgid "Crea un archivo"
+msgstr "Convertisseur de fichier"
 
 #: MStarter.module:213
-msgid "Crea una copia reducida en escala de grices en la misma ubicación que la original"
+msgid "y luego lo adjunta en un nuevo correo"
 msgstr ""
 
 #: MStarter.module:217
-msgid "Crea una copia en escala de grices en la misma ubicación que la original"
+msgid "Crea una copia reducida en la misma ubicación que la original"
 msgstr ""
 
 #: MStarter.module:221
-msgid "Crea una copia reducida de proporción cuadrada en la misma ubicación que la original."
+msgid "Crea una copia reducida en escala de grices en la misma ubicación que la original"
 msgstr ""
 
 #: MStarter.module:225
-msgid "Crea un archivo PDF con todas las imagenes que se le pase."
+msgid "Crea una copia en escala de grices en la misma ubicación que la original"
 msgstr ""
 
 #: MStarter.module:229
-msgid "Mueve las fotografias organizandolas según su fecha de captura."
+msgid "Crea una copia reducida de proporción cuadrada en la misma ubicación que la original."
 msgstr ""
 
-#: MStarter.module:238
-msgid "Crea una copia reducida en la misma ubicación que la original en formato JPEG"
+#: MStarter.module:233
+msgid "con todas las imágenes que se le pase"
 msgstr ""
 
-#: MStarter.module:243
+#: MStarter.module:237
+msgid "Mueve las fotografiás organizándolas según su fecha de captura."
+msgstr ""
+
+#: MStarter.module:251
 msgid "Extractor de miniatura del documento"
 msgstr ""
 
-#: MStarter.module:247
-msgid "Convertir documentos ODT en documentos EPUB"
+#: MStarter.module:255
+msgid "Convertir documentos"
 msgstr ""
 
-#: MStarter.module:252
-msgid "Crea una copia desencriptada del archivo"
-msgstr ""
-
-#: MStarter.module:256
-msgid "Extractor de paginas en formato de imagen jpeg una imagen por página."
+#: MStarter.module:255
+msgid "en"
 msgstr ""
 
 #: MStarter.module:260
-msgid "Extractor de paginas en formato pdf"
+msgid "Crea una copia desencriptada del archivo"
 msgstr ""
 
 #: MStarter.module:264
-msgid "Extractor de paginas en formato de imagen TIF y reconocimiento optico de caracteres"
+msgid "Extractor de paginas en formato de imagen jpeg una imagen por página."
 msgstr ""
 
 #: MStarter.module:268
-msgid "Rota las paginas del archivo 90 grados"
+msgid "Extractor de paginas"
 msgstr ""
 
-#: MStarter.module:273
+#: MStarter.module:272
+msgid "Reconocimiento optico de caracteres"
+msgstr ""
+
+#: MStarter.module:276
+msgid "Gira las paginas del archivo"
+msgstr ""
+
+#: MStarter.module:281
 msgid "Extractor de fotograma de un video"
 msgstr ""
 
-#: MStarter.module:278
-msgid "Crea los archivos SQL necesarios para reconstruir una base de datos Jet en SQLite, PostgreSQL y MySQL"
+#: MStarter.module:286
+#, fuzzy
+msgid "Crea los archivos"
+msgstr "Convertisseur de fichier"
+
+#: MStarter.module:286
+msgid "para crear bases de datos"
 msgstr ""
 
-#: MStarter.module:283
-msgid "Crea los archivos MBX a partir del los PST"
-msgstr ""
+#: MStarter.module:291
+#, fuzzy
+msgid "Crea archivos"
+msgstr "Convertisseur de fichier"
 
-#: MStarter.module:293
-msgid "Ruta"
-msgstr ""
-
-#: MStarter.module:294
-msgid "Directorio"
-msgstr ""
-
-#: MStarter.module:295
-msgid "Nombre"
-msgstr ""
-
-#: MStarter.module:297
-msgid "Base"
-msgstr ""
-
-#: MStarter.module:298
-msgid "Tamaño"
-msgstr ""
-
-#: MStarter.module:299
-msgid "Tiempo"
+#: MStarter.module:291
+msgid "a partir de"
 msgstr ""
 
 #: MStarter.module:301
+msgid "Ruta"
+msgstr ""
+
+#: MStarter.module:302
+msgid "Directorio"
+msgstr ""
+
+#: MStarter.module:303
+msgid "Nombre"
+msgstr ""
+
+#: MStarter.module:305
+msgid "Base"
+msgstr ""
+
+#: MStarter.module:306
+msgid "Tamaño"
+msgstr ""
+
+#: MStarter.module:307
+msgid "Tiempo"
+msgstr ""
+
+#: MStarter.module:309
 msgid "Versión"
+msgstr ""
+
+#: MStarter.module:310
+msgid "Páginas"
 msgstr ""
 
 #: MUtility.module:34
 msgid "Seleccionar directorio"
 msgstr ""
 
-#: MUtility.module:53
+#: MUtility.module:81
 msgid "Seleccionar archivo"
 msgstr ""
 
-#: MUtility.module:58
-msgid "Filtro por:"
+#: MUtility.module:86
+msgid "Filtro por"
 msgstr ""
 
-#: MUtility.module:1007
-msgid "El archivo "
+#: MUtility.module:1157
+msgid "El archivo"
 msgstr ""
 
-#: MUtility.module:1007
-msgid "Tiene caracteres no ascii"
+#: MUtility.module:1157
+msgid "Tiene caracteres no compatibles con"
 msgstr ""
 
-#: MUtility.module:1064
+#: MUtility.module:1214
 msgid "Hola"
 msgstr ""
 
@@ -406,11 +435,11 @@ msgid "Faltan instalar los siguientes paquetes"
 msgstr ""
 
 #: Msys.module:534
-msgid "Puede usar la siguente orden"
+msgid "No"
 msgstr ""
 
 #: Msys.module:534
-msgid "¿Quiere abrir la terminal para poceder?"
+msgid "Puede usar la siguiente orden"
 msgstr ""
 
 #: Msys.module:534
@@ -418,9 +447,5 @@ msgid "Sí"
 msgstr ""
 
 #: Msys.module:534
-msgid "No"
-msgstr ""
-
-#: Msys.module:584
-msgid "Puede usar el siguente commando"
+msgid "¿Quiere abrir la terminal para poceder?"
 msgstr ""

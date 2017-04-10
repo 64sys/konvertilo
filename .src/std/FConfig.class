@@ -29,7 +29,6 @@ Public Sub Form_Open()
   Dim chk As CheckBox
   Dim scw As ScrollView
   Dim strText As String
-  'Dim intType As Integer
   Dim stxType As New String[]
   Dim inxTypeKey As New Integer[]
   Dim intTab As Integer
@@ -39,12 +38,6 @@ Public Sub Form_Open()
   inxTypeKey.Clear
   stxLang.Clear
   intCounter = 0
-
-  ' For intType = 0 To MStarter.stxLanguage.Max
-  '   If stxType.Find(MStarter.stxLanguage[intType][7]) = -1 Then
-  '     stxType.Add(MStarter.stxLanguage[intType][7])
-  '   Endif
-  ' Next
 
   If stxType.Count > 0 Then
     TabPanel1.Count = stxType.Count

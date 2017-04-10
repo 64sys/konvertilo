@@ -73,7 +73,7 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
     Case "PDF>Pages" 'Extractor de paginas en formato pdf
 
     Case "PDF>OCR-Text" 'Extractor de paginas en formato de imagen TIF y reconocimiento optico de caracteres
-      str = PDFOCRText(strPath)
+      str = PDFOCRText(strPath, intPage)
 
       '## Video
     Case "Video>Frame" 'Extractor de fotograma de un video
@@ -237,41 +237,21 @@ End
 
 Public Function JPEGPDF(strPath As String) As String ''Convierte todas las imágenes JPEG de la lista en un archivo PDF. Si el archivo PDF es creado satisfactoriamente se devuelve la ruta del mismo.
 
-  'Dim prs As Process
-  'Dim strCommand As String
-
   Dim prs2 As Process
   Dim strCommand2 As String
 
-  'Dim strTmpPath As String
   Dim strRenPath As String
 
   If MStarter.strState = "running" Then
 
-    'strTmpPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "#rezised" & "." & String.LCase(File.Ext(strPath))
     strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & ".pdf"
 
-    'If Exist(strRenPath) = False Then
-    'strCommand = "mogrify -resize 1754x2481! " & strPath
-    'prs = Shell strCommand
-    'While
-    '  prs.State = prs.Running
-    '  Wait 0.05
-    'Wend
-
-    'Endif
-
-    'strCommand2 = "convert -type grayscale -quality 30 " & strPath & " " & strRenPath
     strCommand2 = "convert -quality 30 " & strPath & " " & strRenPath
     prs2 = Shell strCommand2
     While
       prs2.State = prs2.Running
       Wait 0.05
     Wend
-
-    ' If Exist(strTmpPath) Then
-    '   Kill strTmpPath
-    ' Endif
 
   Endif
 
@@ -349,7 +329,6 @@ Public Function PDFImage(strPath As String, intPage As Integer) As String '' Dev
   Dim strCommand As String
   Dim prs1 As Process
   Dim pdf As New PdfDocument
-  'Dim index As Integer
   Dim strNameNoExt As String
   Dim strNumx As String
   Dim strPageImageName As String
@@ -362,8 +341,6 @@ Public Function PDFImage(strPath As String, intPage As Integer) As String '' Dev
   If Exist(strNameNoExt) = False
     Shell "mkdir -p '" & strNameNoExt & "'"
   Endif
-
-  'For index = 0 To pdf.Count - 1
 
   If MStarter.strState = "running" Then
 
@@ -380,7 +357,6 @@ Public Function PDFImage(strPath As String, intPage As Integer) As String '' Dev
 
     ' Salia con fondo negro asi que le pude "-alpha remove" y solucionado
     strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & intPage & "] '" & strPageImageName & "'"
-    'strCommand = "convert -type grayscale -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & index & "] '" & strPageImageName & "'"
 
     prs1 = Shell strCommand
 
@@ -396,19 +372,15 @@ Public Function PDFImage(strPath As String, intPage As Integer) As String '' Dev
 
   Endif
 
-  'Next
-
-  'Desktop.Open(strNameNoExt) ' Abrir el directorio donde se estrajerosn las paginas
-  'If int = pdf.Count Then
   If Exist(strPageImageName) Then
-    Return strPageImageName 'strNameNoExt
+    Return strPageImageName
   Else
     Return "0"
   Endif
 
 End
 
-Public Function PDFOCRText(strPath As String) As String '' Devuelve la carpeta donde se extrajeron las imagenes PNG
+Public Function PDFOCRText(strPath As String, intPage As Integer) As String '' Devuelve la carpeta donde se extrajeron las imagenes PNG
 
   Dim strCommand As String
   Dim prs1 As Process
@@ -417,62 +389,53 @@ Public Function PDFOCRText(strPath As String) As String '' Devuelve la carpeta d
   Dim strNameNoExt As String
   Dim strNumx As String
   Dim strPageImageName As String
-  Dim int As Integer
-  'Dim strTxt As String
   Dim strTxtTemp As String
 
   strNameNoExt = String.Left(strPath, String.RInStr(strPath, ".") - 1)
-  int = 0
 
   pdf.Open(strPath)
   If Exist(strNameNoExt) = False
     Shell "mkdir -p '" & strNameNoExt & "'"
   Endif
 
-  For index = 0 To pdf.Count - 1
+  If MStarter.strState = "running" Then
 
-    If MStarter.strState = "running" Then
+    Select String.Len(Str(index + 1)) ' Le sumo 1 porque convert arranca de 0
+      Case 1
+        strNumx = "s00" & Str(index + 1) '' idem
+      Case 2
+        strNumx = "s0" & Str(index + 1) '' idem
+      Case 3
+        strNumx = "s" & Str(index + 1) '' idem
+    End Select
 
-      Select String.Len(Str(index + 1)) ' Le sumo 1 porque convert arranca de 0
-        Case 1
-          strNumx = "s00" & Str(index + 1) '' idem
-        Case 2
-          strNumx = "s0" & Str(index + 1) '' idem
-        Case 3
-          strNumx = "s" & Str(index + 1) '' idem
-      End Select
+    strPageImageName = strNameNoExt &/ strNumx & ".png"
 
-      strPageImageName = strNameNoExt &/ strNumx & ".png"
+    strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & intPage & "] '" & strPageImageName & "'"
 
-      strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & index & "] '" & strPageImageName & "'"
+    prs1 = Shell strCommand
 
-      prs1 = Shell strCommand
+    While prs1.State = prs1.Running
+      Wait 0.05
+    Wend
 
-      While prs1.State = prs1.Running
+    If Exist(strPageImageName) Then
+      If Stat(strPageImageName).Type = gb.File Then
+        strTxtTemp = ""
+
+        strCommand = "tesseract '" & strPageImageName & "' stdout -l spa 2>&1"
+        Shell strCommand To strTxtTemp
+
+        File.Save(File.Dir(strPageImageName) &/ File.BaseName(strPageImageName) & ".txt", strTxtTemp)
+
         Wait 0.05
-      Wend
 
-      If Exist(strPageImageName) Then
-        If Stat(strPageImageName).Type = gb.File Then
-          strTxtTemp = ""
+        Kill strPageImageName
 
-          strCommand = "tesseract '" & strPageImageName & "' stdout -l spa 2>&1"
-          Shell strCommand To strTxtTemp
-          MStarter.strOCRTxt &= strTxtTemp
-
-          ' Guardado incremental con cada p ágina procesada, al final del proceso este archivo y el final deben coincidir
-
-          File.Save(File.Dir(strPath) &/ File.BaseName(strPath) & "-tmp.txt", MStarter.strOCRTxt)
-
-          'Kill strPageImageName
-
-          Inc int
-        Endif
       Endif
-
     Endif
 
-  Next
+  Endif
 
   If MStarter.strOCRTxt <> "" Then
     Return MStarter.strOCRTxt
