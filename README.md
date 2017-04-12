@@ -2,6 +2,13 @@
 File converter and batch processor.
 
 ## General
+
+### Media>Arrange
+* Mueve las fotografias y videos, organizandolas según su fecha de captura, a una ruta como por ejemplo:
+ YYYYF/MM/YYYYMMDDHHNNSS-MARCA-MODELO-CRC32.JPEG Donde:
+ YYYY es el año y la F es de fotos, la V es de videos, MM es el mes, DD es el dia, HH es la hora, NN es el minuto, SS es el segundo, MARCA es la marca de la cámara de fotos, MODELO es el modelo de la cámara de fotos y CRC32 es el codigo crc del archivo.
+Es una herramienta pensada para las fotos y los videos que hacemos con las camaras, no para los medios transmitidos por sistemas de chats, ya que estos les quitan todos los metadatos.
+
 ### File-Rename
 Renombrador de archivos
 
@@ -10,9 +17,6 @@ Verificador de nombre de archivo
 
 
 ## JPEG
-
-### JPEG>Arrange
-* Mueve las fotografias organizandolas según su fecha de captura.
 
 ### JPEG>Email
 Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email.

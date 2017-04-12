@@ -2,10 +2,12 @@
 MStarter=[202]
 
 [Breakpoints]
-Count=0
+Count=1
+Breakpoint[1]="MUtility.492"
 
 [DebugWindow]
-Count=0
+Count=1
+DebugWindow[1]="stxExifBruto"
 
 [DebugWindow/MStarter.stxExt]
 Geometry=[56,25,224,280]
@@ -40,6 +42,9 @@ Geometry=[25,71,224,280]
 [DebugWindow/stxExif]
 Geometry=[1215,37,535,1005]
 
+[DebugWindow/stxExifBruto]
+Geometry=[1382,58,436,953]
+
 [DebugWindow/stxFInfo]
 Geometry=[934,574,224,321]
 
@@ -59,23 +64,17 @@ Geometry=[960,33,224,280]
 Path="konvertilo.gambas"
 
 [OpenFile]
-Count=15
-File[1]=".src/FPages.form"
-File[2]=".src/FPages.class:22.120"
-File[3]=".src/FMain.class:0.334"
-Active=8
-File[4]=".src/FMain.form"
-File[5]=".src/gef/MUtility.module:1.754"
-File[6]=".src/std/MStarter.module:2.343"
-File[7]=".src/gef/MValidator.module:0.0"
-File[8]=".src/MBatch.module:0.422"
-File[9]=".src/std/FAbout.form"
-File[10]=".src/std/FAbout.class:0.44"
-File[11]=".src/std/FConfig.form"
-File[12]=".src/std/FConfig.class:0.41"
-File[13]=".src/std/FData.form"
-File[14]=".src/std/FData.class:0.0"
-File[15]=".src/FTools.form"
+Count=9
+File[1]=".src/std/FConfig.form"
+File[2]=".src/std/FConfig.class:0.41"
+File[3]=".src/std/FData.form"
+Active=9
+File[4]=".src/std/MStarter.module:55.281"
+File[5]=".src/FPages.form"
+File[6]=".src/MBatch.module:0.141"
+File[7]=".src/FMain.class:37.192"
+File[8]="README.md:6.41"
+File[9]=".src/gef/MUtility.module:9.494"
 
 [Watches]
 Count=0

@@ -167,15 +167,24 @@ Public Function Scheduler(stxFiles As String[], stxTool As String[], stxExt As S
   Dim stxVTool As New String[] ' Herramienta válida
   Dim stxPagesTmp As New String[] ' Logística de las páginas
   Dim intM As Integer ' Número de posicion en la cadena de logistica de páginas
+  Dim stxExtTmp As New String[]
 
   stxVTool.Clear
 
   For int1 = 0 To stxTool.Max
 
+    stxExtTmp.Clear
+
+    If InStr(stxExt[int1], ":") > 0 Then
+      stxExtTmp = Split(stxExt[int1], ":")
+    Else
+      stxExtTmp.Add(stxExt[int1])
+    Endif
+
     For int2 = 0 To stxFiles.Max
       strExtension = String.LCase(File.Ext(stxFiles[int2]))
 
-      If File.Ext(stxFiles[int2]) = stxExt[int1] Then  ' Comprobar si la extension de archivo tiene acciones planeadas
+      If stxExtTmp.Find(String.LCase(File.Ext(stxFiles[int2]))) > -1 Then ' = stxExt[int1] Then  ' Comprobar si la extension de archivo tiene acciones planeadas
         If Settings[strExtension & "/" & stxTool[int1]] = True Then ' Comprobar si la herramienta esta seleccionada
 
           ' Genero una matriz temporal de la logística de páginas
@@ -318,10 +327,11 @@ Public Sub cmdCheckFiles() ' Hace dos cosas: Cargar el gridview y cargar el Tree
   grwData.Rows.Count = MStarter.stxFiles.Count
 
   MStarter.stxExt.Clear
+  MStarter.stxFilesPages.Clear
 
   For intI = 0 To MStarter.stxFiles.Max
     stxFInfo.Clear
-    MStarter.stxFilesPages.Clear
+    'MStarter.stxFilesPages.Clear
 
     'Extraccion de la informacion del arcivo
     stxFInfo = MUtility.FileInfo(MStarter.stxFiles[intI])

@@ -45,11 +45,9 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
     Case "JPEG>Copy-Reduced-Gray" 'Crea una copia reducida en escala de grices en la misma ubicación que la original
     Case "JPEG>Copy-Gray" 'Crea una copia en escala de grices en la misma ubicación que la original
     Case "JPEG>Square" 'Crea una copia reducida de proporción cuadrada en la misma ubicación que la original.
+
     Case "JPEG>PDF" 'Crea un archivo PDF con todas las imagenes que se le pase.
       str = JPEGPDF(strPath, intPage)
-
-    Case "JPEG>Arrange" 'Mueve las fotografias organizandolas según su fecha de captura.
-      str = JPEGArrange(strPath)
 
       '## PNG
     Case "PNG>Copy-Reduced-Color" 'Crea una copia reducida en la misma ubicación que la original
@@ -78,6 +76,9 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
       '## Video
     Case "Video>Frame" 'Extractor de fotograma de un video
 
+    Case "Media>Arrange" 'Mueve las fotografias organizandolas según su fecha de captura.
+      str = MediaArrange(strPath)
+
       '## MDB, ACCDB
     Case "JET>SQL" 'Crea los archivos SQL necesarios para reconstruir una base de datos Jet en SQLite, PostgreSQL y MySQL
 
@@ -87,7 +88,7 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
 
 End
 
-Public Function JPEGArrange(strPath As String) As String '' Devuelve la rutade destino del archivo
+Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade destino del archivo
 
   Dim stxExif As New String[]
 
@@ -104,8 +105,10 @@ Public Function JPEGArrange(strPath As String) As String '' Devuelve la rutade d
 
   Dim strRenPath As String
   Dim intEx As Integer
+  Dim strExt As String
 
   strCRC = MUtility.CRC32(strPath)
+  strExt = String.UCase(File.Ext(strPath)) ' Extensión del archivo en mayúsculas
 
   If MStarter.strState = "running" Then
 
@@ -123,11 +126,11 @@ Public Function JPEGArrange(strPath As String) As String '' Devuelve la rutade d
           strDay = String.Mid(strTimeStamp, 7, 2)
           strTime = String.Mid(strTimeStamp, 9, 6)
 
-        Case "Make"
+        Case "Make" ' Fabricante de la cámara
           strMnfr = Split(stxExif[intEx], "\t")[1]
           strMnfr = String.UCase(strMnfr)
 
-        Case "Model"
+        Case "Model" ' Modelo de cámara sin caracteres extraños.
           strModel = Split(stxExif[intEx], "\t")[1]
           strModel = MValidator.NoSymbols(strModel)
           strModel = String.UCase(strModel)
@@ -140,7 +143,7 @@ Public Function JPEGArrange(strPath As String) As String '' Devuelve la rutade d
     Endif
     If String.Len(strTimeStamp) = 14 Then
       If String.Len(strCRC) = 8 Then
-        strRenPath = User.Home &/ strYear & "F" &/ strMonth &/ strTimeStamp & "-" & strMnfr & "-" & strModel & "-" & strCRC & ".JPEG"
+        strRenPath = User.Home &/ strYear & "F" &/ strMonth &/ strTimeStamp & "-" & strMnfr & "-" & strModel & "-" & strCRC & "." & strExt
         If Exist(strRenPath) = False Then
           prs = Shell "mv '" & strPath & "' " & strRenPath
           While

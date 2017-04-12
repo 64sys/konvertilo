@@ -5,23 +5,57 @@
   Arrangement = Arrange.Vertical
   Spacing = True
   Margin = True
-  { pnlPages Panel
-    MoveScaled(1,1,62,57)
-    Expand = True
-    Arrangement = Arrange.Row
-    Spacing = True
+  { TabPanel1 TabPanel
+    MoveScaled(2,3,60,54)
+    Arrangement = Arrange.Vertical
+    Border = False
+    Count = 2
+    Index = 0
+    Text = ("Páginas")
+    { pnlPages Panel
+      MoveScaled(10,8,31,28)
+      Expand = True
+      Arrangement = Arrange.Row
+      Spacing = True
+    }
+    { HBox2 HBox
+      MoveScaled(0,43,62,4)
+      Spacing = True
+      { btnWhole Button
+        MoveScaled(0,0,11,4)
+        Text = ("Todas")
+      }
+      { btnNothing Button
+        MoveScaled(12,0,11,4)
+        Text = ("Ninguna")
+      }
+      { Panel2 Panel
+        MoveScaled(24,0,4,4)
+        Expand = True
+      }
+    }
+    Index = 1
+    Text = ("Datos")
+    { HSplit1 HSplit
+      MoveScaled(4,4,51,40)
+      Expand = True
+      { pnlMetadata Panel
+        MoveScaled(8,7,14,25)
+        Arrangement = Arrange.Row
+      }
+      { pnlThumbnail Panel
+        MoveScaled(28,8,15,24)
+        Arrangement = Arrange.Fill
+        { pioThumbnail PictureBox
+          MoveScaled(2,5,10,12)
+        }
+      }
+    }
+    Index = 0
   }
   { HBox1 HBox
     MoveScaled(1,59,62,4)
     Spacing = True
-    { btnWhole Button
-      MoveScaled(0,0,11,4)
-      Text = ("Todas")
-    }
-    { btnNothing Button
-      MoveScaled(12,0,11,4)
-      Text = ("Ninguna")
-    }
     { Panel1 Panel
       MoveScaled(24,0,4,4)
       Expand = True

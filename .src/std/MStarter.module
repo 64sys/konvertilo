@@ -236,10 +236,6 @@ Public Sub LoadTools() '' Carga de herramientas disponibles para asignar el el p
   stxToolsDesc.Add(("Crea un archivo") & " PDF " & ("con todas las imágenes que se le pase") & ".")
   stxToolsExt.Add("jpg:jpeg")
 
-  stxToolsName.Add("JPEG>Arrange")
-  stxToolsDesc.Add(("Mueve las fotografiás organizándolas según su fecha de captura."))
-  stxToolsExt.Add("jpg:jpeg")
-
   '## PNG
   stxToolsName.Add("PNG>Copy-Reduced-Color")
   stxToolsDesc.Add(("Crea una copia reducida en la misma ubicación que la original"))
@@ -279,10 +275,11 @@ Public Sub LoadTools() '' Carga de herramientas disponibles para asignar el el p
   stxToolsDesc.Add(("Gira las paginas del archivo") & " 90º")
   stxToolsExt.Add("pdf")
 
-  '## Video
-  stxToolsName.Add("Video>Frame")
-  stxToolsDesc.Add(("Extractor de fotograma de un video"))
-  stxToolsExt.Add("avi:mov:m2ts:mp4:webm:ogv")
+  '## Medios, fotografias y videos
+
+  stxToolsName.Add("Media>Arrange")
+  stxToolsDesc.Add(("Mueve las fotografiás y videos organizándolas según su fecha de captura."))
+  stxToolsExt.Add("jpg:jpeg:avi:mov:m2ts:mp4:webm:ogv")
 
   '## MDB, ACCDB
   stxToolsName.Add("JET>SQL")
