@@ -483,6 +483,8 @@ Public Function ExifRaw(strPath As String) As String[] '' Devuelve una matriz co
   Dim intLin As Integer
   Dim intCur As Integer
   Dim intLen As Integer
+  Dim strExifTag As String ' Nombre de la etiqueta exif
+  Dim strExifVal As String ' Valor de la etiquieta
   Dim strExif As String
   Dim stxExif As New String[]
 
@@ -495,8 +497,15 @@ Public Function ExifRaw(strPath As String) As String[] '' Devuelve una matriz co
     If stxExifBruto[intLin] <> "" Then
       intCur = InStr(stxExifBruto[intLin], ": ")
       intLen = String.Len(stxExifBruto[intLin])
-      strExif = String.Mid(stxExifBruto[intLin], 1, intCur - 1) & "\t" & String.Mid(stxExifBruto[intLin], intCur + 2, intLen - intCur - 1)
+
+      strExifTag = String.Mid(stxExifBruto[intLin], 1, intCur - 1)
+
+      strExifVal = String.Mid(stxExifBruto[intLin], intCur + 2, intLen - intCur - 1)
+
+      strExif = strExifTag & "\t" & strExifVal
+
       stxExif.Add(strExif)
+
     Endif
   Next
   Return stxExif

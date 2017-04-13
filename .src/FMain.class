@@ -124,6 +124,10 @@ Public Sub tobStart_Click()
 
     strReturn = MBatch.FileDelibery(strTool, strFile, intPage)
 
+    While Exist(strReturn) = False
+      Wait 0.01
+    Wend
+
     stxTime.Clear
 
     intCurrTime = MStarter.intTimer
@@ -402,6 +406,9 @@ Public Sub tobClean_Click()
   MStarter.stxFiles.Clear
   MStarter.stxEmail.Clear
   MStarter.stxPDF.Clear
+  lblEstimated.Text = ""
+  lblInformation.Text = ""
+  lblTotals.Text = ""
 
   MStarter.stxFilesPlay.Clear
   MStarter.strState = "stopped"

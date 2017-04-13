@@ -68,6 +68,9 @@ Public stxErr As New String[] ' Lista de rutas de archivos con error Tool/file
 Public strOCRTxt As String ' Texto de salida del OCR
 Public strOCRFile As String ' Archivo de salida del OCR
 
+Public stxFileExifUgly As New String[] ' Lista de etiquetas a reemplazar.
+Public stxFileExifGood As New String[] ' Lista de etiquetas de reemplazo.
+
 Public Sub Main()
 
   Dim stxPackages As New String[]
@@ -182,6 +185,8 @@ Public Sub Main()
 
   LoadTools()
 
+  LoadExif() ' Carga de equivalencias de etiquetas
+
   strState = "stopped"
   stxFilesPlay.Clear
   stxSchedule.Clear
@@ -202,6 +207,39 @@ Public Function LoadViews()
 
   stxViews.Clear
   stxViews.Insert(MData.getTables(conProgram, "view")) ' Lista de VISTAS
+
+End
+
+Public Sub LoadExif()
+
+  Dim strFileExif As String
+  Dim int As Integer
+
+  Dim stxFileExif As New String[]
+
+  stxFileExifUgly.Clear
+  stxFileExifGood.Clear
+
+  If Exist("exif.txt") = True Then
+    strFileExif = File.Load("exif.txt")
+  Endif
+
+  If strFileExif <> "" Then
+    If InStr(strFileExif, "\n") > 0 Then
+      stxFileExif = Split(strFileExif, "\n")
+    Else
+      stxFileExif.Add(strFileExif)
+    Endif
+  Endif
+
+  If stxFileExif.Count > 0 Then
+    For Int = 0 To stxFileExif.Max
+      If InStr(stxFileExif[int], ":") > 0 Then
+        stxFileExifUgly.Add(Split(stxFileExif[int], ":")[0])
+        stxFileExifGood.Add(Split(stxFileExif[int], ":")[1])
+      Endif
+    Next
+  Endif
 
 End
 

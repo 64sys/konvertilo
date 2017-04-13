@@ -1,6 +1,29 @@
 # konvertilo  ![](./logo.png)
 File converter and batch processor.
 
+# Advertencia
+En el caso de la herramienta para acomodar fotografias y vdeos.
+
+Es importante tener en cuenta que esta es una herramienta en desarrollo y no conviene trabajar con la unica copia de las fotos, por lo menos hasta que no se hacen varias pruebas. Debido a que cada Cámara tiene sus propias etiquetas exif.
+Por ejemplo para la fecha de captura:
+
+### Media Create Date
+Fairphone 2 jpg
+Leica mov
+
+### Date/Time Original
+Fairphone 2 mp4
+
+Nota: Si quiere ayudar a mejorar esta herramienta envie la salida de la orden bash para cada uno de sus tipos de archivo detallando si no aparece, el fabricante de la cámara y el modelo. O envie una fotografia o un video de uno o dos segundos, hechos con su cámara.
+
+### exiftool -f -s -s fotografia.jpg > exif-fabricante-modelo.txt
+
+El sistema de dependencias en el ide y en los paquetes .deb .rpm etc.
+
+Atencion con los directorios y archivos con nombres que tienen espacios.
+
+
+# Herramientas
 ## General
 
 ### Media>Arrange

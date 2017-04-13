@@ -100,12 +100,17 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
   Dim strMnfr As String
   Dim strModel As String
   Dim strCRC As String
+  Dim intRep As Integer
 
   Dim prs As Process
 
   Dim strRenPath As String
   Dim intEx As Integer
   Dim strExt As String
+  Dim intKey As Integer
+  Dim strDirBase As String
+  Dim strFileName As String
+  Dim strDirDup As String
 
   strCRC = MUtility.CRC32(strPath)
   strExt = String.UCase(File.Ext(strPath)) ' Extensión del archivo en mayúsculas
@@ -114,9 +119,18 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
 
     ' Extacción de un sobconjunto de metadatos de la foto
     stxExif = MUtility.ExifRaw(strPath)
+
+    'Reemplazo de etiquetas por otras estandar si fuera el caso
+    For intRep = 0 To stxExif.Max
+      intKey = MStarter.stxFileExifUgly.Find(Split(stxExif[intRep], "\t")[0])
+      If intKey > -1 Then
+        stxExif[intRep] = MStarter.stxFileExifGood[intKey] & "\t" & Split(stxExif[intRep], "\t")[1]
+      Endif
+    Next
+
     For intEx = 0 To stxExif.Max
       Select Split(stxExif[intEx], "\t")[0]
-        Case "DateTimeOriginal"
+        Case "MediaCreateDate"
           strTimeStamp = Split(stxExif[intEx], "\t")[1]
           strTimeStamp = MValidator.OnlyNumbers(strTimeStamp)
           strTimeStamp = String.Mid(strTimeStamp, 1, 14)
@@ -138,18 +152,65 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
       End Select
     Next
 
-    If Not Exist(User.Home &/ strYear & "F" &/ strMonth) Then ' Verificación de la existencia de la carpeta
-      Shell "mkdir -p " & User.Home &/ strYear & "F" &/ strMonth
-    Endif
+    Select strExt
+      Case "JPG", "JPEG"
+        strDirBase = User.Home &/ strYear & "F" &/ strMonth
+        strDirDup = User.Home &/ strYear & "F-DUP" &/ strMonth
+
+        strFileName = strTimeStamp & "-" & strMnfr & "-" & strModel & "-" & strCRC & "." & strExt
+
+      Case "AVI", "MOV", "M2TS", "MP4", "WEBM", "OGV"
+        strDirBase = User.Home &/ strYear & "V"
+        strDirDup = User.Home &/ strYear & "V-DUP"
+
+        strFileName = strTimeStamp & "-" & strCRC & "." & strExt
+
+      Case Else
+        strDirBase = User.Home &/ strYear & "X"
+        strDirDup = User.Home &/ strYear & "X-DUP"
+
+        strFileName = strTimeStamp & "-" & strCRC & "." & strExt
+
+    End Select
+
     If String.Len(strTimeStamp) = 14 Then
       If String.Len(strCRC) = 8 Then
-        strRenPath = User.Home &/ strYear & "F" &/ strMonth &/ strTimeStamp & "-" & strMnfr & "-" & strModel & "-" & strCRC & "." & strExt
+
+        strRenPath = strDirBase &/ strFileName
+
         If Exist(strRenPath) = False Then
+          Print "Bucle 1"
+          While
+            Exist(strDirBase) = False
+            Shell "mkdir -p " & strDirBase
+            Wait 0.05
+          Wend
+
           prs = Shell "mv '" & strPath & "' " & strRenPath
+          Print "Bucle 2"
           While
             prs.State = prs.Running
             Wait 0.05
           Wend
+
+        Else
+          Print "Bucle 3"
+          While
+            Exist(strDirDup) = False
+            Shell "mkdir -p " & strDirDup
+            Wait 0.05
+          Wend
+
+          strRenPath = strDirDup &/ strFileName
+          Wait 0.01
+          prs = Shell "mv '" & strPath & "' " & strRenPath
+          Print "Bucle "
+          Print "Bucle 4"
+          While
+            prs.State = prs.Running
+            Wait 0.05
+          Wend
+
         Endif
       Endif
     Endif

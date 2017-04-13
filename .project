@@ -3,7 +3,7 @@
 Title=Konvertilo
 Startup=MStarter
 Icon=logo.png
-Version=0.0.13
+Version=0.0.16
 Component=gb.image
 Component=gb.gui.qt
 Component=gb.form
@@ -25,7 +25,7 @@ VendorPrefix=bmk
 Address=info@belmotek.net
 Url=www.belmotek.net
 License=General Public License
-PackageName=konvertilo-0.0.13
+PackageName=konvertilo-0.0.16
 CreateEachDirectory=1
 Packager=1
 Systems=ubuntu
