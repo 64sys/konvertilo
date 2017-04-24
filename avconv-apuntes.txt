@@ -1,0 +1,8 @@
+Extraer audio de un video
+avconv -i original.mp4  -vn -acodec copy audio.aac
+
+Unir el video (sin el audio) con una pista de sonido
+
+avconv -i input.mkv -an -i input.aac -c copy output.mky
+
+

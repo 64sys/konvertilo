@@ -824,7 +824,7 @@ Public Function ConvertPath(strInput As String) As String '' Descodifica los car
     strChar = Mid$(strInput, intPos, 1)
     If strChar = "+" Then
       ' Convertir a espacio
-      strOutput = strOutput & " "
+      ' strOutput = strOutput & " " ' Lo anule porque se carga los directorios con signo +
     Else If strChar <> "%" Then
       ' Normal, no cambiar
       strOutput = strOutput & strChar

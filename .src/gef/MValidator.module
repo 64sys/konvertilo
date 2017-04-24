@@ -41,6 +41,28 @@ Public Function VEmail(strAddress As String) As String '' Validación de una dir
 
 End
 
+Public Function ArrangeParagraph(strInText As String) As String
+
+  Dim stxUgly As New String[]
+  Dim stxGood As New String[]
+  Dim int As Integer
+
+  stxUgly.Clear
+  stxGood.Clear
+
+  stxUgly.Add("-\n\n")
+  stxGood.Add("\n")
+
+  For int = 0 To stxUgly.Max
+    If InStr(strInText, stxUgly[int]) > 0 Then
+      strInText = Replace(strInText, stxUgly[int], stxGood[int])
+    Endif
+  Next
+
+  Return strInText
+
+End
+
 Public Function OnlyTextParenthesis(strInput As String) As String '' Validación de solo texto, espacio, punto y coma entre parentesis.
 
   Dim regex As New RegExp

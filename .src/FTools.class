@@ -4,22 +4,92 @@ Public strFileExt As String
 
 Public Sub Run(strExt As String)
 
+  Dim pnl As Panel
   Dim chk As CheckBox
+  Dim cmo As ComboBox
+  Dim txo As TextBox
   Dim intR As Integer
+  Dim intL As Integer
 
   strFileExt = String.LCase(strExt)
 
+  ' Creacion del checkbox para seleccionar la herramienta a aplicar
+  ' con un modificador para el caso que sea necesario
+
   For intR = 0 To MStarter.stxToolsExt.Max
+
     If InStr(MStarter.stxToolsExt[intR], strFileExt) > 0 Then
-      chk = New CheckBox(pnlTools) As "chk"
+      pnl = New Panel(pnlTools) As "pnl"
+      With pnl
+        .Name = "pnl" & ":" & strFileExt & ":" & CStr(intR)
+        .Height = 28
+        .Width = 350
+        .Arrangement = Arrange.Horizontal
+
+      End With
+
+      chk = New CheckBox(pnl) As "chk"
       With chk
         .Name = "chk" & ":" & strFileExt & ":" & CStr(intR)
         .Text = MStarter.stxToolsName[intR]
         .Height = 28
-        .Width = 300
+        .Width = 250
         .Tooltip = MStarter.stxToolsDesc[intR]
         .Value = Settings[strFileExt & "/" & MStarter.stxToolsName[intR], False]
+
       End With
+
+      ' Aca algunas particularidades de modificadores de estilo libre o de seleccion de valores preestablecidos
+
+      Select MStarter.stxToolsName[intR]
+        Case "PNG>OCR-Text", "JPEG>OCR-Text", "PDF>OCR-Text"
+          cmo = New ComboBox(pnl) As "mod"
+          With cmo
+            .Name = "cmo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 100
+            For intL = 0 To MStarter.stxOCRLang.Max
+              .Add(MStarter.stxOCRLang[intL])
+            Next
+            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+
+          End With
+        Case "TXT>WAV"
+          cmo = New ComboBox(pnl) As "mod"
+          With cmo
+            .Name = "cmo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 100
+            For intL = 0 To Split("en-GB:de-DE:es-ES:fr-FR:it-IT", ":").Max
+              .Add(Split("en-GB:de-DE:es-ES:fr-FR:it-IT", ":")[intL])
+            Next
+            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+
+          End With
+
+        Case "PDF>Image"
+          cmo = New ComboBox(pnl) As "mod"
+          With cmo
+            .Name = "cmo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 100
+            For intL = 0 To MStarter.stxImageOFormat.Max
+              .Add(String.LCase(MStarter.stxImageOFormat[intL]))
+            Next
+            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+
+          End With
+
+        Case Else
+          txo = New TextBox(pnl) As "mod"
+          With txo
+            .Name = "txo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 100
+            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+          End With
+      End Select
+
     Endif
   Next
 
@@ -44,14 +114,31 @@ End
 
 Public Sub cmdSaveSettings()
 
-  Dim obj As Object
+  Dim objPanel As Object
+  Dim pnl As Panel
+  Dim objBox As Object
+  Dim strBox As String
 
-  For Each obj In pnlTools.Children
+  For Each objPanel In pnlTools.Children
+    If Object.Type(objPanel) = "Panel" Then
 
-    If Object.Type(obj) = "CheckBox" Then
-      With obj
-        Settings[strFileExt & "/" & .Text] = .Value
-      End With
+      pnl = objPanel
+
+      For Each objBox In pnl.Children
+
+        Select Object.Type(objBox)
+          Case "CheckBox"
+            Settings[strFileExt & "/" & objBox.Text] = objBox.Value
+
+          Case "ComboBox", "TextBox"
+            strBox = Split(objBox.Name, ":")[1] & "/" & Split(objBox.Name, ":")[2]
+            Settings[strBox] = objBox.Text
+
+          Case "ValueBox"
+            strBox = Split(objBox.Name, ":")[1] & "/" & Split(objBox.Name, ":")[2]
+            Settings[strBox] = objBox.Value
+        End Select
+      Next
     Endif
   Next
 

@@ -1,3 +1,9 @@
+* Sat Apr 22 2017 Belmotek <info@belmotek.net> 0.0.19
+- Agregado de la herramienta PNG > OCR
+
+* Sat Apr 15 2017 Belmotek <info@belmotek.net> 0.0.18
+- Correccion del probrema con rutas de archivos que contenian espacios y caracteres con acento.
+
 * Thu Apr 13 2017 Belmotek <info@belmotek.net> 0.0.16
 - Correccion de error al crear carpeta para fotos repetidas
 

@@ -1,0 +1,94 @@
+ART	PFS	 1st Publisher
+AVI	Microsoft Audio/Visual Interleaved
+AVS	AVS X image
+BMP	Microsoft Windows bitmap
+CGM	Computer Graphics Metafile
+CMYK	Raw cyan, magenta, yellow, and black samples
+CUT	DR Halo
+DCM	Digital Imaging and Communications in Medicine (DICOM) image
+DCX	ZSoft IBM PC multi-page Paintbrush image
+DIB	Microsoft Windows Device Independent Bitmap
+DPX	Digital Moving Picture Exchange
+EMF	Microsoft Enhanced Metafile (32-bit)
+EPDF	Encapsulated Portable Document Format
+EPI	Adobe Encapsulated PostScript Interchange format
+EPS	Adobe Encapsulated PostScript
+EPSF	Adobe Encapsulated PostScript
+EPSI	Adobe Encapsulated PostScript Interchange format
+EPT	Adobe Encapsulated PostScript Interchange format with TIFF preview
+FAX	Group 3 TIFF
+FIG	FIG graphics format
+FITS	Flexible Image Transport System
+FPX	FlashPix Format
+GIF	CompuServe Graphics Interchange Format
+GPLT	Gnuplot plot files
+GRAY	Raw gray samples
+HPGL	HP-GL plotter language
+HTML	Hypertext Markup Language with a client-side image map
+ICO	Microsoft icon
+JBIG	Joint Bi-level Image experts Group file interchange format
+JNG	Multiple-image Network Graphics
+JP2	JPEG-2000 JP2 File Format Syntax
+JPC	JPEG-2000 Code Stream Syntax
+JPEG	Joint Photographic Experts Group JFIF format
+MAN	Unix reference manual pages
+MAT	MATLAB image format
+MIFF	Magick image file format
+MONO	Bi-level bitmap in least-significant-byte first order
+MNG	JPEG Network Graphics
+MPEG	Motion Picture Experts Group file interchange format (version 1)
+M2V	Motion Picture Experts Group file interchange format (version 2)
+MPC	Magick Persistent Cache image file format
+MSL	Magick Scripting Language
+MTV	MTV Raytracing image format
+MVG	Magick Vector Graphics.
+OTB	On-the-air Bitmap
+P7	Xv's Visual Schnauzer thumbnail format
+PALM	Palm pixmap
+PBM	Portable bitmap format (black and white)
+PCD	Photo CD
+PCDS	Photo CD
+PCX	ZSoft IBM PC Paintbrush file
+PDB	Palm Database ImageViewer Format
+PDF	Portable Document Format
+PFA	Postscript Type 1 font (ASCII)
+PFB	Postscript Type 1 font (binary)
+PGM	Portable graymap format (gray scale)
+PICON	Personal Icon
+PICT	Apple Macintosh QuickDraw/PICT file
+PIX	Alias/Wavefront RLE image format
+PNG	Portable Network Graphics
+PNM	Portable anymap
+PPM	Portable pixmap format (color)
+PS	Adobe PostScript file
+PS2	Adobe Level II PostScript file
+PS3	Adobe Level III PostScript file
+PSD	Adobe Photoshop bitmap file
+PTIF	Pyramid encoded TIFF
+PWP	Seattle File Works multi-image file
+RAD	Radiance image file
+RGB	Raw red, green, and blue samples
+RGBA	Raw red, green, blue, and matte samples
+RLA	Alias/Wavefront image file
+RLE	Utah Run length encoded image file
+SCT	Scitex Continuous Tone Picture
+SFW	Seattle File Works image
+SGI	Irix RGB image
+SUN	SUN Rasterfile
+SVG	Scalable Vector Graphics
+TGA	Truevision Targa image
+TIFF	Tagged Image File Format
+TIM	PSX TIM file
+TTF	TrueType font file
+TXT	Raw text file
+UYVY	Interleaved YUV raw image
+VICAR	VICAR rasterfile format
+VIFF	Khoros Visualization Image File Format
+WBMP	Wireless bitmap
+WPG	Word Perfect Graphics File
+XBM	X Windows system bitmap, black and white only
+XCF	GIMP image
+XPM	X Windows system pixmap
+XWD	X Windows system window dump
+YUV	CCIR 601 4	1	1
+

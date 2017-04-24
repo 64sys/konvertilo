@@ -22,7 +22,7 @@
 ' Boston, MA  02110-1301  USA
 '
 
-Public Function FileDelibery(strTool As String, strPath As String, Optional intPage As Integer) As String '' Funcion que reparte el archivo a una funcion coincidente con el nombre de la herramienta "Tool" en el segundo parametro
+Public Function FileDelibery(strTool As String, strPath As String, Optional intPage As Integer, Optional strMod As String) As String '' Funcion que reparte el archivo a una funcion coincidente con el nombre de la herramienta "Tool" en el segundo parametro
 
   Dim str As String
 
@@ -41,6 +41,9 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
     Case "JPEG>GIFEmail" 'Crea un archivo GIF y lo adjunta en un nuevo email.
       str = JPEGGIFEmail(strPath)
 
+    Case "JPEG>OCR-Text" 'Reconocimiento optico de caracteres
+      str = JPEGOCRText(strPath, strMod)
+
     Case "JPEG>Copy-Reduced-Color" 'Crea una copia reducida en la misma ubicación que la original
     Case "JPEG>Copy-Reduced-Gray" 'Crea una copia reducida en escala de grices en la misma ubicación que la original
     Case "JPEG>Copy-Gray" 'Crea una copia en escala de grices en la misma ubicación que la original
@@ -54,6 +57,9 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
     Case "PNG>JPEG-Copy-Reduced-Color" 'Crea una copia reducida en la misma ubicación que la original
       str = PNGJPEGReduced(strPath)
 
+    Case "PNG>OCR-Text" 'Reconocimiento optico de caracteres
+      str = PNGOCRText(strPath, strMod)
+
       '## ODT
     Case "ODT-Thumbnail" 'Extractor de miniatura del documento
     Case "ODT>EPUB" 'Convertir documentos ODT en documentos EPUB
@@ -63,7 +69,7 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
       str = PDFDecrypt(strPath)
 
     Case "PDF>Image" 'Extractor de paginas en formato de imagen jpeg una imagen por página.
-      str = PDFImage(strPath, intPage)
+      str = PDFImage(strPath, intPage, strMod)
 
     Case "PDF>PDF-R90" 'Rota las paginas 90 grados.
       str = PDFR90(strPath)
@@ -71,10 +77,23 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
     Case "PDF>Pages" 'Extractor de paginas en formato pdf
 
     Case "PDF>OCR-Text" 'Extractor de paginas en formato de imagen TIF y reconocimiento optico de caracteres
-      str = PDFOCRText(strPath, intPage)
+      str = PDFOCRText(strPath, intPage, strMod)
+
+      '## TXT
+    Case "TXT>WAV" 'Crea un archivo de sonido a partir de uno de texto
+      str = TXT2WAV(strPath, strMod)
 
       '## Video
     Case "Video>Frame" 'Extractor de fotograma de un video
+
+    Case "Audio-Extractor" 'Extractor del audio de un video
+      str = AudioExtractor(strPath)
+
+    Case "Video-Extractor" 'Extractor del audio de un video
+      str = VideoExtractor(strPath)
+
+    Case "Video-Mixer" 'Crea un video copia pero sin audio y le agrega una pista de audio que se llama igual que el video
+      str = VideoMixer(strPath)
 
     Case "Media>Arrange" 'Mueve las fotografias organizandolas según su fecha de captura.
       str = MediaArrange(strPath)
@@ -85,6 +104,221 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
   End Select
 
   Return str
+
+End
+
+Public Function PlayWAV(strPath As String) As Integer '' Esta funcion reproduce un archivo WAV comn el programa mplayer. Dependenciaas: mplayer. Devuelve el numero PID del proceso.
+
+  Dim strCommand As String
+  Dim prsWav As Process
+  Dim intWav As Integer
+
+End
+
+Public Function TXT2WAV(strPath As String, strLang As String) As String '' Esta funcion convierte un archivo de texto TXT en un archivo WAV. Como parametros de entrada requiere una ruta valida a un archivo TXT que contenga el texto y el idioma.
+
+  Dim strCommand As String
+  Dim prsWav As Process
+
+  Dim strDir As String
+  Dim strDirBase As String
+  Dim strFileWav As String
+
+  strDir = File.Dir(strPath)
+
+  Select strLang
+
+    Case "en_GB", "en", "eng", "en-GB"
+      strLang = "en-GB"
+    Case "en-US", "en_US"
+      strLang = "en-US"
+    Case "de-DE"
+      strLang = "de-DE"
+    Case "es_ES", "es", "spa", "es-ES"
+      strLang = "es-ES"
+    Case "fr-FR", "fra"
+      strLang = "fr-FR"
+    Case "it-IT", "ita"
+      strLang = "it-IT"
+    Case Else
+      strLang = "Error"
+  End Select
+
+  If strLang <> "Error" Then
+
+    strDirBase = File.BaseName(strPath)
+    strFileWav = strDir &/ strDirBase & ".wav"
+
+    strCommand = "pico2wave --lang=" & strLang & " --wave='" & strFileWav & "' " & Chr(34) & "$(cat '" & strPath & "')" & Chr(34)
+
+    Print strCommand
+
+    prsWav = Shell strCommand
+
+    While
+      prsWav.State = prsWav.Running
+      Wait 0.1
+    Wend
+
+  Endif
+
+  If Exist(strFileWav) Then
+    Return strFileWav
+  Else
+    Return "0"
+  Endif
+
+End
+
+Public Function AudioExtractor(strPath As String) As String '' Esta funcion extrae solamente la pista de audio de un archivo de video. Devuelve la rutade destino del archivo extraido
+
+  Dim strCommand As String
+  Dim prsAE As Process
+  Dim strDir As String
+  Dim strDirBase As String
+  Dim strAudioFile As String
+
+  strDir = File.Dir(strPath)
+  strDirBase = File.BaseName(strPath)
+
+  strAudioFile = strDir &/ strDirBase & ".ogg"
+
+  strCommand = "avconv -i '" & strPath & "' -vn "
+  strCommand &= "-af volume=7dB:precision=fixed "
+  strCommand &= "-acodec libvorbis '" & strAudioFile & "'"
+
+  Print strCommand
+
+  prsAE = Shell strCommand For Read As "ExtAudio"
+
+  While
+    prsAE.State = prsAE.Running
+    'Print "Running"
+    Wait 2
+  Wend
+
+  If Exist(strAudioFile) Then
+    Print "Audio file exist: " & strAudioFile
+    If Stat(strAudioFile).Type = gb.File Then
+      Return strAudioFile
+    Else
+      Return "0"
+    Endif
+  Else
+    Return "0"
+  Endif
+
+End
+
+Public Sub ExtAudio_read()
+
+  Dim lineaconsola As String
+
+  Read #Last, lineaconsola, -80
+  'lineaconsola = Trim(lineaconsola)
+  Print lineaconsola
+
+End
+
+Public Function VideoExtractor(strPath As String) As String '' Esta funcion extrae solamante la pista de video de un archivo de video. Devuelve la rutade destino del archivo extraido
+
+  Dim strCommand As String
+  Dim prsVE As Process
+  Dim strDir As String
+  Dim strDirBase As String
+  Dim strOutputFile As String
+  Dim strExt As String
+
+  strExt = File.Ext(strPath)
+  strDir = File.Dir(strPath)
+  strDirBase = File.BaseName(strPath)
+
+  strOutputFile = strDir &/ strDirBase & "-muted." & strExt
+
+  strCommand = "avconv -i '" & strPath & "' -an "
+  strCommand &= "'" & strOutputFile & "'"
+
+  Print strCommand
+
+  prsVE = Shell strCommand For Read As "ExtVideo"
+
+  While
+    prsVE.State = prsVE.Running
+    Wait 1
+  Wend
+
+  If Exist(strOutputFile) Then
+    If Stat(strOutputFile).Type = gb.File Then
+      Return strOutputFile
+    Endif
+  Endif
+
+End
+
+Public Sub ExtVideo_read()
+
+  Dim lineaconsola As String
+
+  Read #Last, lineaconsola, -80
+  'lineaconsola = Trim(lineaconsola)
+  Print lineaconsola
+
+End
+
+Public Function VideoMixer(strPath As String) As String '' Devuelve la ruta de destino del archivo remasterzado creado.
+  'avconv -i output.mkv -an -i konvertilo-02-media-arrange.ogg output-unido.mkv
+
+  Dim strCommand As String
+  Dim prsVM As Process
+  Dim strExt As String
+  Dim strDir As String
+  Dim strDirBase As String
+  Dim strAudioFile As String
+  Dim strInputFile As String
+  Dim strOutputFile As String
+
+  strExt = File.Ext(strPath)
+  strDir = File.Dir(strPath)
+  strDirBase = File.BaseName(strPath)
+  strAudioFile = strDir &/ strDirBase & ".ogg"
+  strInputFile = strDir &/ strDirBase & "-muted." & strExt
+  strOutputFile = strDir &/ strDirBase & "-remaster." & strExt
+
+  If Exist(strOutputFile) Then
+    Kill strOutputFile
+  Endif
+
+  strCommand = "avconv -i '" & strInputFile & "' "
+  strCommand &= "-i '" & strAudioFile & "' "
+  strCommand &= "'" & strOutputFile & "'"
+
+  Print strCommand
+
+  prsVM = Shell strCommand For Read As "MixVideo"
+
+  While
+    prsVM.State = prsVM.Running
+    Wait 1
+  Wend
+
+  If Exist(strOutputFile) Then
+    If Stat(strOutputFile).Type = gb.File Then
+      Return strOutputFile
+    Else
+      Return "0"
+    Endif
+    Return "0"
+  Endif
+
+End
+
+Public Sub MixVideo_read()
+
+  Dim lineaconsola As String
+
+  Read #Last, lineaconsola, -80
+  'lineaconsola = Trim(lineaconsola)
+  Print lineaconsola
 
 End
 
@@ -187,14 +421,12 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
           Wend
 
           prs = Shell "mv '" & strPath & "' " & strRenPath
-          Print "Bucle 2"
           While
             prs.State = prs.Running
             Wait 0.05
           Wend
 
         Else
-          Print "Bucle 3"
           While
             Exist(strDirDup) = False
             Shell "mkdir -p " & strDirDup
@@ -204,8 +436,6 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
           strRenPath = strDirDup &/ strFileName
           Wait 0.01
           prs = Shell "mv '" & strPath & "' " & strRenPath
-          Print "Bucle "
-          Print "Bucle 4"
           While
             prs.State = prs.Running
             Wait 0.05
@@ -289,6 +519,37 @@ Public Function JPEGGIFEmail(strPath As String) As String ''Si el archivo es pro
     Endif
 
   Endif
+  If Exist(strRenPath) Then
+    If Stat(strRenPath).Type = gb.File Then
+      Return strRenPath
+    Else
+      Return "0"
+    Endif
+  Endif
+
+End
+
+Public Function JPEGPNG(strPath As String) As String ''Convierte una imágenes JPEG a otra formato PNG.
+
+  Dim prs2 As Process
+  Dim strCommand2 As String
+
+  Dim strRenPath As String
+
+  If MStarter.strState = "running" Then
+
+    strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & ".png"
+
+    strCommand2 = "convert -quality 30 " & strPath & " " & strRenPath
+
+    prs2 = Shell strCommand2
+    While
+      prs2.State = prs2.Running
+      Wait 0.05
+    Wend
+
+  Endif
+
   If Exist(strRenPath) Then
     If Stat(strRenPath).Type = gb.File Then
       Return strRenPath
@@ -388,7 +649,7 @@ Public Function PDFDecrypt(strPath As String) As String '' Devuelve la ruta al a
 
 End
 
-Public Function PDFImage(strPath As String, intPage As Integer) As String '' Devuelve la carpeta donde se extrajeron las imagenes
+Public Function PDFImage(strPath As String, intPage As Integer, Optional strMod As String) As String '' <p>Devuelve la ruta a la imagen extraida. </br> Como parametros de entrada requiere la ruta al archivo PDF, la página y el tipo de archivo que se desea extraer, PNG, JPEG, TIF.
 
   Dim strCommand As String
   Dim prs1 As Process
@@ -406,6 +667,12 @@ Public Function PDFImage(strPath As String, intPage As Integer) As String '' Dev
     Shell "mkdir -p '" & strNameNoExt & "'"
   Endif
 
+  If strMod = "" Then
+    strMod = "jpeg"
+  Else
+    strMod = String.LCase(strMod)
+  Endif
+
   If MStarter.strState = "running" Then
 
     Select String.Len(Str(intPage + 1)) ' Le sumo 1 porque convert arranca de 0
@@ -417,7 +684,7 @@ Public Function PDFImage(strPath As String, intPage As Integer) As String '' Dev
         strNumx = "s" & Str(intPage + 1) '' idem
     End Select
 
-    strPageImageName = strNameNoExt &/ strNumx & ".jpeg"
+    strPageImageName = strNameNoExt &/ strNumx & "." & strMod
 
     ' Salia con fondo negro asi que le pude "-alpha remove" y solucionado
     strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & intPage & "] '" & strPageImageName & "'"
@@ -444,68 +711,108 @@ Public Function PDFImage(strPath As String, intPage As Integer) As String '' Dev
 
 End
 
-Public Function PDFOCRText(strPath As String, intPage As Integer) As String '' Devuelve la carpeta donde se extrajeron las imagenes PNG
+Public Function PNGOCRText(strPath As String, Optional strLang As String) As String '' Devuelve la ruta al archivo .txt con el texto extraido o "0" si no hay texto.
 
   Dim strCommand As String
-  Dim prs1 As Process
-  Dim pdf As New PdfDocument
-  Dim index As Integer
-  Dim strNameNoExt As String
-  Dim strNumx As String
-  Dim strPageImageName As String
   Dim strTxtTemp As String
+  Dim strFileOutput As String
 
-  strNameNoExt = String.Left(strPath, String.RInStr(strPath, ".") - 1)
+  strFileOutput = File.Dir(strPath) &/ File.BaseName(strPath) & ".txt"
 
-  pdf.Open(strPath)
-  If Exist(strNameNoExt) = False
-    Shell "mkdir -p '" & strNameNoExt & "'"
-  Endif
+  If MStarter.stxOCRLang.Find(strLang) > -1 Then
 
-  If MStarter.strState = "running" Then
+    If MStarter.strState = "running" Then
 
-    Select String.Len(Str(index + 1)) ' Le sumo 1 porque convert arranca de 0
-      Case 1
-        strNumx = "s00" & Str(index + 1) '' idem
-      Case 2
-        strNumx = "s0" & Str(index + 1) '' idem
-      Case 3
-        strNumx = "s" & Str(index + 1) '' idem
-    End Select
+      If Exist(strPath) Then
+        If Stat(strPath).Type = gb.File Then
+          strTxtTemp = ""
 
-    strPageImageName = strNameNoExt &/ strNumx & ".png"
+          strCommand = "tesseract '" & strPath & "' stdout -l " & strLang & " 2>&1"
+          Shell strCommand To strTxtTemp
 
-    strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & intPage & "] '" & strPageImageName & "'"
+          If strTxtTemp <> "" Then
+            File.Save(strFileOutput, strTxtTemp)
+          Endif
 
-    prs1 = Shell strCommand
+          Wait 0.05
 
-    While prs1.State = prs1.Running
-      Wait 0.05
-    Wend
-
-    If Exist(strPageImageName) Then
-      If Stat(strPageImageName).Type = gb.File Then
-        strTxtTemp = ""
-
-        strCommand = "tesseract '" & strPageImageName & "' stdout -l spa 2>&1"
-        Shell strCommand To strTxtTemp
-
-        File.Save(File.Dir(strPageImageName) &/ File.BaseName(strPageImageName) & ".txt", strTxtTemp)
-
-        Wait 0.05
-
-        Kill strPageImageName
-
+        Endif
       Endif
+
     Endif
 
   Endif
 
-  If MStarter.strOCRTxt <> "" Then
-    Return MStarter.strOCRTxt
+  If strTxtTemp <> "" Then
+    Return strFileOutput
   Else
     Return "0"
   Endif
+
+End
+
+Public Function JPEGOCRText(strPath As String, Optional strLang As String) As String '' Devuelve la ruta al archivo .txt con el texto extraido o "0" si no hay texto.
+
+  '  Dim strCommand As String
+  Dim strTxtTemp As String
+  Dim strFileTXT As String
+  Dim strFilePNG As String
+  Dim intTime As Integer
+
+  'strFilePNG = File.Dir(strPath) &/ File.BaseName(strPath) & ".png"
+  strFileTXT = File.Dir(strPath) &/ File.BaseName(strPath) & ".txt"
+
+  If MStarter.strState = "running" Then
+
+    If Exist(strPath) Then
+      If Stat(strPath).Type = gb.File Then
+        strTxtTemp = ""
+        intTime = 0
+
+        strFilePNG = JPEGPNG(strPath)
+
+        If Exist(strFilePNG) = True
+
+          strTxtTemp = PNGOCRText(strFilePNG, strLang)
+
+          'strCommand = "tesseract '" & strFilePNG & "' stdout -l spa 2>&1"
+          'Shell strCommand To strTxtTemp
+          '
+          ' If strTxtTemp <> "" Then
+          '
+          '   File.Save(strFileTXT, strTxtTemp)
+          ' Endif
+          '
+          ' Wait 0.05
+
+        Endif
+      Endif
+    Endif
+  Endif
+
+  Print "Contador de espera: " & CStr(intTime)
+
+  If strTxtTemp <> "" Then
+    Return strFileTXT
+  Else
+    Return "0"
+  Endif
+
+End
+
+Public Function PDFOCRText(strPath As String, intPage As Integer, Optional strLang As String) As String '' Devuelve el texto extraido de la pagina. Como parametros de entrada requiere la ruta del archivo PDF la página y el idioma.
+
+  Dim strFilePNG As String
+  Dim strPageText As String
+
+  strPageText = ""
+  strFilePNG = PDFImage(strPath, intPage, "png")
+
+  If Exist(strFilePNG) Then
+    strPageText = PNGOCRText(strFilePNG, strLang)
+  Endif
+
+  Return strPageText
 
 End
 

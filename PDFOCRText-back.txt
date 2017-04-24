@@ -1,0 +1,73 @@
+Public Function PDFOCRText(strPath As String, intPage As Integer, Optional strLang As String) As String '' Devuelve la carpeta donde se extrajeron las imagenes PNG
+
+  Dim strCommand As String
+  Dim prs1 As Process
+  Dim pdf As New PdfDocument
+  Dim index As Integer
+  Dim strNameNoExt As String
+  Dim strNumx As String
+  Dim strPageImageName As String
+  Dim strTxtTemp As String
+
+  Select strLang
+    Case "-1", "", "0"
+      strLang = "spa"
+  End Select
+
+  strNameNoExt = String.Left(strPath, String.RInStr(strPath, ".") - 1)
+
+  pdf.Open(strPath)
+  If Exist(strNameNoExt) = False
+    Shell "mkdir -p '" & strNameNoExt & "'"
+  Endif
+
+  If MStarter.strState = "running" Then
+
+    Select String.Len(Str(index + 1)) ' Le sumo 1 porque convert arranca de 0
+      Case 1
+        strNumx = "s00" & Str(index + 1) '' idem
+      Case 2
+        strNumx = "s0" & Str(index + 1) '' idem
+      Case 3
+        strNumx = "s" & Str(index + 1) '' idem
+    End Select
+
+    strPageImageName = strNameNoExt &/ strNumx & ".png"
+
+    Print "Convirtiendo " & strPageImageName
+    strCommand = "convert -alpha remove -density 300 -resample 300x300 -quality 30 '" & strPath & "'[" & intPage & "] '" & strPageImageName & "'"
+    Print strCommand
+    prs1 = Shell strCommand
+
+    While prs1.State = prs1.Running
+      Wait 0.05
+    Wend
+
+    Print "Finalizo el proceso 1"
+
+    If Exist(strPageImageName) Then
+      If Stat(strPageImageName).Type = gb.File Then
+        strTxtTemp = ""
+
+        strCommand = "tesseract '" & strPageImageName & "' stdout -l " & strLang & " 2>&1"
+        Shell strCommand To strTxtTemp
+
+        File.Save(File.Dir(strPageImageName) &/ File.BaseName(strPageImageName) & ".txt", strTxtTemp)
+
+        Wait 0.05
+
+        Kill strPageImageName
+
+      Endif
+    Endif
+
+  Endif
+
+  If MStarter.strOCRTxt <> "" Then
+    Return MStarter.strOCRTxt
+  Else
+    Return "0"
+  Endif
+
+End
+

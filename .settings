@@ -22,6 +22,9 @@ Geometry=[0,56,725,854]
 [DebugWindow/MStarter.stxPages]
 Geometry=[354,67,224,280]
 
+[DebugWindow/MStarter.stxSchedule]
+Geometry=[226,33,1164,930]
+
 [DebugWindow/MStarter.stxToolsExt]
 Geometry=[47,179,224,280]
 
@@ -33,6 +36,12 @@ Geometry=[354,67,224,280]
 
 [DebugWindow/inxPages]
 Geometry=[354,67,224,280]
+
+[DebugWindow/prs]
+Geometry=[368,308,344,584]
+
+[DebugWindow/prsAE]
+Geometry=[390,519,224,493]
 
 [DebugWindow/stxEmail]
 Geometry=[25,71,224,280]
@@ -56,10 +65,13 @@ Geometry=[121,260,224,280]
 Geometry=[352,261,224,280]
 
 [DebugWindow/stxFiles]
-Geometry=[564,69,743,280]
+Geometry=[825,775,743,280]
 
 [DebugWindow/stxPDFDir]
 Geometry=[0,25,891,577]
+
+[DebugWindow/stxPaths]
+Geometry=[322,710,767,280]
 
 [DebugWindow/stxSch]
 Geometry=[1,33,224,280]
@@ -71,13 +83,15 @@ Geometry=[960,33,224,280]
 Path="konvertilo.gambas"
 
 [OpenFile]
-Count=5
+Count=7
 File[1]=".src/FMain.form"
-File[2]=".src/FMain.class:6.460"
-File[3]=".src/gef/MUtility.module:0.503"
-Active=2
-File[4]=".src/MBatch.module:27.218"
-File[5]=".src/std/MStarter.module:54.319"
+File[2]=".src/FMain.class:0.125"
+File[3]=".src/gef/MUtility.module:27.806"
+Active=4
+File[4]=".src/MBatch.module:1.756"
+File[5]=".src/std/MStarter.module:0.393"
+File[6]=".src/FTools.form"
+File[7]=".src/FTools.class:24.74"
 
 [Watches]
 Count=0

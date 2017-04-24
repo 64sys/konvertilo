@@ -61,6 +61,8 @@ Public Sub tobStart_Click()
 
   Dim intTotal As Integer
   Dim stxTime As New Integer[]
+  Dim strMod As String
+  Dim strExt As String
 
   Inc Application.Busy
 
@@ -119,10 +121,12 @@ Public Sub tobStart_Click()
 
     strTool = Split(MStarter.stxSchedule[intS], "\t")[0]
     strFile = Split(MStarter.stxSchedule[intS], "\t")[1]
-
     intPage = CInt(Split(MStarter.stxSchedule[intS], "\t")[2])
+    strExt = File.Ext(strFile)
 
-    strReturn = MBatch.FileDelibery(strTool, strFile, intPage)
+    strMod = Settings[strTool & "/" & strExt, ""]
+
+    strReturn = MBatch.FileDelibery(strTool, strFile, intPage, strMod)
 
     While Exist(strReturn) = False
       Wait 0.01
@@ -247,7 +251,10 @@ End
 Public Sub grwData_Drop()
 
   Inc Application.Busy
-  cmdFiles()
+  MStarter.stxFiles = cmdFiles()
+  If MStarter.stxFiles.Count > 0 Then
+    cmdCheckFiles()
+  Endif
   Dec Application.Busy
 
 End
@@ -259,20 +266,26 @@ Public Function cmdFiles() As String[]
   Dim strPath As String
   Dim stxPaths As New String[]
   Dim stxFilesTmp As New String[]
+  Dim stxFiles As New String[]
   Dim strPathTmp As String
 
   stxPaths = MUtility.FilesList(Drag.Paste("text/uri-list"))
 
+  stxFiles = MStarter.stxFiles
+
   ' En este punto se tiene la lista de archivos
   ' Para cada ruta de archivo se verifica que exista y se extraen los metadaos de este
   For Each strPath In stxPaths
+
+    strPath = MUtility.ConvertPath(strPath) ' Para caracteres con acento
+
     If Exist(strPath) Then
 
       Select Stat(strPath).Type
 
         Case gb.File
-          If MStarter.stxFiles.Find(strPath) = -1 Then
-            MStarter.stxFiles.Add(strPath)
+          If stxFiles.Find(strPath) = -1 Then
+            stxFiles.Add(strPath)
           Endif
 
         Case gb.Directory
@@ -281,8 +294,8 @@ Public Function cmdFiles() As String[]
           stxFilesTmp = MUtility.ScanFolder(strPath)
 
           For Each strPathTmp In stxFilesTmp
-            If MStarter.stxFiles.Find(strPathTmp) = -1 Then
-              MStarter.stxFiles.Add(strPathTmp)
+            If stxFiles.Find(strPathTmp) = -1 Then
+              stxFiles.Add(strPathTmp)
             Endif
           Next
 
@@ -291,11 +304,13 @@ Public Function cmdFiles() As String[]
     Endif
   Next
   ' Orden de la lista
-  If MStarter.stxFiles.Count > 0 Then
-    MStarter.stxFiles.Sort
+  If stxFiles.Count > 0 Then
+    stxFiles.Sort
   Endif
 
-  cmdCheckFiles()
+  Return stxFiles
+
+  'cmdCheckFiles()
 
 End
 

@@ -1,0 +1,73 @@
+AVS	AVS X image
+BMP	Microsoft Windows bitmap
+CMYK	Raw cyan, magenta, yellow, and black samples
+DCX	ZSoft IBM PC multi-page Paintbrush image
+DIB	Microsoft Windows Device Independent Bitmap
+DPX	Digital Moving Picture Exchange
+EPDF	Encapsulated Portable Document Format
+EPI	Adobe Encapsulated PostScript Interchange format
+EPS	Adobe Encapsulated PostScript
+EPS2	Adobe Level II Encapsulated PostScript
+EPS3	Adobe Level III Encapsulated PostScript
+EPSF	Adobe Encapsulated PostScript
+EPSI	Adobe Encapsulated PostScript Interchange format
+EPT	Adobe Encapsulated PostScript Interchange format with TIFF preview
+FAX	Group 3 TIFF
+FITS	Flexible Image Transport System
+FPX	FlashPix Format
+GIF	CompuServe Graphics Interchange Format
+GRAY	Raw gray samples
+HTML	Hypertext Markup Language with a client-side image map
+JBIG	Joint Bi-level Image experts Group file interchange format
+JNG	Multiple-image Network Graphics
+JP2	JPEG-2000 JP2 File Format Syntax
+JPC	JPEG-2000 Code Stream Syntax
+JPEG	Joint Photographic Experts Group JFIF format
+MIFF	Magick image file format
+MONO	Bi-level bitmap in least-significant-byte first order
+MNG	JPEG Network Graphics
+MPEG	Motion Picture Experts Group file interchange format (version 1)
+M2V	Motion Picture Experts Group file interchange format (version 2)
+MPC	Magick Persistent Cache image file format
+MSL	Magick Scripting Language
+MTV	MTV Raytracing image format
+MVG	Magick Vector Graphics.
+OTB	On-the-air Bitmap
+P7	Xv's Visual Schnauzer thumbnail format
+PALM	Palm pixmap
+PBM	Portable bitmap format (black and white)
+PCD	Photo CD
+PCDS	Photo CD
+PCL	HP Page Control Language
+PCX	ZSoft IBM PC Paintbrush file
+PDB	Palm Database ImageViewer Format
+PDF	Portable Document Format
+PGM	Portable graymap format (gray scale)
+PICON	Personal Icon
+PICT	Apple Macintosh QuickDraw/PICT file
+PNG	Portable Network Graphics
+PNM	Portable anymap
+PPM	Portable pixmap format (color)
+PS	Adobe PostScript file
+PS2	Adobe Level II PostScript file
+PS3	Adobe Level III PostScript file
+PSD	Adobe Photoshop bitmap file
+PTIF	Pyramid encoded TIFF
+RGB	Raw red, green, and blue samples
+RGBA	Raw red, green, blue, and matte samples
+SGI	Irix RGB image
+SHTML	Hypertext Markup Language client-side image map
+SUN	SUN Rasterfile
+SVG	Scalable Vector Graphics
+TGA	Truevision Targa image
+TIFF	Tagged Image File Format
+TXT	Raw text file
+UIL	X-Motif UIL table
+UYVY	Interleaved YUV raw image
+VICAR	VICAR rasterfile format
+VIFF	Khoros Visualization Image File Format
+WBMP	Wireless bitmap
+XBM	X Windows system bitmap, black and white only
+XPM	X Windows system pixmap
+XWD	X Windows system window dump
+YUV	CCIR 601 411

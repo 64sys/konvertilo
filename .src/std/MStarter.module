@@ -53,7 +53,8 @@ Public stxFilesPages As New String[] ' Lista de paginas de cada archivo a proces
 Public stxExt As New String[] ' Lista de tipode extensiones
 Public stxToolsName As New String[] ' Lista de herramientas a aplicar cuando se procesan archivos
 Public stxToolsDesc As New String[] ' Lista de descripciones de las herramientas (traducibles)
-Public stxToolsExt As New String[] ' Llista de las extensiones de archivo a las que se puede aplicar cada herramienta
+Public stxToolsExt As New String[] ' Lista de las extensiones de archivo a las que se puede aplicar cada herramienta
+Public stxToolsMod As New String[] ' Lista de modificadores de las herramientas
 Public intTimer As Integer ' Tiempo en segundos transcurridos desde el inicio del procesado de archivos
 
 Public strState As String ' Estado de actividad del programa "running / stopped"
@@ -67,9 +68,16 @@ Public stxErr As New String[] ' Lista de rutas de archivos con error Tool/file
 
 Public strOCRTxt As String ' Texto de salida del OCR
 Public strOCRFile As String ' Archivo de salida del OCR
+Public stxOCRLang As New String[] ' Lista de los paquetes de idiomas instalados en el sistema para usar con tesseract
 
 Public stxFileExifUgly As New String[] ' Lista de etiquetas a reemplazar.
 Public stxFileExifGood As New String[] ' Lista de etiquetas de reemplazo.
+
+'Public stxImageIFormat As New String[] ' Lista de formatos de imagen de entrada.
+'Public stxImageIDesc As New String[] ' Lista de descripciones de formatos de imagen de entrada.
+
+Public stxImageOFormat As New String[] ' Lista de formatos de imagen de salida.
+Public stxImageODesc As New String[] ' Lista de descripciones de formatos de imagen de salida.
 
 Public Sub Main()
 
@@ -182,8 +190,15 @@ Public Sub Main()
   stxToolsName.Clear
   stxToolsDesc.Clear
   stxToolsExt.Clear
+  stxToolsMod.Clear
 
-  LoadTools()
+  If LoadTools() = 1 Then
+    If LoadMods() = 1 Then
+      LoadFormats()
+    Endif
+  Endif
+
+  LoadOCRLang() ' Carga de los idiomas disponibles en el sistema para usar con tesseract
 
   LoadExif() ' Carga de equivalencias de etiquetas
 
@@ -243,12 +258,49 @@ Public Sub LoadExif()
 
 End
 
-Public Sub LoadTools() '' Carga de herramientas disponibles para asignar el el proceso de archivos segun su extensión
+Public Sub LoadOCRLang() '' Carga los idiomas disponibles en el sistema para usar con tesseract-ocr
+
+  Dim strLangTemp As String
+  Dim stxAllLangs As New String[]
+  Dim stxOCRLangTmp As New String[]
+  Dim int As Integer
+  Dim intNull As Integer
+
+  stxAllLangs.Clear
+  stxAllLangs = Split(File.Load("tesseract-langs.txt"), "\n")
+  intNull = stxAllLangs.Find("")
+  If intNull > -1 Then
+    stxAllLangs.Delete(intNull, 1)
+  Endif
+
+  stxOCRLang.Clear
+  stxOCRLangTmp.Clear
+  Shell "tesseract --list-langs 2>&1" To strLangTemp
+  Wait 0.1
+  strLangTemp = Replace(strLangTemp, "_", "-")
+  Wait 0.1
+  stxOCRLangTmp = Split(strLangTemp, "\n")
+
+  For int = 0 To stxOCRLangTmp.Max
+    If stxAllLangs.Find(stxOCRLangTmp[int]) > -1 Then
+      If stxOCRLangTmp[int] <> "" Then
+        stxOCRLang.Add(stxOCRLangTmp[int])
+      Endif
+    Endif
+  Next
+
+End
+
+Public Function LoadTools() As Integer '' Carga de herramientas disponibles para asignar el el proceso de archivos segun su extensión
 
   '## JPEG
   stxToolsName.Add("JPEG>Email")
   stxToolsDesc.Add(("Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email"))
   stxToolsExt.Add("jpg:jpeg")
+
+  stxToolsName.Add("JPEG>OCR-Text")
+  stxToolsDesc.Add(("Reconocimiento optico de caracteres"))
+  stxToolsExt.Add("jpeg:jpg")
 
   stxToolsName.Add("JPEG>GIFEmail")
   stxToolsDesc.Add(("Crea un archivo") & " GIF " & ("y luego lo adjunta en un nuevo correo") & ".")
@@ -281,6 +333,10 @@ Public Sub LoadTools() '' Carga de herramientas disponibles para asignar el el p
 
   stxToolsName.Add("PNG>JPEG-Copy-Reduced-Color")
   stxToolsDesc.Add(("Crea una copia reducida en la misma ubicación que la original"))
+  stxToolsExt.Add("png")
+
+  stxToolsName.Add("PNG>OCR-Text")
+  stxToolsDesc.Add(("Reconocimiento optico de caracteres"))
   stxToolsExt.Add("png")
 
   '## ODT
@@ -319,6 +375,23 @@ Public Sub LoadTools() '' Carga de herramientas disponibles para asignar el el p
   stxToolsDesc.Add(("Mueve las fotografiás y videos organizándolas según su fecha de captura."))
   stxToolsExt.Add("jpg:jpeg:avi:mov:m2ts:mp4:webm:ogv")
 
+  stxToolsName.Add("Video-Mixer")
+  stxToolsDesc.Add(("Crea una copia muda de un video y le agrega una pista de audio."))
+  stxToolsExt.Add("mkv:avi:mov:m2ts:mp4:webm:ogv")
+
+  stxToolsName.Add("Audio-Extractor")
+  stxToolsDesc.Add(("Extrae la pista de audio de un video."))
+  stxToolsExt.Add("mkv:avi:mov:m2ts:mp4:webm:ogv")
+
+  stxToolsName.Add("Video-Extractor")
+  stxToolsDesc.Add(("Extrae la pista de video de un video."))
+  stxToolsExt.Add("mkv:avi:mov:m2ts:mp4:webm:ogv")
+
+  '## TXT
+  stxToolsName.Add("TXT>WAV")
+  stxToolsDesc.Add(("Crea un archivo de sonido a partir de uno de texto."))
+  stxToolsExt.Add("txt")
+
   '## MDB, ACCDB
   stxToolsName.Add("JET>SQL")
   stxToolsDesc.Add(("Crea los archivos") & "SQL" & ("para crear bases de datos") & " SQLite / PostgreSQL / MySQL")
@@ -329,8 +402,62 @@ Public Sub LoadTools() '' Carga de herramientas disponibles para asignar el el p
   stxToolsDesc.Add(("Crea archivos") & " MBX " & ("a partir de") & " PST")
   stxToolsExt.Add("pst")
 
-  ' Agragar acá las nuevas herramientas de vonversión. #######
+  ' Carga de modificadores de herramientas para cada tpo de archivo.
+  ' Por ejemlo: JPEG>OCR-Text/jpg/spa
+
+  ' Agragar acá las nuevas herramientas de conversión. #######
   ' ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Return 1
+
+End
+
+Public Function LoadFormats() As Integer
+
+  Dim stxFTemp As New String[]
+  Dim int As Integer
+
+  stxFTemp = Split(File.Load("convert-output-formats.txt"), "\n")
+
+  For int = 0 To stxFTemp.Max
+    If stxFTemp[int] <> "" Then
+      stxImageOFormat.Add(Split(stxFTemp[int], "\t")[0])
+      stxImageODesc.Add(Split(stxFTemp[int], "\t")[1])
+    Endif
+  Next
+
+  Return 1
+
+End
+
+Public Function LoadMods() As Integer
+
+  Dim intT As Integer
+  Dim intE As Integer
+  Dim stxTempExt As New String[]
+  Dim strToolKey As String
+  Dim strToolMod As Variant
+
+  stxToolsMod.Clear
+
+  For intT = 0 To stxToolsName.Max
+
+    stxTempExt.Clear
+    If InStr(stxToolsName[intT], ":") > 0 Then
+      stxTempExt = Split(stxToolsExt[intT], ":")
+    Else
+      stxTempExt.Add(stxToolsExt[intT])
+    Endif
+
+    For intE = 0 To stxTempExt.Max
+      strToolKey = stxToolsName[intT] & "/" & stxTempExt[intE]
+      strToolMod = Settings[strToolKey, ""]
+
+      stxToolsMod.Add(strToolKey & ":" & strToolMod)
+    Next
+
+  Next
+
+  Return 1
 
 End
 
