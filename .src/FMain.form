@@ -4,49 +4,65 @@
   MoveScaled(0,0,88,64)
   Icon = Picture["logo.png"]
   Arrangement = Arrange.Vertical
+  Padding = 2
   { Panel1 Panel
-    MoveScaled(0,0,87,5)
+    MoveScaled(0,1,87,5)
     Arrangement = Arrange.Horizontal
     { tobStart ToolButton
-      MoveScaled(2,0,5,5)
+      MoveScaled(1,0,5,5)
       ToolTip = ("Iniciar procesado de archivos")
       Picture = Picture["icon:/22/play"]
     }
+    { tobAddDir ToolButton
+      MoveScaled(8,0,5,5)
+      ToolTip = ("Agregar archivos o directorios")
+      Picture = Picture["icon:/22/directory"]
+    }
+    { tobAddFiles ToolButton
+      MoveScaled(15,0,5,5)
+      ToolTip = ("Agregar archivos o directorios")
+      Picture = Picture["icon:/22/file"]
+    }
+    { tobClean2 ToolButton
+      MoveScaled(20,0,5,5)
+      ToolTip = ("Limpiar la lista")
+      Picture = Picture["icon:/22/remove"]
+    }
     { tobClean ToolButton
-      MoveScaled(9,0,5,5)
+      MoveScaled(25,0,5,5)
       ToolTip = ("Limpiar la lista")
       Picture = Picture["icon:/22/clear"]
     }
     { tobConfig ToolButton
-      MoveScaled(16,0,5,5)
+      MoveScaled(30,0,5,5)
       ToolTip = ("Preferencias")
       Picture = Picture["icon:/22/properties"]
     }
     { tobReport ToolButton
-      MoveScaled(24,0,5,5)
+      MoveScaled(36,0,5,5)
       ToolTip = ("Imprimir informe de archivos procesados")
       Picture = Picture["icon:/22/print"]
     }
     { tobAbout ToolButton
-      MoveScaled(30,0,5,5)
+      MoveScaled(42,0,5,5)
       ToolTip = ("Acerca de")
       Picture = Picture["icon:/22/info"]
     }
     { tobHelp ToolButton
-      MoveScaled(36,0,5,5)
+      MoveScaled(48,0,5,5)
       ToolTip = ("Ayuda")
       Picture = Picture["icon:/22/help"]
     }
     { sirProcess Spinner
-      MoveScaled(42,0,5,5)
+      MoveScaled(54,0,5,5)
       Visible = False
     }
     { Panel5 Panel
-      MoveScaled(49,0,7,5)
+      MoveScaled(59,0,7,5)
       Expand = True
     }
     { btoSearch ButtonBox
-      MoveScaled(62,1,24,4)
+      MoveScaled(67,1,19,4)
     }
   }
   { HSplit1 HSplit

@@ -116,6 +116,17 @@ Public Function OnlyLeters(strInput As String) As String '' Validación de palab
 
 End
 
+Public Function CaptionCheck(strInput As String) As String '' Validación del texto de un control en KDE el texto de los botones por ejemplo tiene un simbolo & delante del texto.
+
+  Dim strOut As String
+
+  If String.Left(strInput) = "&" Then
+    strOut = String.Right(strInput, -1)
+  Endif
+  Return strOut
+
+End
+
 Public Function NoSymbols(strInput As String) As String '' Solo letras y números, y las letras sin acentos.
 
   Dim int As Integer

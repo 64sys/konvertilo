@@ -2,16 +2,26 @@
 MStarter=[202]
 
 [Breakpoints]
-Count=0
+Count=1
+Breakpoint[1]="FData.236"
 
 [DebugWindow]
 Count=0
 
+[DebugWindow/MStarter.stxEmail]
+Geometry=[632,655,224,280]
+
 [DebugWindow/MStarter.stxExt]
 Geometry=[56,25,224,280]
 
+[DebugWindow/MStarter.stxExtPlay]
+Geometry=[22,33,224,280]
+
 [DebugWindow/MStarter.stxFiles]
-Geometry=[787,298,777,658]
+Geometry=[583,68,777,658]
+
+[DebugWindow/MStarter.stxFilesPlay]
+Geometry=[71,34,224,280]
 
 [DebugWindow/MStarter.stxHeaders]
 Geometry=[1170,551,224,344]
@@ -23,19 +33,37 @@ Geometry=[0,56,725,854]
 Geometry=[354,67,224,280]
 
 [DebugWindow/MStarter.stxSchedule]
-Geometry=[226,33,1164,930]
+Geometry=[512,151,1164,904]
 
 [DebugWindow/MStarter.stxToolsExt]
-Geometry=[47,179,224,280]
+Geometry=[936,192,224,282]
+
+[DebugWindow/MStarter.stxToolsName]
+Geometry=[454,132,396,499]
 
 [DebugWindow/MUtility.FileExif(strPath)]
 Geometry=[1053,389,224,615]
+
+[DebugWindow/chk]
+Geometry=[826,261,397,577]
 
 [DebugWindow/inxMod]
 Geometry=[354,67,224,280]
 
 [DebugWindow/inxPages]
 Geometry=[354,67,224,280]
+
+[DebugWindow/objBox]
+Geometry=[648,215,313,319]
+
+[DebugWindow/objPanel]
+Geometry=[1218,0,352,904]
+
+[DebugWindow/pnl.Children]
+Geometry=[951,620,224,280]
+
+[DebugWindow/pnlTools.Children]
+Geometry=[986,21,224,280]
 
 [DebugWindow/prs]
 Geometry=[368,308,344,584]
@@ -52,6 +80,12 @@ Geometry=[1215,37,535,1005]
 [DebugWindow/stxExifBruto]
 Geometry=[1382,58,436,953]
 
+[DebugWindow/stxExt]
+Geometry=[1063,517,224,280]
+
+[DebugWindow/stxExtTmp]
+Geometry=[996,58,224,280]
+
 [DebugWindow/stxFInfo]
 Geometry=[934,574,224,321]
 
@@ -65,33 +99,52 @@ Geometry=[121,260,224,280]
 Geometry=[352,261,224,280]
 
 [DebugWindow/stxFiles]
-Geometry=[825,775,743,280]
+Geometry=[913,544,743,280]
 
 [DebugWindow/stxPDFDir]
 Geometry=[0,25,891,577]
+
+[DebugWindow/stxPackages]
+Geometry=[528,349,224,280]
 
 [DebugWindow/stxPaths]
 Geometry=[322,710,767,280]
 
 [DebugWindow/stxSch]
-Geometry=[1,33,224,280]
+Geometry=[1084,552,224,280]
 
 [DebugWindow/stxTime]
 Geometry=[960,33,224,280]
+
+[DebugWindow/stxTool]
+Geometry=[803,558,224,280]
+
+[DebugWindow/trvEntities]
+Geometry=[22,33,224,280]
 
 [Executable]
 Path="konvertilo.gambas"
 
 [OpenFile]
-Count=7
+Count=17
 File[1]=".src/FMain.form"
-File[2]=".src/FMain.class:0.125"
-File[3]=".src/gef/MUtility.module:27.806"
-Active=4
-File[4]=".src/MBatch.module:1.756"
-File[5]=".src/std/MStarter.module:0.393"
-File[6]=".src/FTools.form"
-File[7]=".src/FTools.class:24.74"
+File[2]=".src/FMain.class:1.33"
+Active=9
+File[3]=".src/std/FData.class:21.65"
+File[4]=".src/std/FConfig.form"
+File[5]=".src/FTools.form"
+File[6]=".src/FTools.class:0.28"
+File[7]=".src/gef/MValidator.module:3.127"
+File[8]=".src/gef/MUtility.module:11.642"
+File[9]=".src/std/FData.form"
+File[10]=".src/std/FAbout.form"
+File[11]="depend-deb.txt:16.17"
+File[12]=".src/MBatch.module:0.38"
+File[13]=".src/FPages.form"
+File[14]=".src/std/MStarter.module:51.73"
+File[15]=".src/std/FConfig.class:0.0"
+File[16]=".src/gef/Msys.module:11.256"
+File[17]=".src/std/FAbout.class:0.96"
 
 [Watches]
 Count=0

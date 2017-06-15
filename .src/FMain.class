@@ -63,6 +63,11 @@ Public Sub tobStart_Click()
   Dim stxTime As New Integer[]
   Dim strMod As String
   Dim strExt As String
+  Dim intN As Integer
+  Dim intColor As Integer
+  Dim intRow As Integer
+  Dim intCol As Integer
+  Dim intKey As Integer
 
   Inc Application.Busy
 
@@ -72,7 +77,13 @@ Public Sub tobStart_Click()
       For Each obj In pnlButtons.Children
         If Object.Type(obj) = "ToggleButton" Then
           If obj.Value = True Then
-            MStarter.stxFilesPlay.Add(obj.Tag)
+            MStarter.stxExtPlay.Add(obj.Tag)
+          Else
+            intKey = MStarter.stxExtPlay.Find(obj.Tag)
+
+            If intKey > -1 Then
+              MStarter.stxExtPlay.Remove(intKey)
+            Endif
           Endif
         Endif
       Next
@@ -81,7 +92,7 @@ Public Sub tobStart_Click()
       tobStart.Picture = Picture["icon:/22/stop"]
 
     Case "running"
-      MStarter.stxFilesPlay.Clear
+      MStarter.stxExtPlay.Clear
       MStarter.strState = "stopped"
       tobStart.Picture = Picture["icon:/22/play"]
 
@@ -100,7 +111,7 @@ Public Sub tobStart_Click()
     Next
   Next
 
-  MStarter.stxSchedule = Scheduler(MStarter.stxFiles, MStarter.stxToolsName, MStarter.stxToolsExt)
+  MStarter.stxSchedule = Scheduler(MStarter.stxFiles, MStarter.stxToolsName, MStarter.stxToolsExt, MStarter.stxExtPlay)
 
   tmrCounter.Start
 
@@ -124,7 +135,7 @@ Public Sub tobStart_Click()
     intPage = CInt(Split(MStarter.stxSchedule[intS], "\t")[2])
     strExt = File.Ext(strFile)
 
-    strMod = Settings[strTool & "/" & strExt, ""]
+    strMod = Settings[String.LCase(strExt) &/ strTool, ""]
 
     strReturn = MBatch.FileDelibery(strTool, strFile, intPage, strMod)
 
@@ -147,9 +158,42 @@ Public Sub tobStart_Click()
 
     lblEstimated.Text = "Falta" & ": " & CStr(stxTime[0]) & ":" & CStr(stxTime[1]) & ":" & CStr(stxTime[2])
 
+    ' Coloreando la fila que esta en proceso
+    For intN = 0 To grwData.Rows.Max
+      If Split(MStarter.stxSchedule[intS], "\t")[1] = grwData[intN, 0].Text
+        intRow = intN
+        intCol = 3 ' Columna de extension
+
+        Select intS
+          Case MStarter.stxSchedule.Max
+            intColor = Color.Red
+          Case Else
+            If intS < MStarter.stxSchedule.Max Then
+
+              If Split(MStarter.stxSchedule[intS + 1], "\t")[1] = grwData[intN, 0].Text Then
+                intColor = Color.Green
+              Else
+                intColor = Color.Red
+
+              Endif
+
+            Else
+              intColor = Color.Red
+
+            Endif
+
+        End Select
+
+      Endif
+
+    Next
+
+    grwData[intRow, intCol].Foreground = intColor
+
   Next
+
   ' Finalizacion del proceso e indicacion en el formulario mediante cambio de icono
-  MStarter.stxFilesPlay.Clear
+  MStarter.stxExtPlay.Clear
   MStarter.strState = "stopped"
   tobStart.Picture = Picture["icon:/22/play"]
 
@@ -165,7 +209,7 @@ Public Sub tobStart_Click()
 
 End
 
-Public Function Scheduler(stxFiles As String[], stxTool As String[], stxExt As String[]) As String[] '' stxFiles es la lista de archivos, stxTool es la lista de herramientas, stxExt es la lista de extensiones a las que aplicar las herramientas y estas dos ultimas listas trabajan juntas cada indice se corresponde en ambas listas.
+Public Function Scheduler(stxFiles As String[], stxTool As String[], stxExt As String[], stxExtPlay As String[]) As String[] '' stxFiles es la lista de archivos, stxTool es la lista de herramientas, stxExt es la lista de extensiones a las que aplicar las herramientas y estas dos ultimas listas trabajan juntas cada indice se corresponde en ambas listas. stxExtPlay es la lista de extensiones de archivo habilitadas para el procesado.
 
   Dim stxSch As New String[]
   Dim int1 As Integer
@@ -192,22 +236,26 @@ Public Function Scheduler(stxFiles As String[], stxTool As String[], stxExt As S
     For int2 = 0 To stxFiles.Max
       strExtension = String.LCase(File.Ext(stxFiles[int2]))
 
-      If stxExtTmp.Find(String.LCase(File.Ext(stxFiles[int2]))) > -1 Then ' = stxExt[int1] Then  ' Comprobar si la extension de archivo tiene acciones planeadas
-        If Settings[strExtension & "/" & stxTool[int1]] = True Then ' Comprobar si la herramienta esta seleccionada
+      If stxExtPlay.Find(String.LCase(File.Ext(stxFiles[int2]))) > -1 Then
 
-          ' Genero una matriz temporal de la logística de páginas
-          stxPagesTmp.Clear
-          For intM = 1 To Len(MStarter.stxFilesPages[int2])
-            stxPagesTmp.Add(Mid(MStarter.stxFilesPages[int2], intM, 1))
-          Next
+        If stxExtTmp.Find(String.LCase(File.Ext(stxFiles[int2]))) > -1 Then ' = stxExt[int1] Then  ' Comprobar si la extension de archivo tiene acciones planeadas
 
-          For int3 = 0 To stxPagesTmp.Max
-            If stxPagesTmp[int3] = "1" Then
-              stxSch.Add(stxTool[int1] & "\t" & stxFiles[int2] & "\t" & CStr(int3))
-            Endif
+          If Settings[stxTool[int1] &/ strExtension] = True Then ' Comprobar si la herramienta esta seleccionada
 
-          Next
+            ' Genero una matriz temporal de la logística de páginas
+            stxPagesTmp.Clear
+            For intM = 1 To Len(MStarter.stxFilesPages[int2])
+              stxPagesTmp.Add(Mid(MStarter.stxFilesPages[int2], intM, 1))
+            Next
 
+            For int3 = 0 To stxPagesTmp.Max
+              If stxPagesTmp[int3] = "1" Then
+                stxSch.Add(stxTool[int1] & "\t" & stxFiles[int2] & "\t" & CStr(int3))
+              Endif
+
+            Next
+
+          Endif
         Endif
       Endif
     Next
@@ -222,15 +270,18 @@ End
 Public Sub FileExtButton_Click()
 
   Dim tgb As ToggleButton
+  Dim strText As String
 
   tgb = Last
 
   If tgb.Value = True Then
 
-    FTools.Run(tgb.Text)
+    strText = tgb.Tag
+
+    FTools.Run(strText)
 
   Else
-    Print "Desactivado " & tgb.Text
+    Print "Desactivado " & strText
   Endif
 
 End
@@ -250,8 +301,12 @@ End
 
 Public Sub grwData_Drop()
 
+  Dim stxPaths As New String[]
+
   Inc Application.Busy
-  MStarter.stxFiles = cmdFiles()
+  stxPaths = MUtility.FilesList(Drag.Paste("text/uri-list"))
+  MStarter.stxFiles = cmdFiles(stxPaths)
+
   If MStarter.stxFiles.Count > 0 Then
     cmdCheckFiles()
   Endif
@@ -261,15 +316,15 @@ End
 
 '### FUNCIONES ###
 
-Public Function cmdFiles() As String[]
+Public Function cmdFiles(stxPaths As String[]) As String[]
 
   Dim strPath As String
-  Dim stxPaths As New String[]
+  'Dim stxPaths As New String[]
   Dim stxFilesTmp As New String[]
   Dim stxFiles As New String[]
   Dim strPathTmp As String
 
-  stxPaths = MUtility.FilesList(Drag.Paste("text/uri-list"))
+  'stxPaths = MUtility.FilesList(Drag.Paste("text/uri-list"))
 
   stxFiles = MStarter.stxFiles
 
@@ -425,7 +480,7 @@ Public Sub tobClean_Click()
   lblInformation.Text = ""
   lblTotals.Text = ""
 
-  MStarter.stxFilesPlay.Clear
+  MStarter.stxExtPlay.Clear
   MStarter.strState = "stopped"
 
   trvEntities.Clear
@@ -435,6 +490,43 @@ Public Sub tobClean_Click()
 
   tobStart.Picture = Picture["icon:/22/play"]
   lblInformation.Text = ""
+
+End
+
+Public Function RemovePaths(stxPaths As String[]) As Integer
+
+  Dim strPath As String
+  'Dim strExt As String
+  Dim intKeyFile As Integer
+  'Dim intRow As Integer
+
+  If stxPaths.Count > 0 Then
+    For Each strPath In stxPaths
+      intKeyFile = MStarter.stxFiles.Find(strPath)
+      If intKeyFile > -1 Then
+        MStarter.stxFiles.Remove(intKeyFile)
+      Endif
+    Next
+  Endif
+
+  lblEstimated.Text = ""
+  lblInformation.Text = ""
+  lblTotals.Text = ""
+
+  MStarter.stxExtPlay.Clear
+  MStarter.strState = "stopped"
+
+  trvEntities.Clear
+
+  grwData.Rows.Count = 0
+  pnlButtons.Children.Clear
+
+  tobStart.Picture = Picture["icon:/22/play"]
+  lblInformation.Text = ""
+
+  cmdCheckFiles()
+
+  Return 1
 
 End
 
@@ -462,17 +554,17 @@ Public Sub grwData_DblClick()
 
   Dim inx As New Integer[]
   Dim inxMod As New Integer[]
-  Dim str As String
+  Dim strPages As String
   Dim strFile As String
   Dim int As Integer
 
-  str = grwData[grwData.Row, 8].Text
   strFile = grwData[grwData.Row, 0].Text
+  strPages = grwData[grwData.Row, 8].Text
 
   MStarter.stxPages.Clear
 
-  For int = 1 To String.Len(str)
-    MStarter.stxPages.Add(CInt(String.Mid(str, int, 1)))
+  For int = 1 To String.Len(strPages)
+    MStarter.stxPages.Add(CInt(String.Mid(strPages, int, 1)))
   Next
 
   inxMod = MStarter.stxPages
@@ -482,19 +574,111 @@ Public Sub grwData_DblClick()
   Wait 0.01
   Print "control 1"
 
-  str = ""
+  strPages = ""
   If inx <> MStarter.stxPages Then
     For int = 0 To MStarter.stxPages.Max
-      str &= MStarter.stxPages[int]
+      strPages &= MStarter.stxPages[int]
     Next
 
-    MStarter.stxFilesPages[MStarter.stxFiles.Find(strFile)] = str
+    MStarter.stxFilesPages[MStarter.stxFiles.Find(strFile)] = strPages
 
-    grwData[grwData.Row, 8].Text = str
+    grwData[grwData.Row, 8].Text = strPages
     grwData[grwData.Row, 8].Refresh
 
   Endif
 
   Print "control 2"
+
+End
+
+Public Sub tobAddDir_Click()
+
+  Dim strDirectory As String
+  Dim stxPaths As New String[]
+
+  strDirectory = MUtility.DirChooser()
+  If Exist(strDirectory) Then
+    If Stat(strDirectory).Type = gb.Directory Then
+
+      Inc Application.Busy
+
+      stxPaths = MUtility.FilesList(strDirectory)
+
+      MStarter.stxFiles = cmdFiles(stxPaths)
+
+      If MStarter.stxFiles.Count > 0 Then
+        cmdCheckFiles()
+      Endif
+      Dec Application.Busy
+
+    Endif
+  Endif
+
+End
+
+Public Sub tobAddFiles_Click()
+
+  Dim stxFiles As New String[]
+  Dim strFiles As String
+  Dim stxPaths As New String[]
+
+  stxFiles = MUtility.FileChooser()
+
+  If stxFiles.Count > 0 Then
+
+    strFiles = stxFiles.Join("\n")
+
+    If Exist(strFiles) Then
+      If Stat(strFiles).Type = gb.File Then
+        Inc Application.Busy
+
+        stxPaths = MUtility.FilesList(strFiles)
+
+        MStarter.stxFiles = cmdFiles(stxPaths)
+
+        If MStarter.stxFiles.Count > 0 Then
+          cmdCheckFiles()
+        Endif
+        Dec Application.Busy
+
+      Endif
+    Endif
+
+  Endif
+
+End
+
+Public Sub tobClean2_Click()
+
+  Dim intKey As Integer
+  Dim intAction As Integer
+  Dim strPath As String
+  Dim intAll As Integer
+  Dim strAll As String
+  Dim stxPaths As New String[]
+  Dim stxAll As New String[]
+
+  For Each intKey In grwData.Rows.Selection
+    strPath = grwData[intKey, 0].Text
+    stxPaths.Add(strPath)
+  Next
+
+  For intAll = 0 To grwData.Rows.Max
+    strAll = grwData[intAll, 0].Text
+    stxAll.Add(strAll)
+  Next
+
+  If stxPaths.Count > 0 Then
+    RemovePaths(stxPaths)
+  Else
+    intAction = Message.Warning(("¿Quiere quitar todos los archivos de la lista?"), ("Aceptar"), ("Cancelar"))
+    Select intAction
+      Case 1
+        RemovePaths(stxAll)
+        'Case 2
+
+    End Select
+
+  Endif
 
 End

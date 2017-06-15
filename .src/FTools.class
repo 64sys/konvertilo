@@ -7,11 +7,23 @@ Public Sub Run(strExt As String)
   Dim pnl As Panel
   Dim chk As CheckBox
   Dim cmo As ComboBox
+  Dim lbl As Label
+  Dim swb As SwitchButton
   Dim txo As TextBox
   Dim intR As Integer
   Dim intL As Integer
+  Dim strTitle As String
+  Dim strToolName As String
 
   strFileExt = String.LCase(strExt)
+
+  strTitle = ("Acciones para archivos")
+  strTitle &= " "
+  strTitle &= strFileExt
+
+  Print strFileExt
+
+  Me.Title = strTitle
 
   ' Creacion del checkbox para seleccionar la herramienta a aplicar
   ' con un modificador para el caso que sea necesario
@@ -32,17 +44,34 @@ Public Sub Run(strExt As String)
       With chk
         .Name = "chk" & ":" & strFileExt & ":" & CStr(intR)
         .Text = MStarter.stxToolsName[intR]
+        .Tag = MStarter.stxToolsName[intR]
+        Print MStarter.stxToolsName[intR]
         .Height = 28
         .Width = 250
         .Tooltip = MStarter.stxToolsDesc[intR]
-        .Value = Settings[strFileExt & "/" & MStarter.stxToolsName[intR], False]
+        .Value = Settings[MStarter.stxToolsName[intR] &/ strFileExt, False]
 
       End With
 
       ' Aca algunas particularidades de modificadores de estilo libre o de seleccion de valores preestablecidos
 
-      Select MStarter.stxToolsName[intR]
+      strToolName = MStarter.stxToolsName[intR]
+
+      Print strToolName
+
+      Select strToolName
+
         Case "PNG>OCR-Text", "JPEG>OCR-Text", "PDF>OCR-Text"
+          lbl = New Label(pnl)
+          With lbl
+            .Name = "lbl" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 40
+            .Alignment = Align.Right
+            .Expand = True
+            .Text = ("Idioma") & " "
+          End With
+
           cmo = New ComboBox(pnl) As "mod"
           With cmo
             .Name = "cmo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
@@ -51,10 +80,20 @@ Public Sub Run(strExt As String)
             For intL = 0 To MStarter.stxOCRLang.Max
               .Add(MStarter.stxOCRLang[intL])
             Next
-            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+            .Text = Settings[strFileExt &/ MStarter.stxToolsName[intR], ""]
 
           End With
-        Case "TXT>WAV"
+        Case "TXT>OGG"
+          lbl = New Label(pnl)
+          With lbl
+            .Name = "lbl" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 40
+            .Alignment = Align.Right
+            .Expand = True
+            .Text = ("Idioma") & " "
+          End With
+
           cmo = New ComboBox(pnl) As "mod"
           With cmo
             .Name = "cmo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
@@ -63,11 +102,21 @@ Public Sub Run(strExt As String)
             For intL = 0 To Split("en-GB:de-DE:es-ES:fr-FR:it-IT", ":").Max
               .Add(Split("en-GB:de-DE:es-ES:fr-FR:it-IT", ":")[intL])
             Next
-            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+            .Text = Settings[strFileExt &/ MStarter.stxToolsName[intR], ""]
 
           End With
 
-        Case "PDF>Image"
+        Case "PDF>Image", "Image-Convert"
+          lbl = New Label(pnl)
+          With lbl
+            .Name = "lbl" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 40
+            .Alignment = Align.Right
+            .Expand = True
+            .Text = ("Formato") & " "
+          End With
+
           cmo = New ComboBox(pnl) As "mod"
           With cmo
             .Name = "cmo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
@@ -76,17 +125,45 @@ Public Sub Run(strExt As String)
             For intL = 0 To MStarter.stxImageOFormat.Max
               .Add(String.LCase(MStarter.stxImageOFormat[intL]))
             Next
-            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+            .Text = Settings[strFileExt &/ MStarter.stxToolsName[intR], ""]
+          End With
 
+        Case "Media>Arrange"
+          lbl = New Label(pnl)
+          With lbl
+            .Name = "lbl" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 40
+            .Alignment = Align.Right
+            .Expand = True
+            .Text = ("Mover") & " "
+          End With
+
+          swb = New SwitchButton(pnl) As "mod"
+          With swb
+            .Name = "swb" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 100
+            .Value = Settings[strFileExt &/ MStarter.stxToolsName[intR], False]
           End With
 
         Case Else
+          lbl = New Label(pnl)
+          With lbl
+            .Name = "lbl" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
+            .Height = 28
+            .Width = 40
+            .Alignment = Align.Right
+            .Expand = True
+            .Text = ""
+          End With
+
           txo = New TextBox(pnl) As "mod"
           With txo
             .Name = "txo" & ":" & MStarter.stxToolsName[intR] & ":" & strFileExt & ":" & CStr(intR)
             .Height = 28
             .Width = 100
-            .Text = Settings[MStarter.stxToolsName[intR] & "/" & strFileExt, ""]
+            .Text = Settings[strFileExt &/ MStarter.stxToolsName[intR], ""]
           End With
       End Select
 
@@ -99,10 +176,9 @@ End
 
 Public Sub btnOK_Click()
 
-  cmdSaveSettings()
-  Wait 0.01
-
-  Me.Close
+  If SaveSettings() = 1 Then
+    Me.Close
+  Endif
 
 End
 
@@ -112,12 +188,13 @@ Public Sub btnCancel_Click()
 
 End
 
-Public Sub cmdSaveSettings()
+Public Function SaveSettings() As Integer
 
   Dim objPanel As Object
   Dim pnl As Panel
   Dim objBox As Object
   Dim strBox As String
+  Dim strTool As String
 
   For Each objPanel In pnlTools.Children
     If Object.Type(objPanel) = "Panel" Then
@@ -128,18 +205,43 @@ Public Sub cmdSaveSettings()
 
         Select Object.Type(objBox)
           Case "CheckBox"
-            Settings[strFileExt & "/" & objBox.Text] = objBox.Value
+
+            Print objBox.Name & "\t" & objBox.Text & "\t" & objBox.Tag
+
+            strTool = objBox.Tag
+
+            Select objBox.Value
+              Case "0", 0, False
+                Settings[strTool &/ strFileExt] = ""
+
+              Case True, "-1", -1, True
+                Settings[strTool &/ strFileExt] = True
+
+            End Select
+
+          Case "SwitchButton"
+            strBox = Split(objBox.Name, ":")[2] &/ Split(objBox.Name, ":")[1]
+            Select objBox.Value
+              Case "0", 0, False
+                Settings[strBox] = ""
+              Case "-1", -1, True
+                Settings[strBox] = True
+            End Select
 
           Case "ComboBox", "TextBox"
-            strBox = Split(objBox.Name, ":")[1] & "/" & Split(objBox.Name, ":")[2]
+            strBox = Split(objBox.Name, ":")[2] &/ Split(objBox.Name, ":")[1]
             Settings[strBox] = objBox.Text
 
           Case "ValueBox"
-            strBox = Split(objBox.Name, ":")[1] & "/" & Split(objBox.Name, ":")[2]
+            strBox = Split(objBox.Name, ":")[2] &/ Split(objBox.Name, ":")[1]
             Settings[strBox] = objBox.Value
         End Select
       Next
     Endif
   Next
+
+  Settings.Save
+
+  Return 1
 
 End

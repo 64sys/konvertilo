@@ -69,10 +69,15 @@ Public Function DirParent(strPath As String) As String  ''Devuelve el directorio
 
 End
 
-Public Function FileChooser(Optional strInputPath As String, Optional strFilter As String) As String ''Selecciona la ruta completa de un archivo, con el nombre y las extensiones. Como opcional se puede pasar un directorio que es a donde se dirigira el filechooser cuando se abra. También como opcional se pued epasar un filtro de tipos de archivos separados por :, por ejemolo "txt:csv"
+Public Function FileChooser(Optional strInputPath As String, Optional strFilter As String) As String[] ''Selecciona la ruta completa de un archivo, con el nombre y las extensiones. Como opcional se puede pasar un directorio que es a donde se dirigira el filechooser cuando se abra. También como opcional se pued epasar un filtro de tipos de archivos separados por :, por ejemolo "txt:csv"
 
-  Dim strFilepath, strExtension, strFilterA, strFilterB As String
+  'Dim strFilepath As String
+  Dim strExtension As String
+  Dim strFilterA As String
+  Dim strFilterB As String
+
   Dim stxExtensions As New String[]
+  Dim stxFilepaths As New String[] ' Para el caso de seleccion de multiples archivos
 
   If strInputPath = "" Then
     strInputPath = User.Home
@@ -97,11 +102,12 @@ Public Function FileChooser(Optional strInputPath As String, Optional strFilter 
 
   Endif
 
-  If Not Dialog.OpenFile(False) Then
-    strFilepath = Dialog.Path
+  If Not Dialog.OpenFile(True) Then
+    'strFilepath = Dialog.Path
+    stxFilepaths = Dialog.Paths
   Endif
 
-  Return strFilepath
+  Return stxFilepaths
 
 End
 
@@ -182,7 +188,9 @@ Public Function FilesList(strPath As String) As String[] '' Devuelve una lista d
 
   strPathsTmp = Replace(strPath, "\n", "")
   strPathsTmp = Replace(strPathsTmp, "\r", "")
-  strPathsTmp = Right$(strPathsTmp, -7)  ' Quitando el primer "file://"
+  If String.Mid(strPath, 1, 7) = "file://" Then
+    strPathsTmp = Right$(strPathsTmp, -7)  ' Quitando el primer "file://"
+  Endif
 
   strPathsTmp = Replace(strPathsTmp, "file://", "\n") ' Este es por si existen mas de un archivo
 
@@ -825,6 +833,7 @@ Public Function ConvertPath(strInput As String) As String '' Descodifica los car
     If strChar = "+" Then
       ' Convertir a espacio
       ' strOutput = strOutput & " " ' Lo anule porque se carga los directorios con signo +
+      strOutput = strOutput & strChar
     Else If strChar <> "%" Then
       ' Normal, no cambiar
       strOutput = strOutput & strChar

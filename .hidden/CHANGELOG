@@ -1,3 +1,15 @@
+* Tue May 23 2017 Belmotek <info@belmotek.net> 0.0.24
+- Agregado de "Image Convert" conversion multiformato de imagen.
+
+* Mon May 22 2017 Belmotek <info@belmotek.net> 0.0.24
+- Empaquetado para Xubuntu
+
+* Tue May 09 2017 Belmotek <info@belmotek.net> 0.0.21
+- Empaquetado para KDE
+
+* Wed Apr 26 2017 Belmotek <info@belmotek.net> 0.0.21
+- Adición de la herramienta para crear archivos de audio desde texto.
+
 * Sat Apr 22 2017 Belmotek <info@belmotek.net> 0.0.19
 - Agregado de la herramienta PNG > OCR
 

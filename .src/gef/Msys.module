@@ -377,13 +377,17 @@ Public Function PkgStat(strPkg As String) As Boolean ''Devuelve el estado respec
 
       Shell strCommand & " 2>&1" To strPkgStatus
 
-      strPkgStatus = Split(strPkgStatus, "\n")[0]
-      strPkgStatus = Split(strPkgStatus, " ")[0]
-      If strPkgStatus = "local/" & strPkg
-        bolPkgStatus = True ' "yes"
-      Else
-        bolPkgStatus = False '"no"
+      If strPkgStatus <> "" Then
+        strPkgStatus = Split(strPkgStatus, "\n")[0]
+        strPkgStatus = Split(strPkgStatus, " ")[0]
       Endif
+
+      Select strPkgStatus
+        Case "local/" & strPkg
+          bolPkgStatus = True ' "yes"
+        Case Else
+          bolPkgStatus = False '"no"
+      End Select
 
     Case "debian", "ubuntu", "mint"
 
@@ -527,6 +531,9 @@ Public Function PkgDep(stxPackages As String[]) As String[] '' Verifica si los p
         strCommand = "sudo zipper install " & stxPackagesInstall.Join(" ")
     End Select
     strCommand = Replace(strCommand, "-", Chr(45)) ' Esto es porque sendkeys tiene problermas con "-"
+
+    strCommand = Replace(strCommand, "/", Chr(45)) ' Esto es porque sendkeys tiene problermas con "-"
+
     Select Message.Question(strMessage & ":" & gb.NewLine &
           stxPackagesInstall.Join(gb.NewLine) & gb.NewLine &
           ("Puede usar la siguiente orden") & ":" & gb.NewLine &

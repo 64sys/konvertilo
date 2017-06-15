@@ -34,6 +34,9 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
 
     Case "File-Check" 'Verificador de nombre de archivo
 
+    Case "Image-Convert" ' Convesion de formatos de imagenes
+      str = ImageConvert(strPath, strMod)
+
       '## JPEG
     Case "JPEG>Email" 'Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email.
       'str = JPEGEmail(strPath)
@@ -45,8 +48,13 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
       str = JPEGOCRText(strPath, strMod)
 
     Case "JPEG>Copy-Reduced-Color" 'Crea una copia reducida en la misma ubicación que la original
+      str = JPEGCopyRC(strPath, strMod)
+
     Case "JPEG>Copy-Reduced-Gray" 'Crea una copia reducida en escala de grices en la misma ubicación que la original
+      str = JPEGCopyRG(strPath, strMod)
+
     Case "JPEG>Copy-Gray" 'Crea una copia en escala de grices en la misma ubicación que la original
+
     Case "JPEG>Square" 'Crea una copia reducida de proporción cuadrada en la misma ubicación que la original.
 
     Case "JPEG>PDF" 'Crea un archivo PDF con todas las imagenes que se le pase.
@@ -56,6 +64,10 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
     Case "PNG>Copy-Reduced-Color" 'Crea una copia reducida en la misma ubicación que la original
     Case "PNG>JPEG-Copy-Reduced-Color" 'Crea una copia reducida en la misma ubicación que la original
       str = PNGJPEGReduced(strPath)
+
+      '## TIF
+    Case "TIF>JPEG" 'Crea una copia de una imagen TIFF en otra JPEG
+      str = TIFJPEG(strPath)
 
     Case "PNG>OCR-Text" 'Reconocimiento optico de caracteres
       str = PNGOCRText(strPath, strMod)
@@ -80,8 +92,12 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
       str = PDFOCRText(strPath, intPage, strMod)
 
       '## TXT
-    Case "TXT>WAV" 'Crea un archivo de sonido a partir de uno de texto
-      str = TXT2WAV(strPath, strMod)
+    Case "TXT>OGG" 'Crea un archivo de sonido a partir de uno de texto
+      str = TXT2OGG(strPath, strMod)
+
+      '## Sonido
+    Case "Play-Sound" 'Reproductor de archivos de sonido.
+      str = PlaySound(strPath)
 
       '## Video
     Case "Video>Frame" 'Extractor de fotograma de un video
@@ -96,7 +112,7 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
       str = VideoMixer(strPath)
 
     Case "Media>Arrange" 'Mueve las fotografias organizandolas según su fecha de captura.
-      str = MediaArrange(strPath)
+      str = MediaArrange(strPath, strMod)
 
       '## MDB, ACCDB
     Case "JET>SQL" 'Crea los archivos SQL necesarios para reconstruir una base de datos Jet en SQLite, PostgreSQL y MySQL
@@ -107,15 +123,136 @@ Public Function FileDelibery(strTool As String, strPath As String, Optional intP
 
 End
 
-Public Function PlayWAV(strPath As String) As Integer '' Esta funcion reproduce un archivo WAV comn el programa mplayer. Dependenciaas: mplayer. Devuelve el numero PID del proceso.
+Public Function ImageConvert(strPath As String, strFormat As String) As String ''Convierte una imágenes JPEG a otra formato PNG.
 
-  Dim strCommand As String
-  Dim prsWav As Process
-  Dim intWav As Integer
+  Dim prs2 As Process
+  Dim strCommand2 As String
+
+  Dim strRenPath As String
+
+  If MStarter.strState = "running" Then
+
+    strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "." & strFormat
+
+    strCommand2 = "convert -quality 80 '" & strPath & "' '" & strRenPath & "'"
+
+    prs2 = Shell strCommand2
+    While
+      prs2.State = prs2.Running
+      Wait 0.05
+    Wend
+
+  Endif
+
+  If Exist(strRenPath) Then
+    If Stat(strRenPath).Type = gb.File Then
+      Return strRenPath
+    Else
+      Return "0"
+    Endif
+  Endif
 
 End
 
-Public Function TXT2WAV(strPath As String, strLang As String) As String '' Esta funcion convierte un archivo de texto TXT en un archivo WAV. Como parametros de entrada requiere una ruta valida a un archivo TXT que contenga el texto y el idioma.
+Public Function PlaySound(strPath As String) As String '' Esta funcion reproduce un archivo OGG comn el programa mplayer. Dependenciaas: mplayer. Devuelve el numero PID del proceso.
+
+  'Basic options: (complete list in the man page)
+  ' -vo <drv>        select video output driver ('-vo help' for a list)
+  ' -ao <drv>        select audio output driver ('-ao help' for a list)
+  ' vcd://<trackno>  play (S)VCD (Super Video CD) track (raw device, no mount)
+  ' dvd://<titleno>  play DVD title from device instead of plain file
+  ' -alang/-slang    select DVD audio/subtitle language (by 2-char country code)
+  ' -ss <position>   seek to given (seconds or hh:mm:ss) position
+  ' -nosound         do not play sound
+  ' -fs              fullscreen playback (or -vm, -zoom, details in the man page)
+  ' -x <x> -y <y>    set display resolution (for use with -vm or -zoom)
+  ' -sub <file>      specify subtitle file to use (also see -subfps, -subdelay)
+  ' -playlist <file> specify playlist file
+  ' -vid x -aid y    select video (x) and audio (y) stream to play
+  ' -fps x -srate y  change video (x fps) and audio (y Hz) rate
+  ' -pp <quality>    enable postprocessing filter (details in the man page)
+  ' -framedrop       enable frame dropping (for slow machines)
+
+  'Basic keys: (complete list in the man page, also check input.conf)
+  ' <-  or  ->       seek backward/forward 10 seconds
+  ' down or up       seek backward/forward  1 minute
+  ' pgdown or pgup   seek backward/forward 10 minutes
+  ' < or >           step backward/forward in playlist
+  ' p or SPACE       pause movie (press any key to continue)
+  ' q or ESC         stop playing and quit program
+  ' + or -           adjust audio delay by +/- 0.1 second
+  ' o                cycle OSD mode:  none / seekbar / seekbar + timer
+  ' * or /           increase or decrease PCM volume
+  ' x or z           adjust subtitle delay by +/- 0.1 second
+  ' r or t           adjust subtitle position up/down, also see -vf expand
+
+  Dim strCommand As String
+  Dim prsS As Process ' Proceso de creacion de sonido
+  'Dim intS As Integer '
+
+  If Exist(strPath) = True Then
+    Music.Load(strPath)
+    Music.Play()
+
+    ' strCommand = "play '" & strPath & "'"
+    ' Print strCommand
+    ' prsS = Shell strCommand
+    '
+  Endif
+  '
+  ' While prsS.State = prsS.Running
+  '   Wait 0.2
+  ' Wend
+
+  While Music.Playing
+    Wait 0.2
+  Wend
+
+  Return strPath
+
+End
+
+Public Function WAV2OGG(strPath As String) As String '' Esta función convierte un archivo WAV un UNO OGG. Como parametro de entrada requiere una ruta del archivo WAV. El archivo OGG sera creado en la misma ubicación que el WAV y se devolvera la ruta de este en caso que todo haya ido bien.
+
+  Dim strCommand As String
+  Dim prsWAVE As Process
+  Dim strDir As String
+  Dim strDirBase As String
+  Dim strAudioFile As String
+
+  strDir = File.Dir(strPath)
+  strDirBase = File.BaseName(strPath)
+
+  strAudioFile = strDir &/ strDirBase & ".ogg"
+
+  strCommand = "avconv -i '" & strPath & "' -vn "
+  'strCommand &= "-af volume=7dB:precision=fixed "
+  strCommand &= " '" & strAudioFile & "'"
+
+  Print strCommand
+
+  prsWAVE = Shell strCommand For Read As "ExtAudio"
+
+  While
+    prsWAVE.State = prsWAVE.Running
+    'Print "Running"
+    Wait 2
+  Wend
+
+  If Exist(strAudioFile) Then
+    Print "Audio file exist: " & strAudioFile
+    If Stat(strAudioFile).Type = gb.File Then
+      Return strAudioFile
+    Else
+      Return "0"
+    Endif
+  Else
+    Return "0"
+  Endif
+
+End
+
+Public Function TXT2OGG(strPath As String, strLang As String) As String '' Esta funcion convierte un archivo de texto TXT en un archivo OGG. Como parametros de entrada requiere una ruta valida a un archivo TXT que contenga el texto y el idioma.
 
   Dim strCommand As String
   Dim prsWav As Process
@@ -123,6 +260,7 @@ Public Function TXT2WAV(strPath As String, strLang As String) As String '' Esta 
   Dim strDir As String
   Dim strDirBase As String
   Dim strFileWav As String
+  Dim strFileOgg As String
 
   strDir = File.Dir(strPath)
 
@@ -147,7 +285,24 @@ Public Function TXT2WAV(strPath As String, strLang As String) As String '' Esta 
   If strLang <> "Error" Then
 
     strDirBase = File.BaseName(strPath)
-    strFileWav = strDir &/ strDirBase & ".wav"
+    Select InStr(strDirBase, strLang)
+      Case 0
+        strFileWav = strDir &/ strDirBase & "-" & strLang & ".wav"
+        strFileOgg = strDir &/ strDirBase & "-" & strLang & ".ogg"
+
+      Case Else
+        strFileWav = strDir &/ strDirBase & ".wav"
+        strFileOgg = strDir &/ strDirBase & ".ogg"
+
+    End Select
+
+    If Exist(strFileOgg) Then
+      Kill strFileOgg
+    Endif
+
+    If Exist(strFileWav) Then
+      Kill strFileWav
+    Endif
 
     strCommand = "pico2wave --lang=" & strLang & " --wave='" & strFileWav & "' " & Chr(34) & "$(cat '" & strPath & "')" & Chr(34)
 
@@ -163,9 +318,14 @@ Public Function TXT2WAV(strPath As String, strLang As String) As String '' Esta 
   Endif
 
   If Exist(strFileWav) Then
-    Return strFileWav
-  Else
-    Return "0"
+
+    If Exist(WAV2OGG(strFileWav)) Then
+      Wait 0.1
+      Kill strFileWav
+      Return strFileOgg
+    Else
+      Return "0"
+    Endif
   Endif
 
 End
@@ -322,7 +482,7 @@ Public Sub MixVideo_read()
 
 End
 
-Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade destino del archivo
+Public Function MediaArrange(strPath As String, strLog As String) As String '' Devuelve la rutade destino del archivo
 
   Dim stxExif As New String[]
 
@@ -345,9 +505,19 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
   Dim strDirBase As String
   Dim strFileName As String
   Dim strDirDup As String
+  Dim strAcct As String
+  Dim strImageSize As String
+  Dim int2 As Integer
 
   strCRC = MUtility.CRC32(strPath)
   strExt = String.UCase(File.Ext(strPath)) ' Extensión del archivo en mayúsculas
+
+  Select strLog
+    Case "T"
+      strAcct = "mv"
+    Case "F", ""
+      strAcct = "cp"
+  End Select
 
   If MStarter.strState = "running" Then
 
@@ -364,15 +534,12 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
 
     For intEx = 0 To stxExif.Max
       Select Split(stxExif[intEx], "\t")[0]
-        Case "MediaCreateDate"
+        Case "MediaCreateDate", "DateTimeOriginal"
+          'stxExif[intEx] = "MediaCreateDate" & "\t" & Split(stxExif[intEx], "\t")[1]
+
           strTimeStamp = Split(stxExif[intEx], "\t")[1]
           strTimeStamp = MValidator.OnlyNumbers(strTimeStamp)
           strTimeStamp = String.Mid(strTimeStamp, 1, 14)
-
-          strYear = String.Mid(strTimeStamp, 1, 4)
-          strMonth = String.Mid(strTimeStamp, 5, 2)
-          strDay = String.Mid(strTimeStamp, 7, 2)
-          strTime = String.Mid(strTimeStamp, 9, 6)
 
         Case "Make" ' Fabricante de la cámara
           strMnfr = Split(stxExif[intEx], "\t")[1]
@@ -383,8 +550,42 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
           strModel = MValidator.NoSymbols(strModel)
           strModel = String.UCase(strModel)
 
+        Case "ImageSize"
+          strImageSize = String.UCase(Split(stxExif[intEx], "\t")[1])
+
+        Case "FileType"
+          strExt = Split(stxExif[intEx], "\t")[1]
+
       End Select
     Next
+
+    ' Reemplazos de fechas en caso de que falte la etiqueta principal de creación
+    Select strTimeStamp
+      Case "00000000000000", ""
+        For int2 = 0 To stxExif.Max
+          Select Split(stxExif[int2], "\t")[0]
+            Case "FileModifyDate"
+              strTimeStamp = Split(stxExif[int2], "\t")[1]
+              strTimeStamp = MValidator.OnlyNumbers(strTimeStamp)
+              strTimeStamp = String.Mid(strTimeStamp, 1, 14)
+
+          End Select
+        Next
+    End Select
+
+    strYear = String.Mid(strTimeStamp, 1, 4)
+    strMonth = String.Mid(strTimeStamp, 5, 2)
+    strDay = String.Mid(strTimeStamp, 7, 2)
+    strTime = String.Mid(strTimeStamp, 9, 6)
+
+    ' Reemplazo de Fabricante y modelo en caso de que falten las etiquetas.
+    If strMnfr = "" Then
+      strMnfr = "MNFR"
+    Endif
+
+    If strModel = "" Then
+      strModel = "MOD"
+    Endif
 
     Select strExt
       Case "JPG", "JPEG"
@@ -393,11 +594,15 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
 
         strFileName = strTimeStamp & "-" & strMnfr & "-" & strModel & "-" & strCRC & "." & strExt
 
-      Case "AVI", "MOV", "M2TS", "MP4", "WEBM", "OGV"
+      Case "AVI", "MOV", "MTS", "M2TS", "MP4", "WEBM", "OGV"
         strDirBase = User.Home &/ strYear & "V"
         strDirDup = User.Home &/ strYear & "V-DUP"
 
-        strFileName = strTimeStamp & "-" & strCRC & "." & strExt
+        If strImageSize <> "" Then
+          strFileName = strTimeStamp & "-" & strImageSize & "-" & strCRC & "." & strExt
+        Else
+          strFileName = strTimeStamp & "-" & strCRC & "." & strExt
+        Endif
 
       Case Else
         strDirBase = User.Home &/ strYear & "X"
@@ -420,7 +625,7 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
             Wait 0.05
           Wend
 
-          prs = Shell "mv '" & strPath & "' " & strRenPath
+          prs = Shell strAcct & " '" & strPath & "' " & strRenPath
           While
             prs.State = prs.Running
             Wait 0.05
@@ -435,7 +640,7 @@ Public Function MediaArrange(strPath As String) As String '' Devuelve la rutade 
 
           strRenPath = strDirDup &/ strFileName
           Wait 0.01
-          prs = Shell "mv '" & strPath & "' " & strRenPath
+          prs = Shell strAcct & " '" & strPath & "' " & strRenPath
           While
             prs.State = prs.Running
             Wait 0.05
@@ -529,6 +734,37 @@ Public Function JPEGGIFEmail(strPath As String) As String ''Si el archivo es pro
 
 End
 
+Public Function TIFJPEG(strPath As String) As String ''Convierte una imágenes TIF a JPEG.
+
+  Dim prs2 As Process
+  Dim strCommand2 As String
+
+  Dim strRenPath As String
+
+  If MStarter.strState = "running" Then
+
+    strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & ".jpeg"
+
+    strCommand2 = "convert -quality 80 '" & strPath & "' '" & strRenPath & "'"
+
+    prs2 = Shell strCommand2
+    While
+      prs2.State = prs2.Running
+      Wait 0.05
+    Wend
+
+  Endif
+
+  If Exist(strRenPath) Then
+    If Stat(strRenPath).Type = gb.File Then
+      Return strRenPath
+    Else
+      Return "0"
+    Endif
+  Endif
+
+End
+
 Public Function JPEGPNG(strPath As String) As String ''Convierte una imágenes JPEG a otra formato PNG.
 
   Dim prs2 As Process
@@ -540,7 +776,7 @@ Public Function JPEGPNG(strPath As String) As String ''Convierte una imágenes J
 
     strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & ".png"
 
-    strCommand2 = "convert -quality 30 " & strPath & " " & strRenPath
+    strCommand2 = "convert -quality 30 '" & strPath & "' '" & strRenPath & "'"
 
     prs2 = Shell strCommand2
     While
@@ -571,7 +807,7 @@ Public Function JPEGPDF(strPath As String) As String ''Convierte todas las imág
 
     strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & ".pdf"
 
-    strCommand2 = "convert -quality 30 " & strPath & " " & strRenPath
+    strCommand2 = "convert -quality 30 '" & strPath & "' '" & strRenPath & "'"
     prs2 = Shell strCommand2
     While
       prs2.State = prs2.Running
@@ -590,7 +826,7 @@ Public Function JPEGPDF(strPath As String) As String ''Convierte todas las imág
 
 End
 
-Public Function PNGJPEGReduced(strPath As String) As String '' Devuelve la ruta al archivo jpeg creado
+Public Function JPEGCopyRC(strPath As String, Optional strCompress As String) As String '' Devuelve la ruta al archivo jpeg creado
 
   Dim prs As Process
 
@@ -599,12 +835,107 @@ Public Function PNGJPEGReduced(strPath As String) As String '' Devuelve la ruta 
 
   If MStarter.strState = "running" Then
 
-    strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "-rc.jpeg"
+    'strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "-" & strCompress & "-rc.jpeg"
 
     If Exist(strRenPath) = False Then
 
-      strCommand = "convert -compress jpeg -quality 75 -enhance"
-      strCommand &= " " & strPath & " " & strRenPath
+      If strCompress = "" Then
+        strCompress = "75"
+      Else
+        If IsNumber(strCompress) = True Then
+          If CInt(strCompress) < 1 Or CInt(strCompress) > 100 Then
+            strCompress = "75"
+          Endif
+        Endif
+
+        strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "-" & strCompress & "-rc.jpeg"
+
+        strCommand = "convert -compress jpeg -quality " & strCompress & " -enhance"
+        strCommand &= " '" & strPath & "' '" & strRenPath & "'"
+        Print strCommand
+        prs = Shell strCommand
+        While
+          prs.State = prs.Running
+          Wait 0.05
+        Wend
+      Endif
+    Endif
+
+    If Exist(strRenPath) Then
+      If Stat(strRenPath).Type = gb.File Then
+        Return strRenPath
+      Else
+        Return "0"
+      Endif
+    Endif
+  Endif
+
+End
+
+Public Function JPEGCopyRG(strPath As String, Optional strCompress As String) As String '' Devuelve la ruta al archivo jpeg creado
+
+  Dim prs As Process
+
+  Dim strRenPath As String
+  Dim strCommand As String
+
+  If MStarter.strState = "running" Then
+
+    If Exist(strRenPath) = False Then
+
+      If strCompress = "" Then
+        strCompress = "75"
+      Else
+        If IsNumber(strCompress) = True Then
+          If CInt(strCompress) < 1 Or CInt(strCompress) > 100 Then
+            strCompress = "75"
+          Endif
+        Endif
+
+        Wait 0.01
+
+        strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "-" & strCompress & "-rg.jpeg"
+
+        strCommand = "convert -type Grayscale -depth 8 -normalize -level 0%,75%,0.8"
+        strCommand &= " -compress jpeg -quality " & strCompress & " -enhance"
+        strCommand &= " '" & strPath & "' '" & strRenPath & "'"
+        Print strCommand
+        prs = Shell strCommand
+        While
+          prs.State = prs.Running
+          Wait 0.05
+        Wend
+      Endif
+    Endif
+
+    If Exist(strRenPath) Then
+      If Stat(strRenPath).Type = gb.File Then
+        Return strRenPath
+      Else
+        Return "0"
+      Endif
+    Endif
+  Endif
+
+End
+
+Public Function PNGJPEGReduced(strPath As String, Optional strCompress As String) As String '' Devuelve la ruta al archivo jpeg creado
+
+  Dim prs As Process
+
+  Dim strRenPath As String
+  Dim strCommand As String
+
+  If MStarter.strState = "running" Then
+
+    'strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "-rc.jpeg"
+
+    If Exist(strRenPath) = False Then
+
+      strRenPath = File.Dir(strPath) &/ String.LCase(File.BaseName(strPath)) & "-" & strCompress & "-rc.jpeg"
+
+      strCommand = "convert -compress jpeg -quality " & strCompress & " -enhance"
+      strCommand &= " '" & strPath & "' '" & strRenPath & "'"
       prs = Shell strCommand
       While
         prs.State = prs.Running
@@ -759,7 +1090,6 @@ Public Function JPEGOCRText(strPath As String, Optional strLang As String) As St
   Dim strFilePNG As String
   Dim intTime As Integer
 
-  'strFilePNG = File.Dir(strPath) &/ File.BaseName(strPath) & ".png"
   strFileTXT = File.Dir(strPath) &/ File.BaseName(strPath) & ".txt"
 
   If MStarter.strState = "running" Then
@@ -774,16 +1104,6 @@ Public Function JPEGOCRText(strPath As String, Optional strLang As String) As St
         If Exist(strFilePNG) = True
 
           strTxtTemp = PNGOCRText(strFilePNG, strLang)
-
-          'strCommand = "tesseract '" & strFilePNG & "' stdout -l spa 2>&1"
-          'Shell strCommand To strTxtTemp
-          '
-          ' If strTxtTemp <> "" Then
-          '
-          '   File.Save(strFileTXT, strTxtTemp)
-          ' Endif
-          '
-          ' Wait 0.05
 
         Endif
       Endif

@@ -7,6 +7,51 @@ En el caso de la herramienta para acomodar fotografias y vdeos.
 Es importante tener en cuenta que esta es una herramienta en desarrollo y no conviene trabajar con la unica copia de las fotos, por lo menos hasta que no se hacen varias pruebas. Debido a que cada Cámara tiene sus propias etiquetas exif.
 Por ejemplo para la fecha de captura:
 
+## Dependencias
+Segun sea la distribucion linux que se utilice las dependencias pueden variar el nombre del paquete y en la forma de instalarlos, por ejemplo el paquete pdftk que sirve para manejar archivos PDF no está disponible en el repositorio "core" de Arch pero si esta en AUR, por lo tanto para instalar dicho paquete implicara descargar fuentes y compilar   son las siguientes:
+
+# Debian, Ubuntu, Mint y similares.
+perl-image-exiftool
+libav-tools
+pst-utils
+mdbtools
+pdftk
+imagemagick
+tesseract-ocr
+tesseract-ocr-cat
+tesseract-ocr-deu
+tesseract-ocr-eng
+tesseract-ocr-epo
+tesseract-ocr-fra
+tesseract-ocr-glg
+tesseract-ocr-ita
+tesseract-ocr-por
+tesseract-ocr-rus
+tesseract-ocr-spa
+libttspico-utils
+mplayer
+
+# Arch, Manjaro
+perl-image-exiftool
+libav-tools
+pst-utils (No Existe)
+mdbtools (AUR)
+pdftk (AUR)
+imagemagick
+tesseract-ocr
+tesseract-ocr-cat
+tesseract-ocr-deu
+tesseract-ocr-eng
+tesseract-ocr-epo
+tesseract-ocr-fra
+tesseract-ocr-glg
+tesseract-ocr-ita
+tesseract-ocr-por
+tesseract-ocr-rus
+tesseract-ocr-spa
+libttspico-utils
+mplayer
+
 ### Media Create Date
 Fairphone 2 jpg
 Leica mov
@@ -37,7 +82,6 @@ Renombrador de archivos
 
 ### File-Check
 Verificador de nombre de archivo
-
 
 ## JPEG
 

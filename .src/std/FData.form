@@ -3,6 +3,7 @@
 { Form Form
   MoveScaled(0,0,64,64)
   Expand = True
+  Icon = Picture["logo.png"]
   Arrangement = Arrange.Vertical
   Margin = True
   { pnlData Panel

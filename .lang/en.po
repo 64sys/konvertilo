@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tradukisto 0.0.23\n"
-"POT-Creation-Date: 2017-04-01 00:15+CET\n"
-"PO-Revision-Date: 2017-04-01 00:43+CET\n"
+"POT-Creation-Date: 2017-05-14 16:03+CET\n"
+"PO-Revision-Date: 2017-05-14 16:05+CET\n"
 "Last-Translator: Belmotek, Powerded by Tradukisto software. info@belmotek.net\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 #: .project:1
 msgid "Konvertilo"
-msgstr "Konvertilo"
+msgstr ""
 
 #: .project:2
 msgid "Conversor de archivos"
@@ -21,148 +21,184 @@ msgstr "File converter"
 msgid "Cerrar"
 msgstr "Close"
 
-#: FAbout.class:87
+#: FAbout.class:83
 msgid "Pagina web"
 msgstr "Web page"
 
-#: FAbout.class:92
+#: FAbout.class:88
 msgid "Código fuente"
 msgstr "Source code"
 
-#: FAbout.class:96
+#: FAbout.class:92
 msgid "Correo de contacto"
 msgstr "Contact email"
 
-#: FAbout.class:101
+#: FAbout.class:97
 msgid "Enviar un correo al desarrollador"
 msgstr "Send an email to the developer"
 
-#: FAbout.class:105
+#: FAbout.class:101
 msgid "Componentes utilizados en este programa"
 msgstr "Components used in this program"
 
-#: FAbout.class:120
+#: FAbout.class:116
 msgid "Clic para ver detalles en"
 msgstr "Click to see details in"
 
-#: FAbout.class:129
-msgid "Este programa se entrega sin ningun tipo de garantia"
-msgstr "This program is delivered without any kind of guarantee"
+#: FAbout.class:125
+msgid "Este programa se entrega sin ningún tipo de garantía"
+msgstr "This program is delivered without any warranty"
 
-#: FAbout.class:136
+#: FAbout.class:132
 msgid "Licencia"
 msgstr "License"
 
-#: FAbout.class:137
+#: FAbout.class:133
 msgid "Clic para ver la licencia en"
 msgstr "Click to see the license in"
 
-#: FAbout.class:143 FMain.form:64
+#: FAbout.class:139 FMain.form:86
 msgid "Acerca de"
 msgstr "About"
 
-#: FAbout.class:163
+#: FAbout.class:159
 msgid "Hola desarrolladores de"
 msgstr "Hello developers"
 
-#: FConfig.form:22
+#: FConfig.form:23
 msgid "Guardar y salir"
 msgstr "Save and exit"
 
-#: FConfig.form:23 FMain.form:151
+#: FConfig.form:24 FMain.form:178
 msgid "Guardar"
 msgstr "Save"
 
-#: FConfig.form:29
+#: FConfig.form:30
 msgid "Descartar"
 msgstr "Discard"
 
-#: FConfig.form:41
+#: FConfig.form:42
 msgid "Herramientas"
 msgstr "Thread tools"
 
-#: FConfig.form:55
+#: FConfig.form:56
 msgid "Programa"
 msgstr "Program"
 
-#: FConfig.class:195
-msgid "Motor de la Base de datos"
+#: FConfig.class:188
+msgid "Motor de la base de datos"
 msgstr ""
 
-#: FConfig.class:196
-msgid "Ubicación de la Base de datos"
+#: FConfig.class:189
+msgid "Ubicación de la base de datos"
 msgstr ""
 
-#: FConfig.class:197
-msgid "Nombre de la Base de datos"
+#: FConfig.class:190
+msgid "Nombre de la base de datos"
 msgstr ""
 
-#: FConfig.class:198
-msgid "Ruta de la Base de datos"
+#: FConfig.class:191
+msgid "Ruta de la base de datos"
 msgstr ""
 
-#: FConfig.class:199
+#: FConfig.class:192
 msgid "Idioma de entrada"
 msgstr "Input language"
 
-#: FConfig.class:200
+#: FConfig.class:193
 msgid "Tamaño de la ventana"
 msgstr ""
 
-#: FConfig.class:201
+#: FConfig.class:194
 msgid "Anchura por defecto"
-msgstr ""
+msgstr "Default width"
 
-#: FData.form:34
+#: FData.form:35 FPages.form:95 FTools.form:35
 msgid "Aceptar"
-msgstr ""
+msgstr "To accept"
 
-#: FData.form:40
+#: FData.form:41 FPages.form:100 FTools.form:41
 msgid "Cancelar"
-msgstr ""
+msgstr "Cancel"
 
-#: FMain.form:40
+#: FMain.form:50
 msgid "Iniciar procesado de archivos"
 msgstr ""
 
-#: FMain.form:46
+#: FMain.form:56
+msgid "Agregar archivos o directorios"
+msgstr "Add files or directories"
+
+#: FMain.form:68
 msgid "Limpiar la lista"
 msgstr ""
 
-#: FMain.form:52
+#: FMain.form:74
 msgid "Preferencias"
 msgstr ""
 
-#: FMain.form:58
+#: FMain.form:80
 msgid "Imprimir informe de archivos procesados"
 msgstr ""
 
-#: FMain.form:70
+#: FMain.form:92
 msgid "Ayuda"
-msgstr ""
+msgstr "Help"
 
-#: FMain.form:145
+#: FMain.form:172
 msgid "Agregar"
-msgstr ""
+msgstr "Add"
 
-#: FMain.form:157
+#: FMain.form:184
 msgid "Borrar"
-msgstr ""
+msgstr "Delete"
 
-#: FMain.form:163
+#: FMain.form:190
 msgid "Editar"
+msgstr "Edit"
+
+#: FMain.class:159
+msgid "Proceso finalizado"
 msgstr ""
 
-#: FMain.class:273 MStarter.module:296
+#: FMain.class:159
+msgid "tiempo empleado"
+msgstr ""
+
+#: FMain.class:404 MStarter.module:485
 msgid "Extensión"
 msgstr ""
 
-#: FTools.form:34
-msgid "OK"
+#: FPages.form:32 MStarter.module:491
+msgid "Páginas"
 msgstr ""
 
-#: FTools.form:40
-msgid "Cancel"
+#: FPages.form:47
+msgid "Todas"
+msgstr ""
+
+#: FPages.form:52
+msgid "Ninguna"
+msgstr ""
+
+#: FPages.form:61
+msgid "Datos"
+msgstr "Data"
+
+#: FTools.class:21
+msgid "Acciones para archivos"
+msgstr "File actions"
+
+#: FTools.class:73
+msgid "Idioma"
+msgstr ""
+
+#: FTools.class:118
+msgid "Formato"
+msgstr ""
+
+#: FTools.class:140
+msgid "Mover"
 msgstr ""
 
 #: MData.module:69
@@ -175,10 +211,10 @@ msgstr ""
 
 #: MData.module:315
 msgid "Existen"
-msgstr ""
+msgstr "Exist"
 
 #: MData.module:315
-msgid "coincidencias, deberia ser una sola"
+msgid "coincidencias, debería ser una sola"
 msgstr ""
 
 #: MData.module:315
@@ -186,12 +222,12 @@ msgid "Se utilizara el primero de la lista"
 msgstr ""
 
 #: MData.module:1442
-msgid "mdbtools instalado correctamente"
+msgid "instalado correctamente"
 msgstr ""
 
 #: MData.module:1500
-msgid "Esquemas extraidos"
-msgstr ""
+msgid "Esquemas extraídos"
+msgstr "Extracted schemas"
 
 #: MData.module:1524
 msgid "Nombres de campos cargados"
@@ -215,133 +251,157 @@ msgstr ""
 
 #: MData.module:1609
 msgid "Base de datos completada"
-msgstr ""
+msgstr "Database completed"
 
 #: MData.module:1616
-msgid "Conversion terminada stisfactoriamente"
-msgstr ""
+msgid "Conversion terminada satisfactoriamente"
+msgstr "Conversion completed successfully"
 
-#: MStarter.module:98
-msgid "Carga de parametros primera pasada"
-msgstr ""
+#: MStarter.module:135
+msgid "Carga de parámetros primera pasada"
+msgstr "Parameter loading first passed"
 
-#: MStarter.module:115
+#: MStarter.module:152
 msgid "Conectando la base de datos"
-msgstr ""
+msgstr "Connecting the database"
 
-#: MStarter.module:163
+#: MStarter.module:200
 msgid "Cargando lista de idiomas"
-msgstr ""
+msgstr "Loading language list"
 
-#: MStarter.module:180
+#: MStarter.module:227
 msgid "Abriendo formulario principal"
-msgstr ""
+msgstr "Opening main form"
 
-#: MStarter.module:185
+#: MStarter.module:232
 msgid "No se pudo abrir la conexión a la base de datos"
 msgstr ""
 
-#: MStarter.module:201
+#: MStarter.module:314
 msgid "Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email"
 msgstr ""
 
-#: MStarter.module:205
-msgid "Crea un archivo GIF y lo adjunta en un nuevo email."
+#: MStarter.module:318
+msgid "Reconocimiento optico de caracteres"
 msgstr ""
 
-#: MStarter.module:209
+#: MStarter.module:322
+msgid "Crea un archivo"
+msgstr "Create a file"
+
+#: MStarter.module:322
+msgid "y luego lo adjunta en un nuevo correo"
+msgstr ""
+
+#: MStarter.module:326
 msgid "Crea una copia reducida en la misma ubicación que la original"
 msgstr ""
 
-#: MStarter.module:213
+#: MStarter.module:330
 msgid "Crea una copia reducida en escala de grices en la misma ubicación que la original"
 msgstr ""
 
-#: MStarter.module:217
+#: MStarter.module:334
 msgid "Crea una copia en escala de grices en la misma ubicación que la original"
 msgstr ""
 
-#: MStarter.module:221
+#: MStarter.module:338
 msgid "Crea una copia reducida de proporción cuadrada en la misma ubicación que la original."
 msgstr ""
 
-#: MStarter.module:225
-msgid "Crea un archivo PDF con todas las imagenes que se le pase."
+#: MStarter.module:342
+msgid "con todas las imágenes que se le pase"
 msgstr ""
 
-#: MStarter.module:229
-msgid "Mueve las fotografias organizandolas según su fecha de captura."
-msgstr ""
-
-#: MStarter.module:238
-msgid "Crea una copia reducida en la misma ubicación que la original en formato JPEG"
-msgstr ""
-
-#: MStarter.module:243
+#: MStarter.module:360
 msgid "Extractor de miniatura del documento"
 msgstr ""
 
-#: MStarter.module:247
-msgid "Convertir documentos ODT en documentos EPUB"
+#: MStarter.module:364
+msgid "Convertir documentos"
 msgstr ""
 
-#: MStarter.module:252
+#: MStarter.module:364
+msgid "en"
+msgstr ""
+
+#: MStarter.module:369
 msgid "Crea una copia desencriptada del archivo"
 msgstr ""
 
-#: MStarter.module:256
+#: MStarter.module:373
 msgid "Extractor de paginas en formato de imagen jpeg una imagen por página."
 msgstr ""
 
-#: MStarter.module:260
-msgid "Extractor de paginas en formato pdf"
+#: MStarter.module:377
+msgid "Extractor de paginas"
 msgstr ""
 
-#: MStarter.module:264
-msgid "Extractor de paginas en formato de imagen TIF y reconocimiento optico de caracteres"
+#: MStarter.module:385
+msgid "Gira las paginas del archivo"
 msgstr ""
 
-#: MStarter.module:268
-msgid "Rota las paginas del archivo 90 grados"
+#: MStarter.module:391
+msgid "Mueve las fotografiás y videos organizándolas según su fecha de captura."
 msgstr ""
 
-#: MStarter.module:273
-msgid "Extractor de fotograma de un video"
+#: MStarter.module:395
+msgid "Crea una copia muda de un video y le agrega una pista de audio."
 msgstr ""
 
-#: MStarter.module:278
-msgid "Crea los archivos SQL necesarios para reconstruir una base de datos Jet en SQLite, PostgreSQL y MySQL"
+#: MStarter.module:399
+msgid "Extrae la pista de audio de un video."
 msgstr ""
 
-#: MStarter.module:283
-msgid "Crea los archivos MBX a partir del los PST"
+#: MStarter.module:403
+msgid "Extrae la pista de video de un video."
 msgstr ""
 
-#: MStarter.module:293
+#: MStarter.module:408
+msgid "Crea un archivo de sonido a partir de uno de texto."
+msgstr ""
+
+#: MStarter.module:413
+msgid "Crea los archivos"
+msgstr ""
+
+#: MStarter.module:413
+msgid "para crear bases de datos"
+msgstr ""
+
+#: MStarter.module:418
+msgid "Crea archivos"
+msgstr ""
+
+#: MStarter.module:418
+msgid "a partir de"
+msgstr ""
+
+#: MStarter.module:482
 msgid "Ruta"
 msgstr ""
 
-#: MStarter.module:294
+#: MStarter.module:483
 msgid "Directorio"
 msgstr ""
 
-#: MStarter.module:295
+#: MStarter.module:484
+msgid "Archivo"
+msgstr ""
+
+#: MStarter.module:486
 msgid "Nombre"
 msgstr ""
 
-#: MStarter.module:297
-msgid "Base"
-msgstr ""
-
-#: MStarter.module:298
+#: MStarter.module:487
 msgid "Tamaño"
 msgstr ""
 
-#: MStarter.module:299
+#: MStarter.module:488
 msgid "Tiempo"
 msgstr ""
 
-#: MStarter.module:301
+#: MStarter.module:490
 msgid "Versión"
 msgstr ""
 
@@ -349,47 +409,47 @@ msgstr ""
 msgid "Seleccionar directorio"
 msgstr ""
 
-#: MUtility.module:53
+#: MUtility.module:82
 msgid "Seleccionar archivo"
 msgstr ""
 
-#: MUtility.module:58
-msgid "Filtro por:"
+#: MUtility.module:87
+msgid "Filtro por"
 msgstr ""
 
-#: MUtility.module:1007
-msgid "El archivo "
+#: MUtility.module:1170
+msgid "El archivo"
 msgstr ""
 
-#: MUtility.module:1007
-msgid "Tiene caracteres no ascii"
+#: MUtility.module:1170
+msgid "Tiene caracteres no compatibles con"
 msgstr ""
 
-#: MUtility.module:1064
+#: MUtility.module:1227
 msgid "Hola"
 msgstr ""
 
-#: MValidator.module:296
+#: MValidator.module:329
 msgid "Espacios al inicio y al final"
 msgstr ""
 
-#: MValidator.module:298
+#: MValidator.module:331
 msgid "Espacio al inicio"
 msgstr ""
 
-#: MValidator.module:302
+#: MValidator.module:335
 msgid "Espacio al final"
 msgstr ""
 
-#: MValidator.module:307
+#: MValidator.module:340
 msgid "Repetidos"
 msgstr ""
 
-#: MValidator.module:334
+#: MValidator.module:367
 msgid "Excluidos"
 msgstr ""
 
-#: MValidator.module:338
+#: MValidator.module:371
 msgid "Mas de una letra mayúscula"
 msgstr ""
 
@@ -397,30 +457,26 @@ msgstr ""
 msgid "Desconocido"
 msgstr ""
 
-#: Msys.module:509
+#: Msys.module:513
 msgid "Falta instalar el paquete"
 msgstr ""
 
-#: Msys.module:512
+#: Msys.module:516
 msgid "Faltan instalar los siguientes paquetes"
 msgstr ""
 
-#: Msys.module:534
-msgid "Puede usar la siguente orden"
+#: Msys.module:541
+msgid "Puede usar la siguiente orden"
 msgstr ""
 
-#: Msys.module:534
+#: Msys.module:541
 msgid "¿Quiere abrir la terminal para poceder?"
 msgstr ""
 
-#: Msys.module:534
+#: Msys.module:541
 msgid "Sí"
 msgstr ""
 
-#: Msys.module:534
+#: Msys.module:541
 msgid "No"
-msgstr ""
-
-#: Msys.module:584
-msgid "Puede usar el siguente commando"
 msgstr ""

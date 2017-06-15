@@ -94,6 +94,7 @@ Public Sub Form_Open()
   tob.Font.Grade = 0
   tob.Height = 28
   tob.Border = False
+
   tob.Tooltip = ("Enviar un correo al desarrollador")
 
   txa = New TextLabel(pnlAbout)
@@ -118,6 +119,7 @@ Public Sub Form_Open()
     tob.Height = 28
     tob.Width = 7 * String.Len(stxComp[intComp])
     tob.Border = False
+
   Next
 
   txa = New TextLabel(pnlAbout)

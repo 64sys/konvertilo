@@ -58,7 +58,7 @@ Public stxToolsMod As New String[] ' Lista de modificadores de las herramientas
 Public intTimer As Integer ' Tiempo en segundos transcurridos desde el inicio del procesado de archivos
 
 Public strState As String ' Estado de actividad del programa "running / stopped"
-Public stxFilesPlay As New String[] ' Lista de tipos de archivos a procesar txt, pdf etc.
+Public stxExtPlay As New String[] ' Lista de tipos de archivos a procesar txt, pdf etc.
 Public stxSchedule As New String[] ' Lista de [Herramienta "\t" Página "\t" Archivo]
 Public stxPages As New Integer[] ' Lista de paginas a procesar de un archivo dado, es una matriz temporal den un solo uso.
 
@@ -107,7 +107,23 @@ Public Sub Main()
   Endif
 
   ' Estado de las dependencias.//////////////////////////////////////////////////////////////////////
-  stxPackages = MUtility.FileLoad("depend.txt")
+
+  Select Msys.DistroShort()
+
+    Case "debian", "ubuntu", "mint"
+      stxPackages = MUtility.FileLoad("depend-deb.txt")
+
+    Case "manjaro", "arch"
+      stxPackages = MUtility.FileLoad("depend-arc.txt")
+
+    Case "fedora", "redhat"
+      stxPackages = MUtility.FileLoad("depend-rht.txt")
+    Case "gentoo"
+      stxPackages = MUtility.FileLoad("depend-gto.txt")
+    Case "suse", "opensuse"
+      stxPackages = MUtility.FileLoad("depend-osu.txt")
+  End Select
+
   If stxPackages.Count > 0 Then
     Msys.PkgDep(stxPackages)
   Endif
@@ -203,7 +219,7 @@ Public Sub Main()
   LoadExif() ' Carga de equivalencias de etiquetas
 
   strState = "stopped"
-  stxFilesPlay.Clear
+  stxExtPlay.Clear
   stxSchedule.Clear
 
   '//////////////////////////////////
@@ -293,6 +309,12 @@ End
 
 Public Function LoadTools() As Integer '' Carga de herramientas disponibles para asignar el el proceso de archivos segun su extensión
 
+  '## Image Convet
+
+  stxToolsName.Add("Image-Convert")
+  stxToolsDesc.Add(("Convertir imagenes de un formato a otro"))
+  stxToolsExt.Add("jpg:jpeg:png:tif")
+
   '## JPEG
   stxToolsName.Add("JPEG>Email")
   stxToolsDesc.Add(("Crea copias reducidas en un directorio temporal y las adjunta en un nuevo email"))
@@ -339,6 +361,11 @@ Public Function LoadTools() As Integer '' Carga de herramientas disponibles para
   stxToolsDesc.Add(("Reconocimiento optico de caracteres"))
   stxToolsExt.Add("png")
 
+  '## TIF
+  stxToolsName.Add("TIF>JPEG")
+  stxToolsDesc.Add(("Convierte una copia del una imagen"))
+  stxToolsExt.Add("tif")
+
   '## ODT
   stxToolsName.Add("ODT-Thumbnail")
   stxToolsDesc.Add(("Extractor de miniatura del documento"))
@@ -373,7 +400,7 @@ Public Function LoadTools() As Integer '' Carga de herramientas disponibles para
 
   stxToolsName.Add("Media>Arrange")
   stxToolsDesc.Add(("Mueve las fotografiás y videos organizándolas según su fecha de captura."))
-  stxToolsExt.Add("jpg:jpeg:avi:mov:m2ts:mp4:webm:ogv")
+  stxToolsExt.Add("jpg:jpeg:avi:mov:mts:m2ts:mp4:webm:ogv")
 
   stxToolsName.Add("Video-Mixer")
   stxToolsDesc.Add(("Crea una copia muda de un video y le agrega una pista de audio."))
@@ -387,8 +414,13 @@ Public Function LoadTools() As Integer '' Carga de herramientas disponibles para
   stxToolsDesc.Add(("Extrae la pista de video de un video."))
   stxToolsExt.Add("mkv:avi:mov:m2ts:mp4:webm:ogv")
 
+  '## Sonido
+  stxToolsName.Add("Play-Sound")
+  stxToolsDesc.Add(("Reproduce un archivo de sonido."))
+  stxToolsExt.Add("mp3:ogg:flac:wav")
+
   '## TXT
-  stxToolsName.Add("TXT>WAV")
+  stxToolsName.Add("TXT>OGG")
   stxToolsDesc.Add(("Crea un archivo de sonido a partir de uno de texto."))
   stxToolsExt.Add("txt")
 

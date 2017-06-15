@@ -2,7 +2,7 @@ MStarter
 Konvertilo
 0
 0
-0.0.20
+0.0.24
 
 gb.image
 gb.gui.qt
@@ -13,5 +13,6 @@ gb.desktop
 gb.settings
 gb.pcre
 gb.pdf
+gb.sdl2.audio
 gb.xml
 
